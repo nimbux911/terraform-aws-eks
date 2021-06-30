@@ -87,3 +87,14 @@ resource "aws_security_group_rule" "eks_master_ingress_https_from_workers" {
   to_port                  = 443
   type                     = "ingress"
 }
+
+resource "aws_security_group_rule" "eks_worker_ingress_nginx_from_vpc" {
+  count                    = var.helm_ingress_ngnix_enabled ? 1 : 0
+  description              = "Allow VPC CIDR to access ingress port"
+  from_port                = 32080
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.eks_worker.id
+  cidr_blocks              = [data.aws_vpc.main.cidr_block]
+  to_port                  = 32080
+  type                     = "ingress"
+}
