@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2021-06-30
+
+### Fixed
+
+- The aws-auth configmap used to fail because the cluster wasn't ready yet.
+
+### Added
+
+- Users and roles can be added to the aws-auth configmap and managed by terraform
+- Open ingress port to worker nodes if his Helm chart is enabled
+- Bootstrapping: ingress-nginx, cluster-autoscaler, metrics-server and loki-stack helm charts
+
 ## [1.0.0] - 2021-05-05
 
 ### Added
