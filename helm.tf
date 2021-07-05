@@ -11,6 +11,16 @@ resource "helm_release" "ingress_nginx" {
     file("${path.module}/helm-values/ingress-nginx.yaml")
   ]
 
+
+  dynamic "set" {
+    for_each = var.prometheus_enabled ? ["do it"] : []
+    content {
+      name  = "controller.metrics.enabled"
+      value = true
+    }
+  }
+
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }

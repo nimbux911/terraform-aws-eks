@@ -21,3 +21,11 @@ controller:
 
   admissionWebhooks:
     enabled: false
+
+  metrics:
+    port: 10254
+    # if this port is changed, change healthz-port: in extraArgs: accordingly
+    service:
+      annotations: 
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "10254"
