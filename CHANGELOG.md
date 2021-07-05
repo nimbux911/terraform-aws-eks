@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2021-07-05
+
+### Fixed
+
+- Prometheus server ingress values.
+
 ## [2.0.0] - 2021-06-30
 
 ### Fixed

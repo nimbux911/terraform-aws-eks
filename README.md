@@ -39,7 +39,7 @@ locals {
 
 module "eks_main" {
 
-  source              = "git@gitlab.com:nimbux/terraform-aws-eks.git?ref=v2.0.0"
+  source              = "git@gitlab.com:nimbux/terraform-aws-eks.git?ref=v2.0.1"
 
   environment         = var.environment
   cluster_name        = "${var.environment}-eks-demo"

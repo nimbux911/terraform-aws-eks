@@ -227,12 +227,12 @@ resource "helm_release" "loki_stack" {
 
 # prometheus - ingress
   set {
-    name  = "prometheus.ingress.enabled"
+    name  = "prometheus.server.ingress.enabled"
     value = var.prometheus_ingress_enabled
   }
 
   set {
-    name  = "prometheus.ingress.hosts[0]"
+    name  = "prometheus.server.ingress.hosts[0]"
     value = var.prometheus_ingress_host
   }
 
