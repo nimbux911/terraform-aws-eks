@@ -5,7 +5,7 @@ Terraform module which creates EKS Cluster and dependent resources on AWS.
 **For use this module is needed to install aws-iam-authenticator. You can do it following** [this link](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
 
 
-## Usage 2.0.0
+## Usage
 
 ### Elastic Kubernetes Service
 
@@ -39,7 +39,7 @@ locals {
 
 module "eks_main" {
 
-  source              = "git@gitlab.com:nimbux/terraform-aws-eks.git?ref=v2.0.1"
+  source              = "git@gitlab.com:nimbux/terraform-aws-eks.git?ref=v2.0.3"
 
   environment         = var.environment
   cluster_name        = "${var.environment}-eks-demo"
@@ -78,7 +78,19 @@ module "eks_main" {
   loki_ingress_host        = "loki.domain.com" 
   loki_ingress_path        = "/"
 
-  grafana_enabled             = true 
+  grafana_enabled             = true
+  grafana_datasources               = [
+    {
+      "name" = "Dev Prometheus", 
+      "type" = "prometheus", 
+      "url" = "http://prometheus.dev.domain.com"
+    },
+    {
+      "name" = "Dev Loki", 
+      "type" = "loki", 
+      "url" = "http://loki.dev.domain.com"
+    }
+  ]
   grafana_persistence_enabled = true 
   grafana_ingress_enabled     = true 
   grafana_ingress_host        = "grafana.domain.com"    

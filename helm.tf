@@ -1,3 +1,32 @@
+locals {
+
+  grafana_datasources_p1 = <<-EOF
+grafana:
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources: 
+EOF
+
+  grafana_datasources_p2 = tolist(
+    [ for datasource in var.grafana_datasources : 
+      {
+        name = datasource.name,
+        type = lower(datasource.type),
+        access = "proxy",
+        url  = datasource.url
+      }
+    ]
+  )
+
+}
+
+resource "local_file" "grafana_values" {
+    content  = join("\n        ", [local.grafana_datasources_p1, indent(8, yamlencode(local.grafana_datasources_p2))])
+    filename = "${path.module}/helm-values/grafana-values.yaml"
+}
+
+
 resource "helm_release" "ingress_nginx" {
   count             = var.helm_ingress_ngnix_enabled ? 1 : 0
   name              = "ingress-nginx"
@@ -66,7 +95,6 @@ resource "helm_release" "metrics_server" {
 }
 
 
-
 resource "helm_release" "loki_stack" {
   count             = var.helm_loki_stack_enabled ? 1 : 0
   name              = "loki-stack"
@@ -76,6 +104,11 @@ resource "helm_release" "loki_stack" {
   chart             = "loki-stack"
   version           = "2.4.1"
   dependency_update = true
+
+  values            = [
+#    file("${path.module}/helm-values/loki-stack.yaml"),
+    local_file.grafana_values.content
+  ]
 
 # promtail
   set {

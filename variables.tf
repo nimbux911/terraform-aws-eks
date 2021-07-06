@@ -110,6 +110,15 @@ variable "grafana_enabled" {
     default = false
 }
 
+## grafana - dashboards
+#variable "grafana_cluster_dashboard_enabled" {
+#    default = true
+#}
+
+variable "grafana_datasources" {
+    default = []
+}
+
 # grafana - persistence
 variable "grafana_persistence_enabled" {
     default = false
