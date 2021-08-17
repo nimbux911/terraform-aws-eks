@@ -67,6 +67,11 @@ resource "helm_release" "cluster_autoscaler" {
     value = var.cluster_name
   }
 
+  set {
+    name  = "awsRegion"
+    value = data.aws_region.current.name
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
