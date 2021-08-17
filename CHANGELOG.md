@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.5] - 2021-08-17
+
+### Fixed
+
+- Add current aws region to cluster-autoscaler helm chart.
+- CHANGELOG and README outputs.
+
+## [2.0.4] - 2021-08-09
+
+### Added
+
+- Eks endpoint and CA to outputs to be used for external helm release provider.
+- Updating provider to allow EKS cluster create by Terragrunt role.
+
 ## [2.0.3] - 2021-07-05
 
 ### Added

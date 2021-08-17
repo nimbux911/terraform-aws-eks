@@ -168,3 +168,6 @@ module "eks_main" {
 | security\_group\_worker\_arn | The ARN of the workers security group. |
 | worker\_role\_arn | The ARN of the workers IAM Role. |
 | worker\_role\_id | The ID of the workers IAM Role. |
+| asg\_name | Name of the of the workers Autoscaling Group. |
+| eks\_certificate\_authority | Cluster's certificate authority. |
+| eks\_endpoint | Cluster's endpoint. |
