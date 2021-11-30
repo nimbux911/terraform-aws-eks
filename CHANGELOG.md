@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2021-11-30
+
+### Added
+
+- Add max_pods_per_node kubelet argument.
+- README outputs.
+
 ## [2.0.5] - 2021-08-17
 
 ### Fixed
