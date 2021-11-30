@@ -2,7 +2,7 @@ locals {
   eks_worker_userdata = <<USERDATA
 #!/bin/bash
 set -o xtrace
-/etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.main.endpoint}' --b64-cluster-ca '${aws_eks_cluster.main.certificate_authority.0.data}' '${aws_eks_cluster.main.name}'
+/etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.main.endpoint}' --b64-cluster-ca '${aws_eks_cluster.main.certificate_authority.0.data}' '${aws_eks_cluster.main.name}' --use-max-pods false --kubelet-extra-args '--max-pods=${var.max_pods_per_node}'
 USERDATA
 }
 

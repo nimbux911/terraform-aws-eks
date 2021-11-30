@@ -120,6 +120,7 @@ module "eks_main" {
 | instance\_type | Instance type of the EC2 workers. | `string` | `""` | yes |
 | max\_size | Maximum size of the autoscaling for the worker nodes. | `string` | `""` | yes |
 | min\_size | Minimum size of the autoscaling for the worker nodes. | `string` | `""` | yes |
+| max\_pods\_per\_node | Max pods per Kubernetes worker node. | `string` | `"100"` | no |
 | desired\_capacity | Desired size of the autoscaling for the worker nodes. | `string` | `""` | yes |
 | eks\_worker\_ami\_id | AMI ID for the worker nodes | `string` | `""` | yes |
 | target\_group\_arns | ARNs of the target groups for using the worker nodes behind of ELB | `list[string]` | `[]` | no |
