@@ -6,7 +6,6 @@ variable "subnets_ids" {}
 variable "instance_type" {}
 variable "max_size" {}
 variable "min_size" {}
-variable "max_pods_per_node" { default = 100 }
 variable "desired_capacity" {}
 variable "eks_worker_ami_id" {}
 variable "target_group_arns" {
@@ -30,6 +29,10 @@ variable "eks_api_private" {
     default = false
 }
 
+variable "enabled_cluster_log_types" {
+    default = []
+}
+
 variable "add_configmap_roles" {
     default = []
 }
@@ -44,9 +47,17 @@ variable "aws_auth_ignore_changes" {
 
 # ============================== helm releases ============================== #
 
-# ingress-nginx
+# ================== ingress-nginx =================
 variable "helm_ingress_ngnix_enabled" {
     default = false
+}
+
+variable "ingress_http_nodeport" {
+    default = 32080
+}
+
+variable "ingress_https_nodeport" {
+    default = 32443
 }
 
 # cluster-autoscaler
@@ -59,131 +70,208 @@ variable "helm_metrics_server_enabled" {
     default = false
 }
 
-# ================== loki-stack ================= #
-variable "helm_loki_stack_enabled" {
+# cert-manager
+variable "helm_cert_manager_enabled" {
     default = false
 }
 
-# ============ promtail ============ #
-variable "promtail_enabled" {
+# ================== loki-distributed ================= #
+variable "helm_loki_enabled" {
     default = false
 }
 
-# ============ fluent-bit ============ #
-variable "fluent_bit_enabled" {
-    default = false
-}
-
-
-# ============ loki ============ #
-variable "loki_enabled" {
-    default = false
-}
-
-# loki - persistence
-variable "loki_persistence_enabled" {
-    default = false
-}
-
-variable "loki_persistence_storage_class_name" {
-    default = "gp2"
-}
-
-variable "loki_persistence_size" {
-    default = "10Gi"
-}
-
-# loki - ingress
-variable "loki_ingress_enabled" {
-    default = false
-}
-
-variable "loki_ingress_host" {
+# loki - storage
+variable "loki_storage_s3_bucket" {
     default = ""
 }
 
-variable "loki_ingress_path" {
+variable "loki_s3_bucket_region" {
+    default = ""
+}
+
+# loki - ingester
+variable "loki_ingester_replicas" {
+    default = 1
+}
+
+# loki - distributor
+variable "loki_distributor_min_replicas" {
+    default = 1
+}
+
+variable "loki_distributor_max_replicas" {
+    default = 1
+}
+
+# loki - querier
+variable "loki_querier_min_replicas" {
+    default = 1
+}
+
+variable "loki_querier_max_replicas" {
+    default = 1
+}
+
+
+# loki - query-frontend
+variable "loki_query_frontend_min_replicas" {
+    default = 1
+}
+
+variable "loki_query_frontend_max_replicas" {
+    default = 1
+}
+
+# loki - gateway
+
+variable "loki_gateway_enabled" {
+    default = false
+}
+
+variable "loki_gateway_min_replicas" {
+    default = 1
+}
+
+variable "loki_gateway_max_replicas" {
+    default = 1
+}
+
+variable "loki_gateway_ingress_enabled" {
+    default = false
+}
+
+variable "loki_gateway_ingress_host" {
+    default = ""
+}
+
+variable "loki_gateway_ingress_path" {
     default = "/"
 }
 
-# ============ grafana ============ #
-variable "grafana_enabled" {
-    default = false
-}
+# loki - compactor
 
-## grafana - dashboards
-#variable "grafana_cluster_dashboard_enabled" {
-#    default = true
-#}
-
-variable "grafana_datasources" {
-    default = []
-}
-
-# grafana - persistence
-variable "grafana_persistence_enabled" {
-    default = false
-}
-
-variable "grafana_persistence_storage_class_name" {
-    default = "gp2"
-}
-
-variable "grafana_persistence_size" {
-    default = "10Gi"
-}
-
-# grafana - ingress
-variable "grafana_ingress_enabled" {
-    default = false
-}
-
-variable "grafana_ingress_host" {
-    default = ""
-}
-
-# grafana - sidecard
-variable "grafana_sidecard_enabled" {
+variable "loki_compactor_enabled" {
     default = true
 }
 
-# ============ prometheus ============ #
-variable "prometheus_enabled" {
+# loki - index-gateway
+
+variable "loki_index_gateway_enabled" {
+    default = true
+}
+
+variable "loki_index_gateway_replicas" {
+    default = 1
+}
+
+# ================== fluent-bit ================== #
+variable "helm_fluent_bit_enabled" {
     default = false
 }
 
-# prometheus - alertmanager persistence
-variable "prometheus_alertmanager_persistence_enabled" {
+
+# ================== prometheus ================== #
+variable "helm_prometheus_enabled" {
     default = false
 }
 
-variable "prometheus_alertmanager_persistence_storage_class_name" {
-    default = "gp2"
+variable "prometheus_replicas" {
+    default = 1
 }
 
-variable "prometheus_alertmanager_persistence_size" {
-    default = "10Gi"
-}
-
-
-# prometheus - server
-variable "prometheus_server_persistence_enabled" {
-    default = false
-}
-
-variable "prometheus_server_persistence_storage_class_name" {
-    default = "gp2"
-}
-
-variable "prometheus_server_persistence_size" {
-    default = "10Gi"
-}
- 
-# prometheus - ingress
 variable "prometheus_ingress_enabled" {
     default = false
 }
 
 variable "prometheus_ingress_host" {
     default = ""
+}
+
+variable "prometheus_ingress_path" {
+    default = "/"
+}
+
+variable "prometheus_metrics_retention" {
+    default = "14d"
+}
+
+# ================== tempo ================== #
+variable "helm_tempo_enabled" {
+    default = false
+}
+
+# loki - storage
+variable "tempo_storage_s3_bucket" {
+    default = ""
+}
+
+variable "tempo_s3_bucket_region" {
+    default = ""
+}
+
+# tempo - gateway
+variable "tempo_gateway_enabled" {
+    default = false
+}
+
+variable "tempo_gateway_ingress_enabled" {
+    default = false
+}
+
+variable "tempo_gateway_ingress_host" {
+    default = ""
+}
+
+variable "tempo_gateway_ingress_path" {
+    default = "/"
+}
+
+
+
+## ============ grafana ============ #
+#variable "grafana_enabled" {
+#    default = false
+#}
+#
+### grafana - dashboards
+##variable "grafana_cluster_dashboard_enabled" {
+##    default = true
+##}
+#
+#variable "grafana_datasources" {
+#    default = []
+#}
+#
+## grafana - persistence
+#variable "grafana_persistence_enabled" {
+#    default = false
+#}
+#
+#variable "grafana_persistence_storage_class_name" {
+#    default = "gp2"
+#}
+#
+#variable "grafana_persistence_size" {
+#    default = "10Gi"
+#}
+#
+## grafana - ingress
+#variable "grafana_ingress_enabled" {
+#    default = false
+#}
+#
+#variable "grafana_ingress_host" {
+#    default = ""
+#}
+#
+## grafana - sidecard
+#variable "grafana_sidecard_enabled" {
+#    default = true
+#}
+
+# ============================== k8s manifests ============================== #
+
+# open-telemetry
+variable "k8s_opentelemetry_enabled" {
+    default = false
 }
