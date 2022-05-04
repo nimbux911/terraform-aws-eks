@@ -43,7 +43,7 @@ resource "helm_release" "ingress_nginx" {
 
 
   dynamic "set" {
-    for_each = var.helm_prometheus_enabled ? ["do it"] : []
+    for_each = var.helm_prometheus_enabled != null ? ["do it"] : []
     content {
       name  = "controller.metrics.enabled"
       value = true
@@ -250,9 +250,61 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "ingester.replicas"
     value = var.loki_ingester_replicas
-  }  
+  }
+
+  set {
+    name  = "ingester.persistence.enabled"
+    value = true
+  }
+
+  set {
+    name  = "ingester.persistence.storageClass"
+    value = var.loki_ingester_storage_class
+  }
+
+  set {
+    name  = "ingester.persistence.size"
+    value = var.loki_ingester_storage_size
+  }
+
+  dynamic "set" {
+    for_each = var.loki_ingester_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "ingester.resources.requests.cpu"
+      value = var.loki_ingester_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_ingester_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "ingester.resources.requests.memory"
+      value = var.loki_ingester_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_ingester_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "ingester.resources.limits.cpu"
+      value = var.loki_ingester_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_ingester_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "ingester.resources.limits.memory"
+      value = var.loki_ingester_limits_ram
+    }
+  }
 
   # loki - distributor
+
+  set {
+    name  = "distributor.autoscaling.enabled"
+    value = true
+  }  
 
   set {
     name  = "distributor.autoscaling.minReplicas"
@@ -262,9 +314,47 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "distributor.autoscaling.maxReplicas"
     value = var.loki_distributor_max_replicas
-  }  
+  } 
+
+
+  dynamic "set" {
+    for_each = var.loki_distributor_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "distributor.resources.requests.cpu"
+      value = var.loki_distributor_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_distributor_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "distributor.resources.requests.memory"
+      value = var.loki_distributor_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_distributor_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "distributor.resources.limits.cpu"
+      value = var.loki_distributor_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_distributor_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "distributor.resources.limits.memory"
+      value = var.loki_distributor_limits_ram
+    }
+  }
 
   # loki - querier
+
+  set {
+    name  = "querier.autoscaling.enabled"
+    value = true
+  }  
 
   set {
     name  = "querier.autoscaling.minReplicas"
@@ -274,9 +364,46 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "querier.autoscaling.maxReplicas"
     value = var.loki_querier_max_replicas
-  }  
+  }
+
+  dynamic "set" {
+    for_each = var.loki_querier_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "querier.resources.requests.cpu"
+      value = var.loki_querier_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_querier_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "querier.resources.requests.memory"
+      value = var.loki_querier_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_querier_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "querier.resources.limits.cpu"
+      value = var.loki_querier_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_querier_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "querier.resources.limits.memory"
+      value = var.loki_querier_limits_ram
+    }
+  }
 
   # loki - query-frontend
+
+  set {
+    name  = "queryFrontend.autoscaling.enabled"
+    value = true
+  }  
 
   set {
     name  = "queryFrontend.autoscaling.minReplicas"
@@ -288,12 +415,76 @@ resource "helm_release" "loki_distributed" {
     value = var.loki_query_frontend_max_replicas
   }  
 
+  dynamic "set" {
+    for_each = var.loki_query_frontend_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "queryFrontend.resources.requests.cpu"
+      value = var.loki_query_frontend_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_query_frontend_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "queryFrontend.resources.requests.memory"
+      value = var.loki_query_frontend_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_query_frontend_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "queryFrontend.resources.limits.cpu"
+      value = var.loki_query_frontend_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_query_frontend_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "queryFrontend.resources.limits.memory"
+      value = var.loki_query_frontend_limits_ram
+    }
+  }
+
   # loki - compactor
 
   set {
     name  = "compactor.enabled"
     value = var.loki_compactor_enabled
-  }  
+  }
+
+  dynamic "set" {
+    for_each = var.loki_compactor_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "compactor.resources.requests.cpu"
+      value = var.loki_compactor_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_compactor_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "compactor.resources.requests.memory"
+      value = var.loki_compactor_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_compactor_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "compactor.resources.limits.cpu"
+      value = var.loki_compactor_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_compactor_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "compactor.resources.limits.memory"
+      value = var.loki_compactor_limits_ram
+    }
+  }
 
   # loki - index-gateway
 
@@ -307,11 +498,64 @@ resource "helm_release" "loki_distributed" {
     value = var.loki_index_gateway_replicas
   }
 
+  set {
+    name  = "indexGateway.persistence.enabled"
+    value = true
+  }
+
+  set {
+    name  = "indexGateway.persistence.storageClass"
+    value = var.loki_index_gateway_storage_class
+  }
+
+  set {
+    name  = "indexGateway.persistence.size"
+    value = var.loki_index_gateway_storage_size
+  }
+
+
+  dynamic "set" {
+    for_each = var.loki_index_gateway_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "indexGateway.resources.requests.cpu"
+      value = var.loki_index_gateway_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_index_gateway_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "indexGateway.resources.requests.memory"
+      value = var.loki_index_gateway_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_index_gateway_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "indexGateway.resources.limits.cpu"
+      value = var.loki_index_gateway_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_index_gateway_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "indexGateway.resources.limits.memory"
+      value = var.loki_index_gateway_limits_ram
+    }
+  }
+
   # loki - gateway
 
   set {
     name  = "gateway.enabled"
     value = var.loki_gateway_enabled
+  }  
+
+  set {
+    name  = "gateway.autoscaling.enabled"
+    value = true
   }  
 
   set {
@@ -324,6 +568,38 @@ resource "helm_release" "loki_distributed" {
     value = var.loki_gateway_max_replicas
   }  
 
+  dynamic "set" {
+    for_each = var.loki_gateway_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "gateway.resources.requests.cpu"
+      value = var.loki_gateway_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_gateway_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "gateway.resources.requests.memory"
+      value = var.loki_gateway_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_gateway_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "gateway.resources.limits.cpu"
+      value = var.loki_gateway_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.loki_gateway_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "gateway.resources.limits.memory"
+      value = var.loki_gateway_limits_ram
+    }
+  }
+
   set {
     name  = "gateway.ingress.enabled"
     value = var.loki_gateway_ingress_enabled
@@ -335,10 +611,19 @@ resource "helm_release" "loki_distributed" {
   }
 
   set {
-    name  = "loki.ingress.hosts[0].paths[0].path"
+    name  = "gateway.ingress.ingressClassName"
+    value = var.loki_gateway_ingress_class_name
+  }
+
+  set {
+    name  = "gateway.ingress.hosts[0].paths[0].path"
     value = var.loki_gateway_ingress_path
   }
 
+  set {
+    name  = "gateway.ingress.hosts[0].paths[0].pathType"
+    value = var.loki_gateway_ingress_path_type
+  }
 
 }
 
@@ -374,11 +659,42 @@ resource "helm_release" "tempo_distributed" {
   dependency_update = true
   timeout           = 600
 
-  values            = [
-    file("${path.module}/helm-values/tempo-distributed.yaml"),
-  ]
+  set {
+    name  = "queryFrontend.query.enabled"
+    value = false
+  }
+
+  set {
+    name  = "memcached.enabled"
+    value = false
+  }
+
+  set {
+    name  = "search.enabled"
+    value = true
+  }
+
+  set {
+    name  = "server.logLevel"
+    value = "info"
+  }
+
+  set {
+    name  = "traces.otlp.http"
+    value = true
+  }
+
+  set {
+    name  = "traces.otlp.grpc"
+    value = false
+  }
 
   # tempo - storage
+  set {
+    name  = "storage.trace.backend"
+    value = "s3"
+  }  
+
   set {
     name  = "storage.trace.s3.bucket"
     value = var.tempo_storage_s3_bucket
@@ -415,6 +731,16 @@ resource "helm_release" "tempo_distributed" {
   set {
     name  = "gateway.ingress.hosts[0].paths[0].path"
     value = var.tempo_gateway_ingress_path
+  }
+
+  set {
+    name  = "gateway.ingress.hosts[0].paths[0].pathType"
+    value = var.prometheus_ingress_path_type
+  }
+
+  set {
+    name  = "gateway.ingress.ingressClassName"
+    value = var.prometheus_ingress_class_name
   }
 
 }

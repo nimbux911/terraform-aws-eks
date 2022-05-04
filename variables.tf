@@ -98,9 +98,43 @@ variable "loki_ingester_replicas" {
     default = 1
 }
 
+variable "loki_ingester_storage_class" {
+    default = "gp2"
+}
+
+variable "loki_ingester_storage_size" {
+    default = "10Gi"
+}
+
+variable "loki_ingester_requests_cpu" {
+    default = null
+}
+variable "loki_ingester_requests_ram" {
+    default = null
+}
+variable "loki_ingester_limits_cpu" {
+    default = null
+}
+variable "loki_ingester_limits_ram" {
+    default = null
+}
+
 # loki - distributor
 variable "loki_distributor_min_replicas" {
     default = 1
+}
+
+variable "loki_distributor_requests_cpu" {
+    default = null
+}
+variable "loki_distributor_requests_ram" {
+    default = null
+}
+variable "loki_distributor_limits_cpu" {
+    default = null
+}
+variable "loki_distributor_limits_ram" {
+    default = null
 }
 
 variable "loki_distributor_max_replicas" {
@@ -116,6 +150,18 @@ variable "loki_querier_max_replicas" {
     default = 1
 }
 
+variable "loki_querier_requests_cpu" {
+    default = null
+}
+variable "loki_querier_requests_ram" {
+    default = null
+}
+variable "loki_querier_limits_cpu" {
+    default = null
+}
+variable "loki_querier_limits_ram" {
+    default = null
+}
 
 # loki - query-frontend
 variable "loki_query_frontend_min_replicas" {
@@ -124,6 +170,19 @@ variable "loki_query_frontend_min_replicas" {
 
 variable "loki_query_frontend_max_replicas" {
     default = 1
+}
+
+variable "loki_query_frontend_requests_cpu" {
+    default = null
+}
+variable "loki_query_frontend_requests_ram" {
+    default = null
+}
+variable "loki_query_frontend_limits_cpu" {
+    default = null
+}
+variable "loki_query_frontend_limits_ram" {
+    default = null
 }
 
 # loki - gateway
@@ -152,10 +211,44 @@ variable "loki_gateway_ingress_path" {
     default = "/"
 }
 
+variable "loki_gateway_ingress_path_type" {
+    default = "Prefix"
+}
+
+variable "loki_gateway_ingress_class_name" {
+    default = "nginx"
+}
+
+variable "loki_gateway_requests_cpu" {
+    default = null
+}
+variable "loki_gateway_requests_ram" {
+    default = null
+}
+variable "loki_gateway_limits_cpu" {
+    default = null
+}
+variable "loki_gateway_limits_ram" {
+    default = null
+}
+
 # loki - compactor
 
 variable "loki_compactor_enabled" {
     default = true
+}
+
+variable "loki_compactor_requests_cpu" {
+    default = null
+}
+variable "loki_compactor_requests_ram" {
+    default = null
+}
+variable "loki_compactor_limits_cpu" {
+    default = null
+}
+variable "loki_compactor_limits_ram" {
+    default = null
 }
 
 # loki - index-gateway
@@ -166,6 +259,27 @@ variable "loki_index_gateway_enabled" {
 
 variable "loki_index_gateway_replicas" {
     default = 1
+}
+
+variable "loki_index_gateway_storage_class" {
+    default = "gp2"
+}
+
+variable "loki_index_gateway_storage_size" {
+    default = "10Gi"
+}
+
+variable "loki_index_gateway_requests_cpu" {
+    default = null
+}
+variable "loki_index_gateway_requests_ram" {
+    default = null
+}
+variable "loki_index_gateway_limits_cpu" {
+    default = null
+}
+variable "loki_index_gateway_limits_ram" {
+    default = null
 }
 
 # ================== fluent-bit ================== #
@@ -263,7 +377,13 @@ variable "tempo_gateway_ingress_path" {
     default = "/"
 }
 
+variable "tempo_ingress_path_type" {
+    default = "Prefix"
+}
 
+variable "tempo_ingress_class_name" {
+    default = "nginx"
+}
 
 ## ============ grafana ============ #
 #variable "grafana_enabled" {
