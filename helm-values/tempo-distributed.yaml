@@ -1,0 +1,25 @@
+gateway:
+  ingress:
+    tls: []
+
+queryFrontend:
+  query:
+    enabled: false
+
+memcached:
+  enabled: false
+
+search:
+  enabled: true
+
+server:
+  logLevel: info
+
+traces:
+  otlp:
+    http: true
+    grpc: false
+
+storage:
+  trace:
+    backend: s3

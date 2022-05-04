@@ -1,5 +1,6 @@
 #locals {
 #
+#
 #  grafana_datasources_p1 = <<-EOF
 #grafana:
 #  datasources:
@@ -625,6 +626,7 @@ resource "helm_release" "loki_distributed" {
     value = var.loki_gateway_ingress_path_type
   }
 
+
 }
 
 # ================== fluent-bit ================== #
@@ -659,41 +661,9 @@ resource "helm_release" "tempo_distributed" {
   dependency_update = true
   timeout           = 600
 
-  set {
-    name  = "queryFrontend.query.enabled"
-    value = false
-  }
-
-  set {
-    name  = "memcached.enabled"
-    value = false
-  }
-
-  set {
-    name  = "search.enabled"
-    value = true
-  }
-
-  set {
-    name  = "server.logLevel"
-    value = "info"
-  }
-
-  set {
-    name  = "traces.otlp.http"
-    value = true
-  }
-
-  set {
-    name  = "traces.otlp.grpc"
-    value = false
-  }
-
-  # tempo - storage
-  set {
-    name  = "storage.trace.backend"
-    value = "s3"
-  }  
+  values            = [
+    file("${path.module}/helm-values/tempo-distributed.yaml")
+  ]
 
   set {
     name  = "storage.trace.s3.bucket"
@@ -735,12 +705,13 @@ resource "helm_release" "tempo_distributed" {
 
   set {
     name  = "gateway.ingress.hosts[0].paths[0].pathType"
-    value = var.prometheus_ingress_path_type
+    value = var.tempo_ingress_path_type
   }
 
   set {
     name  = "gateway.ingress.ingressClassName"
-    value = var.prometheus_ingress_class_name
+    value = var.tempo_ingress_class_name
   }
+
 
 }

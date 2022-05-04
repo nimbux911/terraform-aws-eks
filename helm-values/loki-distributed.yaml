@@ -117,3 +117,7 @@ indexGateway:
   extraVolumeMounts:
     - name: data
       mountPath: /data/loki
+
+gateway:
+  ingress:
+    tls: []
