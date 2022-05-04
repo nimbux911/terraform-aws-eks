@@ -1672,9 +1672,9 @@ spec:
         specReplicasPath: .spec.replicas
         statusReplicasPath: .status.scale.replicas
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
+#status:
+#  acceptedNames:
+#    kind: ""
+#    plural: ""
+#  conditions: []
+#  storedVersions: []

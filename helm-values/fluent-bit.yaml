@@ -35,14 +35,7 @@ config:
         Merge_Log On
         K8S-Logging.Exclude Off
         K8S-Logging.Parser Off
-
-#    [FILTER]
-#        Name parser
-#        Match kube.*
-#        Key_Name log
-#        Parser tempo
-#        Reserve_Data True
-#        Preserve_Key True        
+ 
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
     [OUTPUT]
@@ -65,15 +58,7 @@ config:
         Name        docker
         Format      json
         Time_Key    time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L   
-
-#    [PARSER]
-#        Name        tempo
-#        Format      regex
-#        Regex       (?<span_id>(?<=span_id\=)([^\s]+)(?=\ ))
-#        Time_Key    time
-#        Time_Format %Y-%m-%dT%H:%M:%S.%L
-       
+        Time_Format %Y-%m-%dT%H:%M:%S.%L          
 
   # This allows adding more files with arbitary filenames to /fluent-bit/etc by providing key/value pairs.
   # The key becomes the filename, the value becomes the file content.

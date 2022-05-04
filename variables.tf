@@ -17,6 +17,9 @@ variable "health_check_type" {
     default = "EC2"
 }
 
+variable "eks_worker_max_pods_enabled" {
+    default = false
+}
 
 variable "asg_tags" {
   default = []
@@ -180,6 +183,22 @@ variable "prometheus_replicas" {
     default = 1
 }
 
+variable "prometheus_requests_cpu" {
+    default = "200m"
+}
+
+variable "prometheus_requests_ram" {
+    default = "1024Mi"
+}
+
+variable "prometheus_limits_cpu" {
+    default = "500m"
+}
+
+variable "prometheus_limits_ram" {
+    default = "2048Mi"
+}
+
 variable "prometheus_ingress_enabled" {
     default = false
 }
@@ -191,6 +210,23 @@ variable "prometheus_ingress_host" {
 variable "prometheus_ingress_path" {
     default = "/"
 }
+
+variable "prometheus_ingress_path_type" {
+    default = "Prefix"
+}
+
+variable "prometheus_ingress_class_name" {
+    default = "nginx"
+}
+
+variable "prometheus_storage_class_name" {
+    default = "gp2"
+}
+
+variable "prometheus_storage_size" {
+    default = "20Gi"
+}
+
 
 variable "prometheus_metrics_retention" {
     default = "14d"

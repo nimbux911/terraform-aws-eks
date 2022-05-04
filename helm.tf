@@ -110,7 +110,7 @@ resource "helm_release" "metrics_server" {
 }
 
 resource "helm_release" "cert_manager" {
-  count      = var.helm_cert_manager_enabled ? 1 : 0
+  count      = var.helm_cert_manager_enabled || var.k8s_opentelemetry_enabled ? 1 : 0
   name       = "cert-manager"
   namespace  = "cert-manager"
   repository = "https://charts.jetstack.io"
@@ -137,14 +137,37 @@ resource "helm_release" "prometheus_stack" {
   chart             = "kube-prometheus-stack"
   version           = "35.0.3"
   dependency_update = true
+  timeout           = 600
 
-  values            = [
-    file("${path.module}/helm-values/kube-prometheus-stack.yaml"),
-  ]
+  set {
+    name = "grafana.enabled"
+    value = false
+  }
 
   set {
     name  = "prometheus.prometheusSpec.replicas"
     value = var.prometheus_replicas
+  }  
+
+
+  set {
+    name  = "prometheus.prometheusSpec.resources.requests.cpu"
+    value = var.prometheus_requests_cpu
+  }  
+
+  set {
+    name  = "prometheus.prometheusSpec.resources.requests.memory"
+    value = var.prometheus_requests_ram
+  }  
+
+  set {
+    name  = "prometheus.prometheusSpec.resources.limits.cpu"
+    value = var.prometheus_limits_cpu
+  }  
+
+  set {
+    name  = "prometheus.prometheusSpec.resources.limits.memory"
+    value = var.prometheus_limits_ram
   }  
 
   set {
@@ -167,6 +190,34 @@ resource "helm_release" "prometheus_stack" {
     value = var.prometheus_ingress_path
   }  
 
+  set {
+    name  = "prometheus.ingress.pathType"
+    value = var.prometheus_ingress_path_type
+  }  
+
+  set {
+    name  = "prometheus.ingress.ingressClassName"
+    value = var.prometheus_ingress_class_name
+  }  
+
+  set {
+    name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName"
+    value = var.prometheus_storage_class_name
+  }  
+
+
+  set {
+    name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage"
+    value = var.prometheus_storage_size
+  }  
+
+
+  set {
+    name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0]"
+    value = "ReadWriteOnce"
+  }  
+
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
@@ -182,6 +233,7 @@ resource "helm_release" "loki_distributed" {
   chart             = "loki-distributed"
   version           = "0.48.3"
   dependency_update = true
+  timeout           = 600
 
   values            = [
     file("${path.module}/helm-values/loki-distributed.yaml")
@@ -320,6 +372,7 @@ resource "helm_release" "tempo_distributed" {
   chart             = "tempo-distributed"
   version           = "0.17.1"
   dependency_update = true
+  timeout           = 600
 
   values            = [
     file("${path.module}/helm-values/tempo-distributed.yaml"),
