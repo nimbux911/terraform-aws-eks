@@ -92,7 +92,61 @@ resource "aws_iam_role_policy" "eks_worker_cloudwatch" {
   }
   EOF
 }
- 
+
+resource "aws_iam_role_policy" "eks_worker_s3_loki" {
+  count = var.helm_loki_enabled ? 1 : 0
+  name = "loki_s3_permissions"
+  role = aws_iam_role.eks_worker.id
+
+  policy = <<-EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": [
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+          "arn:aws:s3:::${var.loki_storage_s3_bucket}",
+          "arn:aws:s3:::${var.loki_storage_s3_bucket}/*"
+          ]
+      }
+    ]
+  }
+  EOF
+}
+
+resource "aws_iam_role_policy" "eks_worker_s3_tempo" {
+  count = var.helm_tempo_enabled ? 1 : 0
+  name = "tempo_s3_permissions"
+  role = aws_iam_role.eks_worker.id
+
+  policy = <<-EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": [
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+          "arn:aws:s3:::${var.tempo_storage_s3_bucket}",
+          "arn:aws:s3:::${var.tempo_storage_s3_bucket}/*"
+          ]
+      }
+    ]
+  }
+  EOF
+}
+
 resource "aws_iam_instance_profile" "eks_worker" {
   name = "${var.environment}-eks-worker"
   role = aws_iam_role.eks_worker.name
