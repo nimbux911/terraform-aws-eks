@@ -200,7 +200,7 @@ variable "helm_tempo_enabled" {
     default = false
 }
 
-# loki - storage
+# tempo - storage
 variable "tempo_storage_s3_bucket" {
     default = ""
 }
