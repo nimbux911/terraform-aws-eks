@@ -93,6 +93,14 @@ variable "loki_s3_bucket_region" {
     default = ""
 }
 
+variable "loki_logs_retention_enabled" {
+    default = false
+}
+
+variable "loki_logs_retention" {
+    default = "744h"
+}
+
 # loki - ingester
 variable "loki_ingester_replicas" {
     default = 1
@@ -298,19 +306,19 @@ variable "prometheus_replicas" {
 }
 
 variable "prometheus_requests_cpu" {
-    default = "200m"
+    default = null
 }
 
 variable "prometheus_requests_ram" {
-    default = "1024Mi"
+    default = null
 }
 
 variable "prometheus_limits_cpu" {
-    default = "500m"
+    default = null
 }
 
 variable "prometheus_limits_ram" {
-    default = "2048Mi"
+    default = null
 }
 
 variable "prometheus_ingress_enabled" {
@@ -351,6 +359,40 @@ variable "helm_tempo_enabled" {
     default = false
 }
 
+# tempo - compactor
+variable "tempo_compactor_requests_cpu" {
+    default = null
+}
+
+variable "tempo_compactor_requests_ram" {
+    default = null
+}
+
+variable "tempo_compactor_limits_cpu" {
+    default = null
+}
+
+variable "tempo_compactor_limits_ram" {
+    default = null
+}
+
+# tempo - distributor
+variable "tempo_distributor_requests_cpu" {
+    default = null
+}
+
+variable "tempo_distributor_requests_ram" {
+    default = null
+}
+
+variable "tempo_distributor_limits_cpu" {
+    default = null
+}
+
+variable "tempo_distributor_limits_ram" {
+    default = null
+}
+
 # tempo - storage
 variable "tempo_storage_s3_bucket" {
     default = ""
@@ -360,9 +402,76 @@ variable "tempo_s3_bucket_region" {
     default = ""
 }
 
+# tempo - ingester
+variable "tempo_ingester_requests_cpu" {
+    default = null
+}
+
+variable "tempo_ingester_requests_ram" {
+    default = null
+}
+
+variable "tempo_ingester_limits_cpu" {
+    default = null
+}
+
+variable "tempo_ingester_limits_ram" {
+    default = null
+}
+
+# tempo - querier
+variable "tempo_querier_requests_cpu" {
+    default = null
+}
+
+variable "tempo_querier_requests_ram" {
+    default = null
+}
+
+variable "tempo_querier_limits_cpu" {
+    default = null
+}
+
+variable "tempo_querier_limits_ram" {
+    default = null
+}
+
+# tempo - query-frontend
+variable "tempo_query_frontend_requests_cpu" {
+    default = null
+}
+
+variable "tempo_query_frontend_requests_ram" {
+    default = null
+}
+
+variable "tempo_query_frontend_limits_cpu" {
+    default = null
+}
+
+variable "tempo_query_frontend_limits_ram" {
+    default = null
+}
+
 # tempo - gateway
 variable "tempo_gateway_enabled" {
     default = false
+}
+
+variable "tempo_gateway_requests_cpu" {
+    default = null
+}
+
+variable "tempo_gateway_requests_ram" {
+    default = null
+}
+
+variable "tempo_gateway_limits_cpu" {
+    default = null
+}
+
+variable "tempo_gateway_limits_ram" {
+    default = null
 }
 
 variable "tempo_gateway_ingress_enabled" {

@@ -22,12 +22,6 @@ loki:
       max_transfer_retries: 0
       wal:
         dir: /data/loki/wal
-    limits_config:
-      enforce_metric_name: false
-      reject_old_samples: true
-      reject_old_samples_max_age: 168h
-      max_cache_freshness_per_query: 10m
-      split_queries_by_interval: 15m
     {{- if .Values.loki.schemaConfig}}
     schema_config:
     {{- toYaml .Values.loki.schemaConfig | nindent 2}}
@@ -59,12 +53,24 @@ loki:
       log_queries_longer_than: 5s
       compress_responses: true
       tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
-    compactor:
-      shared_store: aws
-      working_directory: /data/loki/boltdb-shipper-compactor
     table_manager:
       retention_deletes_enabled: false
       retention_period: 0s      
+
+  structuredConfig:
+    compactor:
+      working_directory: /data/loki/boltdb-shipper-compactor
+      shared_store: aws
+      compaction_interval: 10m
+      retention_delete_delay: 2h
+      retention_delete_worker_count: 150
+
+    limits_config:
+      enforce_metric_name: false
+      reject_old_samples: true
+      reject_old_samples_max_age: 168h
+      max_cache_freshness_per_query: 10m
+      split_queries_by_interval: 15m
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:

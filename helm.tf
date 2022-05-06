@@ -150,26 +150,37 @@ resource "helm_release" "prometheus_stack" {
     value = var.prometheus_replicas
   }  
 
+  dynamic "set" {
+    for_each = var.prometheus_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "prometheus.prometheusSpec.resources.requests.cpu"
+      value = var.prometheus_requests_cpu
+    }
+  }
 
-  set {
-    name  = "prometheus.prometheusSpec.resources.requests.cpu"
-    value = var.prometheus_requests_cpu
-  }  
+  dynamic "set" {
+    for_each = var.prometheus_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "prometheus.prometheusSpec.resources.requests.memory"
+      value = var.prometheus_requests_ram
+    }
+  }
 
-  set {
-    name  = "prometheus.prometheusSpec.resources.requests.memory"
-    value = var.prometheus_requests_ram
-  }  
+  dynamic "set" {
+    for_each = var.prometheus_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "prometheus.prometheusSpec.resources.limits.cpu"
+      value = var.prometheus_limits_cpu
+    }
+  }
 
-  set {
-    name  = "prometheus.prometheusSpec.resources.limits.cpu"
-    value = var.prometheus_limits_cpu
-  }  
-
-  set {
-    name  = "prometheus.prometheusSpec.resources.limits.memory"
-    value = var.prometheus_limits_ram
-  }  
+  dynamic "set" {
+    for_each = var.prometheus_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "prometheus.prometheusSpec.resources.limits.memory"
+      value = var.prometheus_limits_ram
+    }
+  }
 
   set {
     name  = "prometheus.prometheusSpec.retention"
@@ -244,7 +255,17 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "loki.storageConfig.aws.s3"
     value = "s3://${var.loki_s3_bucket_region}/${var.loki_storage_s3_bucket}"
-  }  
+  } 
+
+  set {
+    name  = "loki.structuredConfig.compactor.retention_enabled"
+    value = var.loki_logs_retention_enabled
+  }
+
+  set {
+    name  = "loki.structuredConfig.limits_config.retention_period"
+    value = var.loki_logs_retention
+  } 
 
   # loki - ingester
 
@@ -713,5 +734,206 @@ resource "helm_release" "tempo_distributed" {
     value = var.tempo_ingress_class_name
   }
 
+  dynamic "set" {
+    for_each = var.tempo_gateway_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "gateway.resources.requests.cpu"
+      value = var.tempo_gateway_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_gateway_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "gateway.resources.requests.memory"
+      value = var.tempo_gateway_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_gateway_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "gateway.resources.limits.cpu"
+      value = var.tempo_gateway_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_gateway_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "gateway.resources.limits.memory"
+      value = var.tempo_gateway_limits_ram
+    }
+  }
+
+  # tempo - compactor
+
+  dynamic "set" {
+    for_each = var.tempo_compactor_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "compactor.resources.requests.cpu"
+      value = var.tempo_compactor_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_compactor_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "compactor.resources.requests.memory"
+      value = var.tempo_compactor_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_compactor_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "compactor.resources.limits.cpu"
+      value = var.tempo_compactor_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_compactor_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "compactor.resources.limits.memory"
+      value = var.tempo_compactor_limits_ram
+    }
+  }  
+
+  # tempo - distributor
+
+  dynamic "set" {
+    for_each = var.tempo_distributor_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "distributor.resources.requests.cpu"
+      value = var.tempo_distributor_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_distributor_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "distributor.resources.requests.memory"
+      value = var.tempo_distributor_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_distributor_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "distributor.resources.limits.cpu"
+      value = var.tempo_distributor_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_distributor_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "distributor.resources.limits.memory"
+      value = var.tempo_distributor_limits_ram
+    }
+  }
+
+  # tempo - ingester
+
+  dynamic "set" {
+    for_each = var.tempo_ingester_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "ingester.resources.requests.cpu"
+      value = var.tempo_ingester_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_ingester_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "ingester.resources.requests.memory"
+      value = var.tempo_ingester_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_ingester_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "ingester.resources.limits.cpu"
+      value = var.tempo_ingester_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_ingester_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "ingester.resources.limits.memory"
+      value = var.tempo_ingester_limits_ram
+    }
+  }  
+
+  # tempo - querier
+
+  dynamic "set" {
+    for_each = var.tempo_querier_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "querier.resources.requests.cpu"
+      value = var.tempo_querier_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_querier_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "querier.resources.requests.memory"
+      value = var.tempo_querier_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_querier_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "querier.resources.limits.cpu"
+      value = var.tempo_querier_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_querier_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "querier.resources.limits.memory"
+      value = var.tempo_querier_limits_ram
+    }
+  }  
+
+  # tempo - query-frontend
+
+  dynamic "set" {
+    for_each = var.tempo_query_frontend_requests_cpu != null ? ["do it"] : []
+    content {
+      name  = "queryFrontend.resources.requests.cpu"
+      value = var.tempo_query_frontend_requests_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_query_frontend_requests_ram != null ? ["do it"] : []
+    content {
+      name  = "queryFrontend.resources.requests.memory"
+      value = var.tempo_query_frontend_requests_ram
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_query_frontend_limits_cpu != null ? ["do it"] : []
+    content {
+      name  = "queryFrontend.resources.limits.cpu"
+      value = var.tempo_query_frontend_limits_cpu
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.tempo_query_frontend_limits_ram != null ? ["do it"] : []
+    content {
+      name  = "queryFrontend.resources.limits.memory"
+      value = var.tempo_query_frontend_limits_ram
+    }
+  }  
 
 }
