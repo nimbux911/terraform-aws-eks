@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2022-05-06
+
+### Added
+- aws-iam-authenticator is not needed anymore
+- loki-stack has been replaced for loki-distributed, kube-stack-prometheus and fluent-bit helm charts
+- tempo-distributed helm chart
+- cert-manager helm chart
+- opentelemetry manifests for auto-instrumentation
+- ingress-nginx, metrics-server and cluster-autoscaler helm charts updated to latest version
+
 ## [2.1.0] - 2021-11-30
 
 ### Added

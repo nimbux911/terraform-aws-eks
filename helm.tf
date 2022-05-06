@@ -1,31 +1,3 @@
-#locals {
-#
-#
-#  grafana_datasources_p1 = <<-EOF
-#grafana:
-#  datasources:
-#    datasources.yaml:
-#      apiVersion: 1
-#      datasources: 
-#EOF
-#
-#  grafana_datasources_p2 = tolist(
-#    [ for datasource in var.grafana_datasources : 
-#      {
-#        name = datasource.name,
-#        type = lower(datasource.type),
-#        access = "proxy",
-#        url  = datasource.url
-#      }
-#    ]
-#  )
-#
-#}
-#
-#resource "local_file" "grafana_values" {
-#    content  = join("\n        ", [local.grafana_datasources_p1, indent(8, yamlencode(local.grafana_datasources_p2))])
-#    filename = "${path.module}/helm-values/grafana-values.yaml"
-#}
 
 # ========================= core charts ========================= #
 

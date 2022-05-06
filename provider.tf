@@ -1,6 +1,3 @@
-#data "external" "aws_iam_authenticator" {
-#  program = ["sh", "-c", "aws-iam-authenticator token -i ${aws_eks_cluster.main.name} | jq -r -c .status"]
-#}
  
 provider "kubernetes" {
   host                      = aws_eks_cluster.main.endpoint

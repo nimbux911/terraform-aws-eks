@@ -494,47 +494,6 @@ variable "tempo_ingress_class_name" {
     default = "nginx"
 }
 
-## ============ grafana ============ #
-#variable "grafana_enabled" {
-#    default = false
-#}
-#
-### grafana - dashboards
-##variable "grafana_cluster_dashboard_enabled" {
-##    default = true
-##}
-#
-#variable "grafana_datasources" {
-#    default = []
-#}
-#
-## grafana - persistence
-#variable "grafana_persistence_enabled" {
-#    default = false
-#}
-#
-#variable "grafana_persistence_storage_class_name" {
-#    default = "gp2"
-#}
-#
-#variable "grafana_persistence_size" {
-#    default = "10Gi"
-#}
-#
-## grafana - ingress
-#variable "grafana_ingress_enabled" {
-#    default = false
-#}
-#
-#variable "grafana_ingress_host" {
-#    default = ""
-#}
-#
-## grafana - sidecard
-#variable "grafana_sidecard_enabled" {
-#    default = true
-#}
-
 # ============================== k8s manifests ============================== #
 
 # open-telemetry
