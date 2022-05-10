@@ -117,13 +117,13 @@ variable "loki_ingester_storage_size" {
 variable "loki_ingester_requests_cpu" {
     default = null
 }
-variable "loki_ingester_requests_ram" {
+variable "loki_ingester_requests_memory" {
     default = null
 }
 variable "loki_ingester_limits_cpu" {
     default = null
 }
-variable "loki_ingester_limits_ram" {
+variable "loki_ingester_limits_memory" {
     default = null
 }
 
@@ -135,13 +135,13 @@ variable "loki_distributor_min_replicas" {
 variable "loki_distributor_requests_cpu" {
     default = null
 }
-variable "loki_distributor_requests_ram" {
+variable "loki_distributor_requests_memory" {
     default = null
 }
 variable "loki_distributor_limits_cpu" {
     default = null
 }
-variable "loki_distributor_limits_ram" {
+variable "loki_distributor_limits_memory" {
     default = null
 }
 
@@ -161,13 +161,13 @@ variable "loki_querier_max_replicas" {
 variable "loki_querier_requests_cpu" {
     default = null
 }
-variable "loki_querier_requests_ram" {
+variable "loki_querier_requests_memory" {
     default = null
 }
 variable "loki_querier_limits_cpu" {
     default = null
 }
-variable "loki_querier_limits_ram" {
+variable "loki_querier_limits_memory" {
     default = null
 }
 
@@ -183,13 +183,13 @@ variable "loki_query_frontend_max_replicas" {
 variable "loki_query_frontend_requests_cpu" {
     default = null
 }
-variable "loki_query_frontend_requests_ram" {
+variable "loki_query_frontend_requests_memory" {
     default = null
 }
 variable "loki_query_frontend_limits_cpu" {
     default = null
 }
-variable "loki_query_frontend_limits_ram" {
+variable "loki_query_frontend_limits_memory" {
     default = null
 }
 
@@ -230,13 +230,13 @@ variable "loki_gateway_ingress_class_name" {
 variable "loki_gateway_requests_cpu" {
     default = null
 }
-variable "loki_gateway_requests_ram" {
+variable "loki_gateway_requests_memory" {
     default = null
 }
 variable "loki_gateway_limits_cpu" {
     default = null
 }
-variable "loki_gateway_limits_ram" {
+variable "loki_gateway_limits_memory" {
     default = null
 }
 
@@ -249,13 +249,13 @@ variable "loki_compactor_enabled" {
 variable "loki_compactor_requests_cpu" {
     default = null
 }
-variable "loki_compactor_requests_ram" {
+variable "loki_compactor_requests_memory" {
     default = null
 }
 variable "loki_compactor_limits_cpu" {
     default = null
 }
-variable "loki_compactor_limits_ram" {
+variable "loki_compactor_limits_memory" {
     default = null
 }
 
@@ -280,13 +280,13 @@ variable "loki_index_gateway_storage_size" {
 variable "loki_index_gateway_requests_cpu" {
     default = null
 }
-variable "loki_index_gateway_requests_ram" {
+variable "loki_index_gateway_requests_memory" {
     default = null
 }
 variable "loki_index_gateway_limits_cpu" {
     default = null
 }
-variable "loki_index_gateway_limits_ram" {
+variable "loki_index_gateway_limits_memory" {
     default = null
 }
 
@@ -309,7 +309,7 @@ variable "prometheus_requests_cpu" {
     default = null
 }
 
-variable "prometheus_requests_ram" {
+variable "prometheus_requests_memory" {
     default = null
 }
 
@@ -317,7 +317,7 @@ variable "prometheus_limits_cpu" {
     default = null
 }
 
-variable "prometheus_limits_ram" {
+variable "prometheus_limits_memory" {
     default = null
 }
 
@@ -364,7 +364,7 @@ variable "tempo_compactor_requests_cpu" {
     default = null
 }
 
-variable "tempo_compactor_requests_ram" {
+variable "tempo_compactor_requests_memory" {
     default = null
 }
 
@@ -372,7 +372,7 @@ variable "tempo_compactor_limits_cpu" {
     default = null
 }
 
-variable "tempo_compactor_limits_ram" {
+variable "tempo_compactor_limits_memory" {
     default = null
 }
 
@@ -381,7 +381,7 @@ variable "tempo_distributor_requests_cpu" {
     default = null
 }
 
-variable "tempo_distributor_requests_ram" {
+variable "tempo_distributor_requests_memory" {
     default = null
 }
 
@@ -389,7 +389,7 @@ variable "tempo_distributor_limits_cpu" {
     default = null
 }
 
-variable "tempo_distributor_limits_ram" {
+variable "tempo_distributor_limits_memory" {
     default = null
 }
 
@@ -407,7 +407,7 @@ variable "tempo_ingester_requests_cpu" {
     default = null
 }
 
-variable "tempo_ingester_requests_ram" {
+variable "tempo_ingester_requests_memory" {
     default = null
 }
 
@@ -415,7 +415,7 @@ variable "tempo_ingester_limits_cpu" {
     default = null
 }
 
-variable "tempo_ingester_limits_ram" {
+variable "tempo_ingester_limits_memory" {
     default = null
 }
 
@@ -424,7 +424,7 @@ variable "tempo_querier_requests_cpu" {
     default = null
 }
 
-variable "tempo_querier_requests_ram" {
+variable "tempo_querier_requests_memory" {
     default = null
 }
 
@@ -432,7 +432,7 @@ variable "tempo_querier_limits_cpu" {
     default = null
 }
 
-variable "tempo_querier_limits_ram" {
+variable "tempo_querier_limits_memory" {
     default = null
 }
 
@@ -441,7 +441,7 @@ variable "tempo_query_frontend_requests_cpu" {
     default = null
 }
 
-variable "tempo_query_frontend_requests_ram" {
+variable "tempo_query_frontend_requests_memory" {
     default = null
 }
 
@@ -449,7 +449,7 @@ variable "tempo_query_frontend_limits_cpu" {
     default = null
 }
 
-variable "tempo_query_frontend_limits_ram" {
+variable "tempo_query_frontend_limits_memory" {
     default = null
 }
 
@@ -462,7 +462,7 @@ variable "tempo_gateway_requests_cpu" {
     default = null
 }
 
-variable "tempo_gateway_requests_ram" {
+variable "tempo_gateway_requests_memory" {
     default = null
 }
 
@@ -470,7 +470,7 @@ variable "tempo_gateway_limits_cpu" {
     default = null
 }
 
-variable "tempo_gateway_limits_ram" {
+variable "tempo_gateway_limits_memory" {
     default = null
 }
 

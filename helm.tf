@@ -131,10 +131,10 @@ resource "helm_release" "prometheus_stack" {
   }
 
   dynamic "set" {
-    for_each = var.prometheus_requests_ram != null ? ["do it"] : []
+    for_each = var.prometheus_requests_memory != null ? ["do it"] : []
     content {
       name  = "prometheus.prometheusSpec.resources.requests.memory"
-      value = var.prometheus_requests_ram
+      value = var.prometheus_requests_memory
     }
   }
 
@@ -147,10 +147,10 @@ resource "helm_release" "prometheus_stack" {
   }
 
   dynamic "set" {
-    for_each = var.prometheus_limits_ram != null ? ["do it"] : []
+    for_each = var.prometheus_limits_memory != null ? ["do it"] : []
     content {
       name  = "prometheus.prometheusSpec.resources.limits.memory"
-      value = var.prometheus_limits_ram
+      value = var.prometheus_limits_memory
     }
   }
 
@@ -270,10 +270,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_ingester_requests_ram != null ? ["do it"] : []
+    for_each = var.loki_ingester_requests_memory != null ? ["do it"] : []
     content {
       name  = "ingester.resources.requests.memory"
-      value = var.loki_ingester_requests_ram
+      value = var.loki_ingester_requests_memory
     }
   }
 
@@ -286,10 +286,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_ingester_limits_ram != null ? ["do it"] : []
+    for_each = var.loki_ingester_limits_memory != null ? ["do it"] : []
     content {
       name  = "ingester.resources.limits.memory"
-      value = var.loki_ingester_limits_ram
+      value = var.loki_ingester_limits_memory
     }
   }
 
@@ -320,10 +320,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_distributor_requests_ram != null ? ["do it"] : []
+    for_each = var.loki_distributor_requests_memory != null ? ["do it"] : []
     content {
       name  = "distributor.resources.requests.memory"
-      value = var.loki_distributor_requests_ram
+      value = var.loki_distributor_requests_memory
     }
   }
 
@@ -336,10 +336,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_distributor_limits_ram != null ? ["do it"] : []
+    for_each = var.loki_distributor_limits_memory != null ? ["do it"] : []
     content {
       name  = "distributor.resources.limits.memory"
-      value = var.loki_distributor_limits_ram
+      value = var.loki_distributor_limits_memory
     }
   }
 
@@ -369,10 +369,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_querier_requests_ram != null ? ["do it"] : []
+    for_each = var.loki_querier_requests_memory != null ? ["do it"] : []
     content {
       name  = "querier.resources.requests.memory"
-      value = var.loki_querier_requests_ram
+      value = var.loki_querier_requests_memory
     }
   }
 
@@ -385,10 +385,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_querier_limits_ram != null ? ["do it"] : []
+    for_each = var.loki_querier_limits_memory != null ? ["do it"] : []
     content {
       name  = "querier.resources.limits.memory"
-      value = var.loki_querier_limits_ram
+      value = var.loki_querier_limits_memory
     }
   }
 
@@ -418,10 +418,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_query_frontend_requests_ram != null ? ["do it"] : []
+    for_each = var.loki_query_frontend_requests_memory != null ? ["do it"] : []
     content {
       name  = "queryFrontend.resources.requests.memory"
-      value = var.loki_query_frontend_requests_ram
+      value = var.loki_query_frontend_requests_memory
     }
   }
 
@@ -434,10 +434,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_query_frontend_limits_ram != null ? ["do it"] : []
+    for_each = var.loki_query_frontend_limits_memory != null ? ["do it"] : []
     content {
       name  = "queryFrontend.resources.limits.memory"
-      value = var.loki_query_frontend_limits_ram
+      value = var.loki_query_frontend_limits_memory
     }
   }
 
@@ -457,10 +457,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_compactor_requests_ram != null ? ["do it"] : []
+    for_each = var.loki_compactor_requests_memory != null ? ["do it"] : []
     content {
       name  = "compactor.resources.requests.memory"
-      value = var.loki_compactor_requests_ram
+      value = var.loki_compactor_requests_memory
     }
   }
 
@@ -473,10 +473,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_compactor_limits_ram != null ? ["do it"] : []
+    for_each = var.loki_compactor_limits_memory != null ? ["do it"] : []
     content {
       name  = "compactor.resources.limits.memory"
-      value = var.loki_compactor_limits_ram
+      value = var.loki_compactor_limits_memory
     }
   }
 
@@ -517,10 +517,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_index_gateway_requests_ram != null ? ["do it"] : []
+    for_each = var.loki_index_gateway_requests_memory != null ? ["do it"] : []
     content {
       name  = "indexGateway.resources.requests.memory"
-      value = var.loki_index_gateway_requests_ram
+      value = var.loki_index_gateway_requests_memory
     }
   }
 
@@ -533,10 +533,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_index_gateway_limits_ram != null ? ["do it"] : []
+    for_each = var.loki_index_gateway_limits_memory != null ? ["do it"] : []
     content {
       name  = "indexGateway.resources.limits.memory"
-      value = var.loki_index_gateway_limits_ram
+      value = var.loki_index_gateway_limits_memory
     }
   }
 
@@ -571,10 +571,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_gateway_requests_ram != null ? ["do it"] : []
+    for_each = var.loki_gateway_requests_memory != null ? ["do it"] : []
     content {
       name  = "gateway.resources.requests.memory"
-      value = var.loki_gateway_requests_ram
+      value = var.loki_gateway_requests_memory
     }
   }
 
@@ -587,10 +587,10 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.loki_gateway_limits_ram != null ? ["do it"] : []
+    for_each = var.loki_gateway_limits_memory != null ? ["do it"] : []
     content {
       name  = "gateway.resources.limits.memory"
-      value = var.loki_gateway_limits_ram
+      value = var.loki_gateway_limits_memory
     }
   }
 
@@ -715,10 +715,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_gateway_requests_ram != null ? ["do it"] : []
+    for_each = var.tempo_gateway_requests_memory != null ? ["do it"] : []
     content {
       name  = "gateway.resources.requests.memory"
-      value = var.tempo_gateway_requests_ram
+      value = var.tempo_gateway_requests_memory
     }
   }
 
@@ -731,10 +731,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_gateway_limits_ram != null ? ["do it"] : []
+    for_each = var.tempo_gateway_limits_memory != null ? ["do it"] : []
     content {
       name  = "gateway.resources.limits.memory"
-      value = var.tempo_gateway_limits_ram
+      value = var.tempo_gateway_limits_memory
     }
   }
 
@@ -749,10 +749,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_compactor_requests_ram != null ? ["do it"] : []
+    for_each = var.tempo_compactor_requests_memory != null ? ["do it"] : []
     content {
       name  = "compactor.resources.requests.memory"
-      value = var.tempo_compactor_requests_ram
+      value = var.tempo_compactor_requests_memory
     }
   }
 
@@ -765,10 +765,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_compactor_limits_ram != null ? ["do it"] : []
+    for_each = var.tempo_compactor_limits_memory != null ? ["do it"] : []
     content {
       name  = "compactor.resources.limits.memory"
-      value = var.tempo_compactor_limits_ram
+      value = var.tempo_compactor_limits_memory
     }
   }  
 
@@ -783,10 +783,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_distributor_requests_ram != null ? ["do it"] : []
+    for_each = var.tempo_distributor_requests_memory != null ? ["do it"] : []
     content {
       name  = "distributor.resources.requests.memory"
-      value = var.tempo_distributor_requests_ram
+      value = var.tempo_distributor_requests_memory
     }
   }
 
@@ -799,10 +799,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_distributor_limits_ram != null ? ["do it"] : []
+    for_each = var.tempo_distributor_limits_memory != null ? ["do it"] : []
     content {
       name  = "distributor.resources.limits.memory"
-      value = var.tempo_distributor_limits_ram
+      value = var.tempo_distributor_limits_memory
     }
   }
 
@@ -817,10 +817,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_ingester_requests_ram != null ? ["do it"] : []
+    for_each = var.tempo_ingester_requests_memory != null ? ["do it"] : []
     content {
       name  = "ingester.resources.requests.memory"
-      value = var.tempo_ingester_requests_ram
+      value = var.tempo_ingester_requests_memory
     }
   }
 
@@ -833,10 +833,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_ingester_limits_ram != null ? ["do it"] : []
+    for_each = var.tempo_ingester_limits_memory != null ? ["do it"] : []
     content {
       name  = "ingester.resources.limits.memory"
-      value = var.tempo_ingester_limits_ram
+      value = var.tempo_ingester_limits_memory
     }
   }  
 
@@ -851,10 +851,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_querier_requests_ram != null ? ["do it"] : []
+    for_each = var.tempo_querier_requests_memory != null ? ["do it"] : []
     content {
       name  = "querier.resources.requests.memory"
-      value = var.tempo_querier_requests_ram
+      value = var.tempo_querier_requests_memory
     }
   }
 
@@ -867,10 +867,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_querier_limits_ram != null ? ["do it"] : []
+    for_each = var.tempo_querier_limits_memory != null ? ["do it"] : []
     content {
       name  = "querier.resources.limits.memory"
-      value = var.tempo_querier_limits_ram
+      value = var.tempo_querier_limits_memory
     }
   }  
 
@@ -885,10 +885,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_query_frontend_requests_ram != null ? ["do it"] : []
+    for_each = var.tempo_query_frontend_requests_memory != null ? ["do it"] : []
     content {
       name  = "queryFrontend.resources.requests.memory"
-      value = var.tempo_query_frontend_requests_ram
+      value = var.tempo_query_frontend_requests_memory
     }
   }
 
@@ -901,10 +901,10 @@ resource "helm_release" "tempo_distributed" {
   }
 
   dynamic "set" {
-    for_each = var.tempo_query_frontend_limits_ram != null ? ["do it"] : []
+    for_each = var.tempo_query_frontend_limits_memory != null ? ["do it"] : []
     content {
       name  = "queryFrontend.resources.limits.memory"
-      value = var.tempo_query_frontend_limits_ram
+      value = var.tempo_query_frontend_limits_memory
     }
   }  
 

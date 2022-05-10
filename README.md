@@ -2,11 +2,23 @@
 
 Terraform module which creates EKS Cluster and dependent resources on AWS.
 
+## Notice
+#### This module install several Helm charts with limited inputs for their configuration, in order to keep it easy and simple. For a more accurate configuration we recommend to read their documentation and make your own installation of your desired Helm charts:
+- [Metrics Server Helm chart](https://github.com/bitnami/charts/tree/master/bitnami/metrics-server/#installing-the-chart)
+- [Ingress NGINX Helm Chart](https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx)
+- [Cluster Autoscaler Helm Chart](https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler)
+- [Cert Manager Helm Chart](https://github.com/cert-manager/cert-manager/tree/master/deploy/charts/cert-manager)
+- [Kube Prometheus Stack Helm Chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+- [Loki Distributed Helm Chart](https://github.com/grafana/helm-charts/tree/main/charts/loki-distributed)
+- [Fluent Bit Helm Chart](https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit)
+- [Tempo Distributed Helm Chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo-distributed)
+
+
 ## Usage
 
-### Terraform required version >= 0.14.8
+#### Terraform required version >= 0.14.8
 
-### Elastic Kubernetes Service
+## Elastic Kubernetes Service
 
 EKS Cluster with ELB:
 
@@ -98,9 +110,9 @@ module "eks_main" {
   prometheus_ingress_enabled  = true
   prometheus_ingress_host     = "prometheus.example.com"
   prometheus_requests_cpu     = "200m"
-  prometheus_requests_ram     = "1024Mi"
+  prometheus_requests_memory     = "1024Mi"
   prometheus_limits_cpu       = "500m"
-  prometheus_limits_ram       = "2048Mi"
+  prometheus_limits_memory       = "2048Mi"
 
 # ================== tempo ================== #
   helm_tempo_enabled            = true
@@ -157,27 +169,27 @@ module "eks_main" {
 | loki\_ingester\_storage\_class | storageClass for ingesters pv | `string` | `gp2` | no |
 | loki\_ingester\_storage\_size | size of ingesters pv | `string` | `10Gi` | no |
 | loki\_ingester\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_ingester\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_ingester\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_ingester\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_ingester\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_ingester\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_distributor\_min\_replicas | loki distributor hpa min replicas | `int` | `1` | no |
 | loki\_distributor\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_distributor\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_distributor\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_distributor\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_distributor\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_distributor\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_distributor\_max\_replicas | loki distributor hpa max replicas | `int` | `1` | no |
 | loki\_querier\_min\_replicas | loki querier hpa min replicas | `int` | `1` | no |
 | loki\_querier\_max\_replicas | loki querier hpa max replicas | `int` | `1` | no |
 | loki\_querier\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_querier\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_querier\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_querier\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_querier\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_querier\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_query\_frontend\_min\_replicas | loki query-frontend hpa min replicas | `int` | `1` | no |
 | loki\_query\_frontend\_max\_replicas | loki query-frontend hpa max replicas | `int` | `1` | no |
 | loki\_query\_frontend\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_query\_frontend\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_query\_frontend\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_query\_frontend\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_query\_frontend\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_query\_frontend\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_gateway\_enabled | Enable loki gateway | `bool` | `false` | no |
 | loki\_gateway\_min\_replicas | loki gateway hpa min replicas | `int` | `1` | no |
 | loki\_gateway\_max\_replicas | loki gateway hpa max replicas | `int` | `1` | no |
@@ -187,30 +199,30 @@ module "eks_main" {
 | loki\_gateway\_ingress\_path\_type | Path type for ingress rule  | `string` | `Prefix` | no |
 | loki\_gateway\_ingress\_class\_name | Set ingress class name | `string` | `nginx` | no |
 | loki\_gateway\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_gateway\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_gateway\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_gateway\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_gateway\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_gateway\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_compactor\_enabled | Enable loki compactor | `bool` | `false` | no |
 | loki\_compactor\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_compactor\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_compactor\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_compactor\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_compactor\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_compactor\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_index\_gateway\_enabled | Enable loki index gateway | `bool` | `false` | no |
 | loki\_index\_gateway\_replicas | Set loki index gateway replicas | `int` | `1` | no |
 | loki\_index\_gateway\_storage\_class | storageClass for index gateway pv | `string` | `gp2` | no |
 | loki\_index\_gateway\_storage\_size | storage size for index gateway pv | `string` | `10Gi` | no |
 | loki\_index\_gateway\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_index\_gateway\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_index\_gateway\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_index\_gateway\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_index\_gateway\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_index\_gateway\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | helm\_fluent\_bit\_enabled | install fluent-bit helm chart | `bool` | `false` | no |
 | k8s\_opentelemetry\_enabled | install opentelemetry manifests | `bool` | `false` | no |
 | helm\_prometheus\_enabled | install kube-prometheus-stack helm chart | `bool` | `false` | no |
 | prometheus\_replicas | prometheus server replicas | `int` | `1` | no |
 | prometheus\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| prometheus\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| prometheus\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | prometheus\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| prometheus\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| prometheus\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | prometheus\_ingress\_enabled | Enable ingress for prometheus server | `bool` | `false` | no |
 | prometheus\_ingress\_host | Host for ingress rule | `string` | `""` | no |
 | prometheus\_ingress\_path | Path for ingress rule | `string` | `/` | no |
@@ -221,32 +233,32 @@ module "eks_main" {
 | prometheus\_metrics\_retention | Prometheus metrics period retention | `string` | `14d` | no |
 | helm\_tempo\_enabled | Install tempo-distributed helm chart | `bool` | `false` | no |
 | tempo\_compactor\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_compactor\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_compactor\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_compactor\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_compactor\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_compactor\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_distributor\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_distributor\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_distributor\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_distributor\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_distributor\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_distributor\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_storage\_s3\_bucket | s3 bucket for tempo traces | `string` | `""` | no |
 | tempo\_s3\_bucket\_region | s3 bucket regino for tempo traces | `string` | `""` | no |
 | tempo\_ingester\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_ingester\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_ingester\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_ingester\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_ingester\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_ingester\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_querier\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_querier\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_querier\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_querier\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_querier\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_querier\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_query\_frontend\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_query\_frontend\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_query\_frontend\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_query\_frontend\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_query\_frontend\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_query\_frontend\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_gateway\_enabled | enable tempo gateway | `bool` | `false` | no |
 | tempo\_gateway\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_gateway\_requests\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_gateway\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_gateway\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
-| tempo\_gateway\_limits\_ram | resources config for kubernetes pod | `string` | `null` | no |
+| tempo\_gateway\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_gateway\_ingress\_enabled | Enable ingress for tempo gateway | `bool` | `false` | no |
 | tempo\_gateway\_ingress\_host | Host for ingress rule | `string` | `""` | no |
 | tempo\_gateway\_ingress\_path | Path for ingress rule | `string` | `/` | no |
