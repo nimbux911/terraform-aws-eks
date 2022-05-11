@@ -14,10 +14,10 @@ output "asg_name" {
   value = aws_autoscaling_group.eks.name
 }
 
-output "cluster_endpoint" {
-  value = aws_eks_cluster.main.endpoint
+output "eks_certificate_authority" {
+  value = aws_eks_cluster.main.certificate_authority.0.data
 }
 
-output "cluster_cert" {
-  value = base64decode(aws_eks_cluster.main.certificate_authority.0.data)
+output "eks_endpoint" {
+  value = aws_eks_cluster.main.endpoint
 }

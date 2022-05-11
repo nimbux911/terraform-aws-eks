@@ -1,10 +1,17 @@
 locals {
-  eks_worker_userdata = <<USERDATA
+  eks_worker_userdata_max_pods_enabled = <<USERDATA
 #!/bin/bash
 set -o xtrace
 /etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.main.endpoint}' --b64-cluster-ca '${aws_eks_cluster.main.certificate_authority.0.data}' '${aws_eks_cluster.main.name}' --use-max-pods false --kubelet-extra-args '--max-pods=${var.max_pods_per_node}'
 USERDATA
+
+  eks_worker_userdata = <<USERDATA
+#!/bin/bash
+set -o xtrace
+/etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.main.endpoint}' --b64-cluster-ca '${aws_eks_cluster.main.certificate_authority.0.data}' '${aws_eks_cluster.main.name}'
+USERDATA
 }
+
 
 resource "aws_key_pair" "eks" {
   key_name   = aws_eks_cluster.main.name
@@ -18,7 +25,7 @@ resource "aws_launch_configuration" "eks" {
   instance_type               = var.instance_type
   name_prefix                 = aws_eks_cluster.main.name
   security_groups             = [aws_security_group.eks_worker.id]
-  user_data_base64            = base64encode(local.eks_worker_userdata)
+  user_data_base64            = var.eks_worker_max_pods_enabled ? base64encode(local.eks_worker_userdata_max_pods_enabled) : base64encode(local.eks_worker_userdata)
   key_name                    = aws_key_pair.eks.key_name
  
   lifecycle {

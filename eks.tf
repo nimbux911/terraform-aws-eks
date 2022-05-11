@@ -42,6 +42,8 @@ resource "aws_eks_cluster" "main" {
   version  = var.cluster_version
   role_arn = aws_iam_role.eks_master.arn
 
+  enabled_cluster_log_types = var.enabled_cluster_log_types
+
   vpc_config {
     subnet_ids              = var.subnets_ids
     security_group_ids      = [aws_security_group.eks_master.id]

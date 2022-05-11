@@ -6,7 +6,7 @@ variable "subnets_ids" {}
 variable "instance_type" {}
 variable "max_size" {}
 variable "min_size" {}
-variable "max_pods_per_node" { default = 100 }
+variable "max_pods_per_node"{}
 variable "desired_capacity" {}
 variable "eks_worker_ami_id" {}
 variable "target_group_arns" {
@@ -17,6 +17,9 @@ variable "health_check_type" {
     default = "EC2"
 }
 
+variable "eks_worker_max_pods_enabled" {
+    default = false
+}
 
 variable "asg_tags" {
   default = []
@@ -28,6 +31,10 @@ variable "eks_tags" {
 
 variable "eks_api_private" {
     default = false
+}
+
+variable "enabled_cluster_log_types" {
+    default = []
 }
 
 variable "add_configmap_roles" {
@@ -44,9 +51,17 @@ variable "aws_auth_ignore_changes" {
 
 # ============================== helm releases ============================== #
 
-# ingress-nginx
+# ================== ingress-nginx =================
 variable "helm_ingress_ngnix_enabled" {
     default = false
+}
+
+variable "ingress_http_nodeport" {
+    default = 32080
+}
+
+variable "ingress_https_nodeport" {
+    default = 32443
 }
 
 # cluster-autoscaler
@@ -59,131 +74,429 @@ variable "helm_metrics_server_enabled" {
     default = false
 }
 
-# ================== loki-stack ================= #
-variable "helm_loki_stack_enabled" {
+# cert-manager
+variable "helm_cert_manager_enabled" {
     default = false
 }
 
-# ============ promtail ============ #
-variable "promtail_enabled" {
+# ================== loki-distributed ================= #
+variable "helm_loki_enabled" {
     default = false
 }
 
-# ============ fluent-bit ============ #
-variable "fluent_bit_enabled" {
-    default = false
-}
-
-
-# ============ loki ============ #
-variable "loki_enabled" {
-    default = false
-}
-
-# loki - persistence
-variable "loki_persistence_enabled" {
-    default = false
-}
-
-variable "loki_persistence_storage_class_name" {
-    default = "gp2"
-}
-
-variable "loki_persistence_size" {
-    default = "10Gi"
-}
-
-# loki - ingress
-variable "loki_ingress_enabled" {
-    default = false
-}
-
-variable "loki_ingress_host" {
+# loki - storage
+variable "loki_storage_s3_bucket" {
     default = ""
 }
 
-variable "loki_ingress_path" {
+variable "loki_s3_bucket_region" {
+    default = ""
+}
+
+variable "loki_logs_retention_enabled" {
+    default = false
+}
+
+variable "loki_logs_retention" {
+    default = "744h"
+}
+
+# loki - ingester
+variable "loki_ingester_replicas" {
+    default = 1
+}
+
+variable "loki_ingester_storage_class" {
+    default = "gp2"
+}
+
+variable "loki_ingester_storage_size" {
+    default = "10Gi"
+}
+
+variable "loki_ingester_requests_cpu" {
+    default = null
+}
+variable "loki_ingester_requests_memory" {
+    default = null
+}
+variable "loki_ingester_limits_cpu" {
+    default = null
+}
+variable "loki_ingester_limits_memory" {
+    default = null
+}
+
+# loki - distributor
+variable "loki_distributor_min_replicas" {
+    default = 1
+}
+
+variable "loki_distributor_requests_cpu" {
+    default = null
+}
+variable "loki_distributor_requests_memory" {
+    default = null
+}
+variable "loki_distributor_limits_cpu" {
+    default = null
+}
+variable "loki_distributor_limits_memory" {
+    default = null
+}
+
+variable "loki_distributor_max_replicas" {
+    default = 1
+}
+
+# loki - querier
+variable "loki_querier_min_replicas" {
+    default = 1
+}
+
+variable "loki_querier_max_replicas" {
+    default = 1
+}
+
+variable "loki_querier_requests_cpu" {
+    default = null
+}
+variable "loki_querier_requests_memory" {
+    default = null
+}
+variable "loki_querier_limits_cpu" {
+    default = null
+}
+variable "loki_querier_limits_memory" {
+    default = null
+}
+
+# loki - query-frontend
+variable "loki_query_frontend_min_replicas" {
+    default = 1
+}
+
+variable "loki_query_frontend_max_replicas" {
+    default = 1
+}
+
+variable "loki_query_frontend_requests_cpu" {
+    default = null
+}
+variable "loki_query_frontend_requests_memory" {
+    default = null
+}
+variable "loki_query_frontend_limits_cpu" {
+    default = null
+}
+variable "loki_query_frontend_limits_memory" {
+    default = null
+}
+
+# loki - gateway
+
+variable "loki_gateway_enabled" {
+    default = false
+}
+
+variable "loki_gateway_min_replicas" {
+    default = 1
+}
+
+variable "loki_gateway_max_replicas" {
+    default = 1
+}
+
+variable "loki_gateway_ingress_enabled" {
+    default = false
+}
+
+variable "loki_gateway_ingress_host" {
+    default = ""
+}
+
+variable "loki_gateway_ingress_path" {
     default = "/"
 }
 
-# ============ grafana ============ #
-variable "grafana_enabled" {
-    default = false
+variable "loki_gateway_ingress_path_type" {
+    default = "Prefix"
 }
 
-## grafana - dashboards
-#variable "grafana_cluster_dashboard_enabled" {
-#    default = true
-#}
-
-variable "grafana_datasources" {
-    default = []
+variable "loki_gateway_ingress_class_name" {
+    default = "nginx"
 }
 
-# grafana - persistence
-variable "grafana_persistence_enabled" {
-    default = false
+variable "loki_gateway_requests_cpu" {
+    default = null
+}
+variable "loki_gateway_requests_memory" {
+    default = null
+}
+variable "loki_gateway_limits_cpu" {
+    default = null
+}
+variable "loki_gateway_limits_memory" {
+    default = null
 }
 
-variable "grafana_persistence_storage_class_name" {
-    default = "gp2"
-}
+# loki - compactor
 
-variable "grafana_persistence_size" {
-    default = "10Gi"
-}
-
-# grafana - ingress
-variable "grafana_ingress_enabled" {
-    default = false
-}
-
-variable "grafana_ingress_host" {
-    default = ""
-}
-
-# grafana - sidecard
-variable "grafana_sidecard_enabled" {
+variable "loki_compactor_enabled" {
     default = true
 }
 
-# ============ prometheus ============ #
-variable "prometheus_enabled" {
-    default = false
+variable "loki_compactor_requests_cpu" {
+    default = null
+}
+variable "loki_compactor_requests_memory" {
+    default = null
+}
+variable "loki_compactor_limits_cpu" {
+    default = null
+}
+variable "loki_compactor_limits_memory" {
+    default = null
 }
 
-# prometheus - alertmanager persistence
-variable "prometheus_alertmanager_persistence_enabled" {
-    default = false
+# loki - index-gateway
+
+variable "loki_index_gateway_enabled" {
+    default = true
 }
 
-variable "prometheus_alertmanager_persistence_storage_class_name" {
+variable "loki_index_gateway_replicas" {
+    default = 1
+}
+
+variable "loki_index_gateway_storage_class" {
     default = "gp2"
 }
 
-variable "prometheus_alertmanager_persistence_size" {
+variable "loki_index_gateway_storage_size" {
     default = "10Gi"
 }
 
+variable "loki_index_gateway_requests_cpu" {
+    default = null
+}
+variable "loki_index_gateway_requests_memory" {
+    default = null
+}
+variable "loki_index_gateway_limits_cpu" {
+    default = null
+}
+variable "loki_index_gateway_limits_memory" {
+    default = null
+}
 
-# prometheus - server
-variable "prometheus_server_persistence_enabled" {
+# ================== fluent-bit ================== #
+variable "helm_fluent_bit_enabled" {
     default = false
 }
 
-variable "prometheus_server_persistence_storage_class_name" {
-    default = "gp2"
+
+# ================== prometheus ================== #
+variable "helm_prometheus_enabled" {
+    default = false
 }
 
-variable "prometheus_server_persistence_size" {
-    default = "10Gi"
+variable "prometheus_replicas" {
+    default = 1
 }
- 
-# prometheus - ingress
+
+variable "prometheus_requests_cpu" {
+    default = null
+}
+
+variable "prometheus_requests_memory" {
+    default = null
+}
+
+variable "prometheus_limits_cpu" {
+    default = null
+}
+
+variable "prometheus_limits_memory" {
+    default = null
+}
+
 variable "prometheus_ingress_enabled" {
     default = false
 }
 
 variable "prometheus_ingress_host" {
     default = ""
+}
+
+variable "prometheus_ingress_path" {
+    default = "/"
+}
+
+variable "prometheus_ingress_path_type" {
+    default = "Prefix"
+}
+
+variable "prometheus_ingress_class_name" {
+    default = "nginx"
+}
+
+variable "prometheus_storage_class_name" {
+    default = "gp2"
+}
+
+variable "prometheus_storage_size" {
+    default = "20Gi"
+}
+
+
+variable "prometheus_metrics_retention" {
+    default = "14d"
+}
+
+# ================== tempo ================== #
+variable "helm_tempo_enabled" {
+    default = false
+}
+
+# tempo - compactor
+variable "tempo_compactor_requests_cpu" {
+    default = null
+}
+
+variable "tempo_compactor_requests_memory" {
+    default = null
+}
+
+variable "tempo_compactor_limits_cpu" {
+    default = null
+}
+
+variable "tempo_compactor_limits_memory" {
+    default = null
+}
+
+# tempo - distributor
+variable "tempo_distributor_requests_cpu" {
+    default = null
+}
+
+variable "tempo_distributor_requests_memory" {
+    default = null
+}
+
+variable "tempo_distributor_limits_cpu" {
+    default = null
+}
+
+variable "tempo_distributor_limits_memory" {
+    default = null
+}
+
+# tempo - storage
+variable "tempo_storage_s3_bucket" {
+    default = ""
+}
+
+variable "tempo_s3_bucket_region" {
+    default = ""
+}
+
+# tempo - ingester
+variable "tempo_ingester_requests_cpu" {
+    default = null
+}
+
+variable "tempo_ingester_requests_memory" {
+    default = null
+}
+
+variable "tempo_ingester_limits_cpu" {
+    default = null
+}
+
+variable "tempo_ingester_limits_memory" {
+    default = null
+}
+
+# tempo - querier
+variable "tempo_querier_requests_cpu" {
+    default = null
+}
+
+variable "tempo_querier_requests_memory" {
+    default = null
+}
+
+variable "tempo_querier_limits_cpu" {
+    default = null
+}
+
+variable "tempo_querier_limits_memory" {
+    default = null
+}
+
+# tempo - query-frontend
+variable "tempo_query_frontend_requests_cpu" {
+    default = null
+}
+
+variable "tempo_query_frontend_requests_memory" {
+    default = null
+}
+
+variable "tempo_query_frontend_limits_cpu" {
+    default = null
+}
+
+variable "tempo_query_frontend_limits_memory" {
+    default = null
+}
+
+# tempo - gateway
+variable "tempo_gateway_enabled" {
+    default = false
+}
+
+variable "tempo_gateway_requests_cpu" {
+    default = null
+}
+
+variable "tempo_gateway_requests_memory" {
+    default = null
+}
+
+variable "tempo_gateway_limits_cpu" {
+    default = null
+}
+
+variable "tempo_gateway_limits_memory" {
+    default = null
+}
+
+variable "tempo_gateway_ingress_enabled" {
+    default = false
+}
+
+variable "tempo_gateway_ingress_host" {
+    default = ""
+}
+
+variable "tempo_gateway_ingress_path" {
+    default = "/"
+}
+
+variable "tempo_ingress_path_type" {
+    default = "Prefix"
+}
+
+variable "tempo_ingress_class_name" {
+    default = "nginx"
+}
+
+# ============================== k8s manifests ============================== #
+
+# open-telemetry
+variable "k8s_opentelemetry_enabled" {
+    default = false
 }

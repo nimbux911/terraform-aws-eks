@@ -1,0 +1,82 @@
+
+image:
+  repository: grafana/fluent-bit-plugin-loki
+  tag: 2.1.0-amd64
+  pullPolicy: IfNotPresent
+
+## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
+config:
+  service: |
+    [SERVICE]
+        Daemon Off
+        Flush {{ .Values.flush }}
+        Log_Level {{ .Values.logLevel }}
+        Parsers_File parsers.conf
+        Parsers_File custom_parsers.conf
+        HTTP_Server On
+        HTTP_Listen 0.0.0.0
+        HTTP_Port {{ .Values.metricsPort }}
+        Health_Check On
+  ## https://docs.fluentbit.io/manual/pipeline/inputs
+  inputs: |
+    [INPUT]
+        Name           tail
+        Tag            kube.*
+        Path           /var/log/containers/*.log
+        Parser         docker
+        DB             /run/fluent-bit/flb_kube.db
+        Mem_Buf_Limit  5MB
+  ## https://docs.fluentbit.io/manual/pipeline/filters
+  filters: |
+    [FILTER]
+        Name           kubernetes
+        Match          kube.*
+        Kube_URL       https://kubernetes.default.svc:443
+        Merge_Log On
+        K8S-Logging.Exclude Off
+        K8S-Logging.Parser Off
+ 
+  ## https://docs.fluentbit.io/manual/pipeline/outputs
+  outputs: |
+    [OUTPUT]
+        Name grafana-loki
+        Match *
+        Url http://loki-distributed-distributor:3100/api/prom/push
+        TenantID ""
+        BatchWait 1
+        BatchSize 1048576
+        Labels {job="fluent-bit"}
+        RemoveKeys kubernetes,stream
+        AutoKubernetesLabels false
+        LabelMapPath /fluent-bit/etc/labelmap.json
+        LineFormat json
+        LogLevel warn
+
+  ## https://docs.fluentbit.io/manual/pipeline/parsers
+  customParsers: |
+    [PARSER]
+        Name        docker
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L          
+
+  # This allows adding more files with arbitary filenames to /fluent-bit/etc by providing key/value pairs.
+  # The key becomes the filename, the value becomes the file content.
+  extraFiles: 
+    labelmap.json: |
+      {
+        "kubernetes": {
+          "container_name": "container",
+          "host": "node",
+          "labels": {
+            "app": "app",
+            "release": "release",
+            "pod-template-hash": "template_hash"
+          },
+          "namespace_name": "namespace",
+          "pod_name": "pod"
+        },
+        "stream": "stream"
+      }
+
+logLevel: warn
