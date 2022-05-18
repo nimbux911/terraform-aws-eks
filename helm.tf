@@ -122,6 +122,11 @@ resource "helm_release" "prometheus_stack" {
     value = var.prometheus_replicas
   }  
 
+  set {
+    name = "prometheus-node-exporter.nodeSelector.node\\.kubernetes\\.io/instance-type"
+    value = var.instance_type
+  }
+
   dynamic "set" {
     for_each = var.prometheus_requests_cpu != null ? ["do it"] : []
     content {
@@ -638,6 +643,10 @@ resource "helm_release" "fluent_bit" {
     file("${path.module}/helm-values/fluent-bit.yaml")
   ]
 
+  set {
+    name = "nodeSelector.node\\.kubernetes\\.io/instance-type"
+    value = var.instance_type
+  }
 
 }
 
