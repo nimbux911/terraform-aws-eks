@@ -83,12 +83,13 @@ resource "helm_release" "metrics_server" {
 }
 
 resource "helm_release" "cert_manager" {
-  count      = var.helm_cert_manager_enabled || var.k8s_opentelemetry_enabled ? 1 : 0
-  name       = "cert-manager"
-  namespace  = "cert-manager"
-  repository = "https://charts.jetstack.io"
-  chart      = "cert-manager"
-  version    = "1.6.1"
+  count             = var.helm_cert_manager_enabled || var.k8s_opentelemetry_enabled ? 1 : 0
+  name              = "cert-manager"
+  namespace         = "cert-manager"
+  repository        = "https://charts.jetstack.io"
+  chart             = "cert-manager"
+  create_namespace  = true
+  version           = "1.6.1"
 
   set {
     name  = "installCRDs"
