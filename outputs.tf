@@ -11,7 +11,7 @@ output "worker_role_id" {
 }
 
 output "asg_name" {
-  value = aws_autoscaling_group.eks.name
+  value = var.ignore_desired_capacity || var.helm_cert_manager_enabled ? aws_autoscaling_group.eks_ignore_desired_capacity.name : aws_autoscaling_group.eks.name
 }
 
 output "eks_certificate_authority" {
