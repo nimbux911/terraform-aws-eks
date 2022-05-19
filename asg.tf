@@ -34,7 +34,7 @@ resource "aws_launch_configuration" "eks" {
 }
 
 resource "aws_autoscaling_group" "eks" {
-  count                = var.ignore_desired_capacity || var.helm_cert_manager_enabled ? 0 : 1
+  count                = var.ignore_desired_capacity || var.helm_cluster_autoscaler_enabled ? 0 : 1
   desired_capacity     = var.desired_capacity
   launch_configuration = aws_launch_configuration.eks.id
   max_size             = var.max_size
@@ -63,7 +63,7 @@ resource "aws_autoscaling_group" "eks" {
 }
 
 resource "aws_autoscaling_group" "eks_ignore_desired_capacity" {
-  count                = var.ignore_desired_capacity || var.helm_cert_manager_enabled ? 1 : 0
+  count                = var.ignore_desired_capacity || var.helm_cluster_autoscaler_enabled ? 1 : 0
   desired_capacity     = var.desired_capacity
   launch_configuration = aws_launch_configuration.eks.id
   max_size             = var.max_size
