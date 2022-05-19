@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2022-05-19
+
+### Fixed
+- Prometheus-node-exporter tried to add pods in fargate nodes (fargate doesn't support daemonsets) [Issue #3](https://github.com/nimbux911/terraform-aws-eks/issues/3)
+- OTEL manifests failed because namespace didn't exist [Issue #2](https://github.com/nimbux911/terraform-aws-eks/issues/2)
+- cert-manager release failed because namespace didn't exist
+
+### Added
+- ignore_change option for asg desired_capacity, to be handled by the cluster-autoscaler
+
 ## [3.0.0] - 2022-05-06
 
 ### Added
