@@ -58,5 +58,12 @@ resource "aws_autoscaling_group" "eks" {
     ],
     var.asg_tags,
   )
-  
+
+  dynamic "lifecycle" {
+    for_each = var.ignore_desired_capacity || var.helm_cert_manager_enabled ? ["do it"] : []
+    content {
+      ignore_changes = [desired_capacity]
+    }
+  }
+
 }
