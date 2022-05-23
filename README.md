@@ -143,6 +143,7 @@ module "eks_main" {
 | min\_size | Minimum size of the autoscaling for the worker nodes. | `string` | `""` | yes |
 | max\_pods\_per\_node | Max pods per Kubernetes worker node. | `string` | `"100"` | no |
 | desired\_capacity | Desired size of the autoscaling for the worker nodes. | `string` | `""` | yes |
+| ignore\_desired\_capacity | Add ignore_changes to desired_capacity | `bool` | `false` | no |
 | eks\_worker\_ami\_id | AMI ID for the worker nodes | `string` | `""` | yes |
 | target\_group\_arns | ARNs of the target groups for using the worker nodes behind of ELB | `list[string]` | `[]` | no |
 | health\_check\_type | Health check type for the worker nodes. | `string` | `"EC2"` | no |

@@ -8,6 +8,9 @@ variable "max_size" {}
 variable "min_size" {}
 variable "max_pods_per_node"{}
 variable "desired_capacity" {}
+variable "ignore_desired_capacity" {
+    default = false
+}
 variable "eks_worker_ami_id" {}
 variable "target_group_arns" {
     default = []

@@ -83,12 +83,13 @@ resource "helm_release" "metrics_server" {
 }
 
 resource "helm_release" "cert_manager" {
-  count      = var.helm_cert_manager_enabled || var.k8s_opentelemetry_enabled ? 1 : 0
-  name       = "cert-manager"
-  namespace  = "cert-manager"
-  repository = "https://charts.jetstack.io"
-  chart      = "cert-manager"
-  version    = "1.6.1"
+  count             = var.helm_cert_manager_enabled || var.k8s_opentelemetry_enabled ? 1 : 0
+  name              = "cert-manager"
+  namespace         = "cert-manager"
+  repository        = "https://charts.jetstack.io"
+  chart             = "cert-manager"
+  create_namespace  = true
+  version           = "1.6.1"
 
   set {
     name  = "installCRDs"
@@ -121,6 +122,11 @@ resource "helm_release" "prometheus_stack" {
     name  = "prometheus.prometheusSpec.replicas"
     value = var.prometheus_replicas
   }  
+
+  set {
+    name = "prometheus-node-exporter.nodeSelector.node\\.kubernetes\\.io/instance-type"
+    value = var.instance_type
+  }
 
   dynamic "set" {
     for_each = var.prometheus_requests_cpu != null ? ["do it"] : []
@@ -638,6 +644,10 @@ resource "helm_release" "fluent_bit" {
     file("${path.module}/helm-values/fluent-bit.yaml")
   ]
 
+  set {
+    name = "nodeSelector.node\\.kubernetes\\.io/instance-type"
+    value = var.instance_type
+  }
 
 }
 

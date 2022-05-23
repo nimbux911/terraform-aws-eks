@@ -34,6 +34,7 @@ resource "aws_launch_configuration" "eks" {
 }
 
 resource "aws_autoscaling_group" "eks" {
+  count                = var.ignore_desired_capacity || var.helm_cluster_autoscaler_enabled ? 0 : 1
   desired_capacity     = var.desired_capacity
   launch_configuration = aws_launch_configuration.eks.id
   max_size             = var.max_size
@@ -58,5 +59,38 @@ resource "aws_autoscaling_group" "eks" {
     ],
     var.asg_tags,
   )
-  
+
+}
+
+resource "aws_autoscaling_group" "eks_ignore_desired_capacity" {
+  count                = var.ignore_desired_capacity || var.helm_cluster_autoscaler_enabled ? 1 : 0
+  desired_capacity     = var.desired_capacity
+  launch_configuration = aws_launch_configuration.eks.id
+  max_size             = var.max_size
+  min_size             = var.min_size
+  name                 = var.cluster_name
+  vpc_zone_identifier  = var.subnets_ids
+  target_group_arns    = var.target_group_arns
+  health_check_type    = var.health_check_type
+
+  tags = concat(
+    [
+      {
+        "key"                 = "Name"
+        "value"               = var.cluster_name
+        "propagate_at_launch" = true
+      },
+      {
+        "key"                 = "kubernetes.io/cluster/${aws_eks_cluster.main.name}"
+        "value"               = "owned"
+        "propagate_at_launch" = true
+      },
+    ],
+    var.asg_tags,
+  )
+
+  lifecycle {
+    ignore_changes = [desired_capacity]
+  }
+
 }
