@@ -98,3 +98,13 @@ resource "kubernetes_config_map" "aws_auth_without_ignore" {
   depends_on = [time_sleep.wait_20_seconds]
 
 }
+
+# Addons
+
+resource "aws_eks_addon" "this" {
+  for_each          = var.eks_addons
+  cluster_name      = var.cluster_name
+  addon_name        = each.key
+  addon_version     = each.value["version"]
+  resolve_conflicts = "OVERWRITE"
+}
