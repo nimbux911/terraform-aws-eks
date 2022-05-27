@@ -80,6 +80,17 @@ module "eks_main" {
   helm_metrics_server_enabled                 = true 
   helm_cert_manager_enabled                   = true
 
+  eks_addons = {
+    vpc-cni = {
+      version = "v1.10.2-eksbuild.1"
+    },
+    coredns = {
+      version = "v1.8.3-eksbuild.1"
+    },
+    kube-proxy = {
+      version = "v1.19.6-eksbuild.2"
+    }
+  }
 
 # ================== loki-distributed ================= #
   helm_loki_enabled                 = true
@@ -150,6 +161,7 @@ module "eks_main" {
 | asg\_tags | Tags to add to autoscaling group. | `list[map]` | `[]` | no |
 | eks\_tags | Tags to add to all resources except the autoscaling group. | `map` | `{}` | no |
 | eks\_api\_private | Defines it the Kubernetes API will be private or public. | `bool` | `false` | no |
+| eks\_addons | Adds EKS addons. | `map(map(string))` | `{}` | no |
 | add\_configmap\_roles | List of maps with the information of the IAM roles to be added to aws-auth configmap. | `list[map]` | `[]` | no |
 | add\_configmap\_users | List of maps with the information of the IAM users to be added to aws-auth configmap. | `list[map]` | `[]` | no |
 | aws\_auth\_ignore\_changes | Set if aws-auth configmap will be managed by Terraform or ignored. | `bool` | `true` | no |

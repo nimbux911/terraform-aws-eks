@@ -52,6 +52,12 @@ variable "aws_auth_ignore_changes" {
     default = true
 }
 
+# ============================== EKS Addons ============================== #
+
+variable "eks_addons" {
+    default = {}
+}
+
 # ============================== helm releases ============================== #
 
 # ================== ingress-nginx =================
