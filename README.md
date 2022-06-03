@@ -39,7 +39,7 @@ locals {
       "user_arn" = "arn:aws:iam::123456789123:user/demo"
       "k8s_user" = "demo"
       "k8s_groups" = [
-        "system:masters"
+        "system:masters",
         "system:developers"
         ]
       }
@@ -49,7 +49,7 @@ locals {
 
 
 module "eks_main" {
-  source                                      = "git@github.com:nimbux911/terraform-aws-eks.git"
+  source                                      = "github.com/nimbux911/terraform-aws-eks.git"
   environment                                 = "dev"
   cluster_name                                = "dev-eks-main"
   cluster_version                             = "1.21"

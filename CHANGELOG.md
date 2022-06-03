@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.1] - 2022-06-02
+
+### Fixed
+- fluent-bit service parsers config
+- module source un README. Ssh url replaced for https instead
+
 ## [3.1.0] - 2022-05-27
 
 ### Added
