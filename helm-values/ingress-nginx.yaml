@@ -20,4 +20,4 @@ controller:
 
     serviceMonitor:
       additionalLabels:
-        release: kube-prometheus-stack
+        release: prometheus-stack
