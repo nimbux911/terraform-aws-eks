@@ -23,6 +23,14 @@ resource "helm_release" "ingress_nginx" {
     }
   }
 
+  dynamic "set" {
+    for_each = var.helm_prometheus_enabled != null ? ["do it"] : []
+    content {
+      name  = "controller.metrics.serviceMonitor.enabled"
+      value = true
+    }
+  }
+
   set {
     name  = "controller.service.nodePorts.http"
     value = var.ingress_http_nodeport
@@ -121,6 +129,16 @@ resource "helm_release" "prometheus_stack" {
   set {
     name  = "prometheus.prometheusSpec.replicas"
     value = var.prometheus_replicas
+  }  
+
+  set {
+    name  = "prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues"
+    value = false
+  }
+
+  set {
+    name  = "prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues"
+    value = false
   }  
 
   set {

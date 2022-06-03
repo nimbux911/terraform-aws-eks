@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.2] - 2022-06-03
+
+### Fixed
+- ingress-nginx metrics expose to Prometheus
+
 ## [3.1.1] - 2022-06-02
 
 ### Fixed
