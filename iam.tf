@@ -158,7 +158,6 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
     "Statement": [
       {
         "Action": [
-          "autoscaling:DescribeTags",
           "autoscaling:SetDesiredCapacity",
           "autoscaling:TerminateInstanceInAutoScalingGroup"
         ],
@@ -167,6 +166,7 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
       },
       {
         "Action": [
+          "autoscaling:DescribeTags",
           "autoscaling:DescribeAutoScalingGroups",
           "autoscaling:DescribeAutoScalingInstances",
           "autoscaling:DescribeLaunchConfigurations",
