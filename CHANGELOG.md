@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.3] - 2022-06-08
+
+### Fixed
+- Add missing IAM policy for Cluster Autoscaler to EKS Worker Nodes IAM role
+
 ## [3.1.2] - 2022-06-03
 
 ### Fixed
