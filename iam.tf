@@ -147,6 +147,39 @@ resource "aws_iam_role_policy" "eks_worker_s3_tempo" {
   EOF
 }
 
+resource "aws_iam_role_policy" "cluster_autoscaler" {
+  count = var.cluster_autoscaler_enabled ? 1 : 0
+  name = "cluster_autoscaler"
+  role = aws_iam_role.eks_worker.id
+
+  policy = <<-EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": [
+          "autoscaling:DescribeTags",
+          "autoscaling:SetDesiredCapacity",
+          "autoscaling:TerminateInstanceInAutoScalingGroup"
+        ],
+        "Effect": "Allow",
+        "Resource": "${var.cluster_name}"
+      },
+      {
+        "Action": [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeAutoScalingInstances",
+          "autoscaling:DescribeLaunchConfigurations",
+          "ec2:DescribeLaunchTemplateVersions"
+        ],
+        "Effect": "Allow",
+        "Resource": "*"
+      }
+    ]
+  }
+  EOF
+}
+
 resource "aws_iam_instance_profile" "eks_worker" {
   name = "${var.environment}-eks-worker"
   role = aws_iam_role.eks_worker.name
