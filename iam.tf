@@ -163,7 +163,7 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
           "autoscaling:TerminateInstanceInAutoScalingGroup"
         ],
         "Effect": "Allow",
-        "Resource": "${aws_autoscaling_group.eks.arn}"
+        "Resource": "${aws_autoscaling_group.eks[0].arn}"
       },
       {
         "Action": [
