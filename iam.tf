@@ -148,7 +148,7 @@ resource "aws_iam_role_policy" "eks_worker_s3_tempo" {
 }
 
 resource "aws_iam_role_policy" "cluster_autoscaler" {
-  count = var.cluster_autoscaler_enabled ? 1 : 0
+  count = var.helm_cluster_autoscaler_enabled ? 1 : 0
   name = "cluster_autoscaler"
   role = aws_iam_role.eks_worker.id
 
