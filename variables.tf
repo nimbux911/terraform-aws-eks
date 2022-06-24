@@ -24,6 +24,10 @@ variable "eks_worker_max_pods_enabled" {
     default = false
 }
 
+variable "eks_worker_ssh_cidrs" {
+    default = []
+}
+
 variable "asg_tags" {
   default = []
 }

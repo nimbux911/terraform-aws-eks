@@ -38,12 +38,14 @@ resource "aws_security_group" "eks_worker" {
   tags = merge({Name="${var.cluster_name}-worker"}, var.eks_tags)
 }
 
+
 resource "aws_security_group_rule" "eks_worker_ingress_ssh" {
+  count                    = length(var.eks_worker_ssh_cidrs)
   description              = "Allow ssh connections"
   from_port                = 22
   protocol                 = "tcp"
   security_group_id        = aws_security_group.eks_worker.id
-  cidr_blocks              = [data.aws_vpc.main.cidr_block]
+  cidr_blocks              = var.eks_worker_ssh_cidrs
   to_port                  = 22
   type                     = "ingress"
 }
@@ -53,6 +55,26 @@ resource "aws_security_group_rule" "eks_worker_ingress_self" {
   from_port                = 0
   protocol                 = "-1"
   security_group_id        = aws_security_group.eks_worker.id
+  source_security_group_id = aws_security_group.eks_worker.id
+  to_port                  = 65535
+  type                     = "ingress"
+}
+
+resource "aws_security_group_rule" "eks_worker_ingress_managed_nodes" {
+  description              = "Allow EC2 nodes to communicate with AWS managed nodes"
+  from_port                = 0
+  protocol                 = "-1"
+  security_group_id        = aws_security_group.eks_worker.id
+  source_security_group_id = aws_eks_cluster.main.vpc_config[0].cluster_security_group_id
+  to_port                  = 65535
+  type                     = "ingress"
+}
+
+resource "aws_security_group_rule" "managed_nodes_ingress_eks_worker" {
+  description              = "Allow AWS managed nodes to communicate with EC2 nodes"
+  from_port                = 0
+  protocol                 = "-1"
+  security_group_id        = aws_eks_cluster.main.vpc_config[0].cluster_security_group_id 
   source_security_group_id = aws_security_group.eks_worker.id
   to_port                  = 65535
   type                     = "ingress"
