@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.5] - 2022-06-27
+
+### Fixed
+- terraform required_providers added [Issue #12](https://github.com/nimbux911/terraform-aws-eks/issues/12)
+
 ## [3.1.4] - 2022-06-22
 
 ### Added
