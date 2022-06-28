@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.6] - 2022-06-28
+
+### Added
+- Input for SSH ingress rules to eks workers
+- Ingress rule to allow communication between EC2 nodes and AWS managed nodes
+
 ## [3.1.5] - 2022-06-27
 
 ### Fixed

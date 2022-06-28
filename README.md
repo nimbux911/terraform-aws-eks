@@ -166,6 +166,7 @@ module "eks_main" {
 | add\_configmap\_users | List of maps with the information of the IAM users to be added to aws-auth configmap. | `list[map]` | `[]` | no |
 | aws\_auth\_ignore\_changes | Set if aws-auth configmap will be managed by Terraform or ignored. | `bool` | `true` | no |
 | eks\_worker\_max\_pods\_enabled | Enable --max-pods flag in workers bootstrap | `bool` | `false` | no |
+| eks\_worker\_ssh\_cidrs | Add SSH ingress rule to eks workers | `list` | `[]` | no |
 | enabled\_cluster\_log\_types | Enable CloudWatch Logs for control plane components | `list[string]` | `[]` | no |
 | helm\_ingress\_ngnix\_enabled | Set if ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
