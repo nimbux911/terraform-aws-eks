@@ -40,7 +40,7 @@ resource "aws_security_group" "eks_worker" {
 
 
 resource "aws_security_group_rule" "eks_worker_ingress_ssh" {
-  count                    = length(var.eks_worker_ssh_cidrs)
+  count                    = length(var.eks_worker_ssh_cidrs) > 0 ? 1 : 0
   description              = "Allow ssh connections"
   from_port                = 22
   protocol                 = "tcp"
