@@ -12,6 +12,10 @@ variable "ignore_desired_capacity" {
     default = false
 }
 variable "eks_worker_ami_id" {}
+
+variable "k8s_auth_api" {
+    default = "client.authentication.k8s.io/v1alpha1"
+}
 variable "target_group_arns" {
     default = []
 }

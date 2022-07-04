@@ -147,6 +147,7 @@ module "eks_main" {
 | environment | Environment name of the resources. | `string` | `""` | yes |
 | cluster\_name | Cluster name | `string` | `""` | yes |
 | cluster\_version | Kubernetes version of the cluster. | `string` | `""` | yes |
+| k8s\_auth\_api | Kubernetes authentication API for Terraform providers. | `string` | `client.authentication.k8s.io/v1alpha1` | no |
 | vpc\_id | VPC ID where cluster will be deployed. | `string` | `""` | yes |
 | subnets\_ids | Subnets ids from the VPC ID where the workers will be deployed. They must be, at least, from 2 differents AZs. | `list[string]` | `[]` | yes |
 | instance\_type | Instance type of the EC2 workers. | `string` | `""` | yes |
