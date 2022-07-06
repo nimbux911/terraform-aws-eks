@@ -16,12 +16,12 @@ resource "helm_release" "ingress_nginx" {
 
   set {
     name  = "controller.metrics.enabled"
-    value = var.helm_prometheus_enabled
+    value = var.ingress_service_monitor_enabled
   }
 
   set {
     name  = "controller.metrics.serviceMonitor.enabled"
-    value = var.helm_prometheus_enabled
+    value = var.ingress_service_monitor_enabled
   }
 
 

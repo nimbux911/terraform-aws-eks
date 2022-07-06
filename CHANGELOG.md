@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Input to define k8s authentication api for tf providers
 
 ### Fixed
-- If condition for ingress-nginx serviceMonitor
+- Removed dependency between ingress-nginx serviceMonitor and Prometheus helm chart
 
 ## [3.1.6] - 2022-06-28
 

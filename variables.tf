@@ -81,6 +81,10 @@ variable "ingress_https_nodeport" {
     default = 32443
 }
 
+variable "ingress_service_monitor_enabled" {
+    default = false
+}
+
 # cluster-autoscaler
 variable "helm_cluster_autoscaler_enabled" {
     default = false
