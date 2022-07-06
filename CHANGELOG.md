@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.1.7] - 2022-07-06
 
 ### Fixed
-- Change was made on helm_release_ingress_nginx to start it without depending on prometheus.
+- Add default values for `controller.metrics.enabled` and `controller.metrics.serviceMonitor.enabled` to ingress-nginx Helm release in order to allow deploying it without having Prometheus as a dependency.
 
 ## [3.1.6] - 2022-06-28
 
