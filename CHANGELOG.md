@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.1.7] - 2022-07-04
+## [3.1.7] - 2022-07-06
 
 ### Added
 - Input to define k8s authentication api for tf providers
