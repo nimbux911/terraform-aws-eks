@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.7] - 2022-07-06
+
+### Fixed
+- Change was made on helm_release_ingress_nginx to start it without depending from prometheus.
+
 ## [3.1.6] - 2022-06-28
 
 ### Added
