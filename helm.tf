@@ -14,20 +14,17 @@ resource "helm_release" "ingress_nginx" {
     file("${path.module}/helm-values/ingress-nginx.yaml")
   ]
 
-
   dynamic "set" {
-    for_each = var.helm_prometheus_enabled != null ? ["do it"] : []
     content {
       name  = "controller.metrics.enabled"
-      value = true
+      value = var.helm_prometheus_enabled
     }
   }
 
   dynamic "set" {
-    for_each = var.helm_prometheus_enabled != null ? ["do it"] : []
     content {
       name  = "controller.metrics.serviceMonitor.enabled"
-      value = true
+      value = var.helm_prometheus_enabled
     }
   }
 
