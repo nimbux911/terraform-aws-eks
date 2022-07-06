@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.7] - 2022-07-06
+
+### Fixed
+- Add default values for `controller.metrics.enabled` and `controller.metrics.serviceMonitor.enabled` to ingress-nginx Helm release in order to allow deploying it without having Prometheus as a dependency.
+
 ## [3.1.6] - 2022-06-28
 
 ### Added
