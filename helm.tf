@@ -14,19 +14,16 @@ resource "helm_release" "ingress_nginx" {
     file("${path.module}/helm-values/ingress-nginx.yaml")
   ]
 
-  dynamic "set" {
-    content {
-      name  = "controller.metrics.enabled"
-      value = var.helm_prometheus_enabled
-    }
+  set {
+    name  = "controller.metrics.enabled"
+    value = var.ingress_service_monitor_enabled
   }
 
-  dynamic "set" {
-    content {
-      name  = "controller.metrics.serviceMonitor.enabled"
-      value = var.helm_prometheus_enabled
-    }
+  set {
+    name  = "controller.metrics.serviceMonitor.enabled"
+    value = var.ingress_service_monitor_enabled
   }
+
 
   set {
     name  = "controller.service.nodePorts.http"

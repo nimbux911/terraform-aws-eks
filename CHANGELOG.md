@@ -9,8 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.1.7] - 2022-07-06
 
+### Added
+- Input to define k8s authentication api for tf providers
+
 ### Fixed
-- Add default values for `controller.metrics.enabled` and `controller.metrics.serviceMonitor.enabled` to ingress-nginx Helm release in order to allow deploying it without having Prometheus as a dependency.
+- Removed dependency between ingress-nginx serviceMonitor and Prometheus helm chart
 
 ## [3.1.6] - 2022-06-28
 

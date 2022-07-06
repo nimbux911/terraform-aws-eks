@@ -147,6 +147,7 @@ module "eks_main" {
 | environment | Environment name of the resources. | `string` | `""` | yes |
 | cluster\_name | Cluster name | `string` | `""` | yes |
 | cluster\_version | Kubernetes version of the cluster. | `string` | `""` | yes |
+| k8s\_auth\_api | Kubernetes authentication API for Terraform providers. | `string` | `client.authentication.k8s.io/v1alpha1` | no |
 | vpc\_id | VPC ID where cluster will be deployed. | `string` | `""` | yes |
 | subnets\_ids | Subnets ids from the VPC ID where the workers will be deployed. They must be, at least, from 2 differents AZs. | `list[string]` | `[]` | yes |
 | instance\_type | Instance type of the EC2 workers. | `string` | `""` | yes |
@@ -171,6 +172,7 @@ module "eks_main" {
 | helm\_ingress\_ngnix\_enabled | Set if ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
+| ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
 | helm\_cluster\_autoscaler\_enabled | Set if cluster-autoscaler Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_metrics\_server\_enabled | Set if metrics-server Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_cert\_manager\_enabled | Set if cert-manager helm chart will be installed on the cluster | `bool` | `false` | no |
