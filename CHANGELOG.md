@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Input to define k8s authentication api for tf providers
 
+### Fixed
+- If condition for ingress-nginx serviceMonitor
+
 ## [3.1.6] - 2022-06-28
 
 ### Added

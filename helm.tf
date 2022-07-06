@@ -16,7 +16,7 @@ resource "helm_release" "ingress_nginx" {
 
 
   dynamic "set" {
-    for_each = var.helm_prometheus_enabled != null ? ["do it"] : []
+    for_each = var.helm_prometheus_enabled ? ["do it"] : []
     content {
       name  = "controller.metrics.enabled"
       value = true
@@ -24,7 +24,7 @@ resource "helm_release" "ingress_nginx" {
   }
 
   dynamic "set" {
-    for_each = var.helm_prometheus_enabled != null ? ["do it"] : []
+    for_each = var.helm_prometheus_enabled ? ["do it"] : []
     content {
       name  = "controller.metrics.serviceMonitor.enabled"
       value = true
