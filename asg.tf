@@ -1,4 +1,6 @@
 locals {
+  asg_tags = toset(var.asg_tags)
+  
   eks_worker_userdata_max_pods_enabled = <<USERDATA
 #!/bin/bash
 set -o xtrace
@@ -44,21 +46,26 @@ resource "aws_autoscaling_group" "eks" {
   target_group_arns    = var.target_group_arns
   health_check_type    = var.health_check_type
 
-  tags = concat(
-    [
-      {
-        "key"                 = "Name"
-        "value"               = var.cluster_name
-        "propagate_at_launch" = true
-      },
-      {
-        "key"                 = "kubernetes.io/cluster/${aws_eks_cluster.main.name}"
-        "value"               = "owned"
-        "propagate_at_launch" = true
-      },
-    ],
-    var.asg_tags,
-  )
+  tag {
+        key                 = "Name"
+        value               = var.cluster_name
+        propagate_at_launch = true
+      }
+
+  tag {
+        key                 = "kubernetes.io/cluster/${aws_eks_cluster.main.name}"
+        value               = "owned"
+        propagate_at_launch = true
+      }
+
+  dynamic "tag" {
+    for_each = local.asg_tags
+    content {
+      key                 = each.key
+      value               = each.value
+      propagate_at_launch = true
+    }
+  }
 
 }
 
