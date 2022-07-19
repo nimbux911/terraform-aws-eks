@@ -120,6 +120,10 @@ variable "loki_ingester_replicas" {
     default = 1
 }
 
+variable "loki_ingester_node_selector" {
+    default = null
+}
+
 variable "loki_ingester_storage_class" {
     default = "gp2"
 }
@@ -146,6 +150,10 @@ variable "loki_distributor_min_replicas" {
     default = 1
 }
 
+variable "loki_distributor_node_selector" {
+    default = null
+}
+
 variable "loki_distributor_requests_cpu" {
     default = null
 }
@@ -166,6 +174,10 @@ variable "loki_distributor_max_replicas" {
 # loki - querier
 variable "loki_querier_min_replicas" {
     default = 1
+}
+
+variable "loki_querier_node_selector" {
+    default = null
 }
 
 variable "loki_querier_max_replicas" {
@@ -190,6 +202,10 @@ variable "loki_query_frontend_min_replicas" {
     default = 1
 }
 
+variable "loki_query_frontend_node_selector" {
+    default = null
+}
+
 variable "loki_query_frontend_max_replicas" {
     default = 1
 }
@@ -211,6 +227,10 @@ variable "loki_query_frontend_limits_memory" {
 
 variable "loki_gateway_enabled" {
     default = false
+}
+
+variable "loki_gateway_node_selector" {
+    default = null
 }
 
 variable "loki_gateway_min_replicas" {
@@ -260,6 +280,10 @@ variable "loki_compactor_enabled" {
     default = true
 }
 
+variable "loki_compactor_node_selector" {
+    default = null
+}
+
 variable "loki_compactor_requests_cpu" {
     default = null
 }
@@ -277,6 +301,10 @@ variable "loki_compactor_limits_memory" {
 
 variable "loki_index_gateway_enabled" {
     default = true
+}
+
+variable "loki_index_gateway_node_selector" {
+    default = null
 }
 
 variable "loki_index_gateway_replicas" {
@@ -313,6 +341,10 @@ variable "helm_fluent_bit_enabled" {
 # ================== prometheus ================== #
 variable "helm_prometheus_enabled" {
     default = false
+}
+
+variable "prometheus_node_selector" {
+    default = null
 }
 
 variable "prometheus_replicas" {

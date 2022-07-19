@@ -60,7 +60,6 @@ resource "aws_launch_template" "eks_node_groups" {
         cluster_name        = aws_eks_cluster.main.name,
         max_pods_enabled    = var.max_pods_per_node != null ? "--use-max-pods false" : "",
         max_pods_per_node   = var.max_pods_per_node != null ? "--max-pods=${var.max_pods_per_node}" : "",
-#        node_labels         = [ for k, v in local.nodes_common_labels : "${k}=${v},"][0]
         node_labels         = can(each.value.k8s_labels) ? join(",", [ for k, v in merge(each.value.k8s_labels, local.nodes_common_labels) : "${k}=${v}"]) : join(",", [ for k,v in local.nodes_common_labels : "${k}=${v},"])
       }
     ))
@@ -138,10 +137,10 @@ resource "aws_eks_node_group" "eks" {
   node_role_arn   = can(each.value.instance_profile) ? each.value.instance_profile : aws_iam_instance_profile.eks_worker.name
   subnet_ids      = each.value.subnets_ids
 
-  labels = each.value.k8s_labels
+  labels = can(each.value.k8s_labels) ? each.value.k8s_labels : null
 
   dynamic "taint" {
-    for_each  = each.value.k8s_taint
+    for_each  = can(each.value.k8s_taint) ? each.value.k8s_taint : {}
     content {
       key     = taint.value.key
       value   = taint.value.value
