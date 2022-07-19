@@ -1,6 +1,34 @@
 locals {
-  asg_tags = toset(var.asg_tags)
-  nodes_common_labels = ["eks.amazonaws.com/compute-type=ec2"]
+
+  nodes_common_labels = { 
+    "eks.amazonaws.com/compute-type" = "ec2"
+  }
+
+  asg_common_tags = var.helm_cluster_autoscaler_enabled ? [
+    {
+      key                 = "kubernetes.io/cluster/${aws_eks_cluster.main.name}"
+      value               = "owned"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "k8s.io/cluster-autoscaler/enabled"
+      value               = true
+      propagate_at_launch = true
+    },
+    {
+      key                 = "k8s.io/cluster-autoscaler/${aws_eks_cluster.main.name}"
+      value               = "owned"
+      propagate_at_launch = true
+    }
+  ] : [
+    {
+      key                 = "kubernetes.io/cluster/${aws_eks_cluster.main.name}"
+      value               = "owned"
+      propagate_at_launch = true
+    }
+  ]
+
+
 
 }
 
@@ -32,7 +60,8 @@ resource "aws_launch_template" "eks_node_groups" {
         cluster_name        = aws_eks_cluster.main.name,
         max_pods_enabled    = var.max_pods_per_node != null ? "--use-max-pods false" : "",
         max_pods_per_node   = var.max_pods_per_node != null ? "--max-pods=${var.max_pods_per_node}" : "",
-        node_labels         = can(each.value.k8s_labels) ? join(",", concat(each.value.k8s_labels, local.nodes_common_labels)) : join(",", local.nodes_common_labels)
+#        node_labels         = [ for k, v in local.nodes_common_labels : "${k}=${v},"][0]
+        node_labels         = can(each.value.k8s_labels) ? join(",", [ for k, v in merge(each.value.k8s_labels, local.nodes_common_labels) : "${k}=${v}"]) : join(",", [ for k,v in local.nodes_common_labels : "${k}=${v},"])
       }
     ))
 
@@ -85,26 +114,15 @@ resource "aws_autoscaling_group" "eks" {
     version = "$Latest"
   }
 
-  tag {
-        key                 = "Name"
-        value               = each.key
-        propagate_at_launch = true
-      }
+  dynamic "tag" {
+    for_each  = toset(concat(local.asg_common_tags, each.value.asg_tags))
+    content {
+      key                   = tag.value.key
+      value                 = tag.value.value
+      propagate_at_launch   = tag.value.propagate_at_launch
+    }
+  }
 
-  tag {
-        key                 = "kubernetes.io/cluster/${aws_eks_cluster.main.name}"
-        value               = "owned"
-        propagate_at_launch = true
-      }
-
-#  dynamic "tag" {
-#    for_each              = local.asg_tags
-#    content {
-#      key                 = each.key
-#      value               = each.value
-#      propagate_at_launch = true
-#    }
-#  }
 
   lifecycle {
     ignore_changes = [desired_capacity]
@@ -120,22 +138,16 @@ resource "aws_eks_node_group" "eks" {
   node_role_arn   = can(each.value.instance_profile) ? each.value.instance_profile : aws_iam_instance_profile.eks_worker.name
   subnet_ids      = each.value.subnets_ids
 
-#  dynamic "labels" {
-#    for_each  = each.value.k8s_labels
-#    content {
-#      key     = split("=", each.key)[0]
-#      value   = split("=", each.key)[1]
-#    }
-#  }
-#
-#  dynamic "taint" {
-#    for_each  = each.value.k8s_taint
-#    content {
-#      key     = each.value.key
-#      value   = each.value.value
-#      effect  = each.value.effect
-#    }
-#  }
+  labels = each.value.k8s_labels
+
+  dynamic "taint" {
+    for_each  = each.value.k8s_taint
+    content {
+      key     = taint.value.key
+      value   = taint.value.value
+      effect  = taint.value.effect
+    }
+  }
 
   scaling_config {
     min_size     = each.value.asg_min

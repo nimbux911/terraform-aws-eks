@@ -29,10 +29,6 @@ variable "eks_worker_ssh_cidrs" {
     default = []
 }
 
-variable "asg_tags" {
-  default = []
-}
-
 variable "eks_tags" {
     default = {}
 }
