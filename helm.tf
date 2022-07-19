@@ -136,8 +136,8 @@ resource "helm_release" "prometheus_stack" {
   }  
 
   set {
-    name = "prometheus-node-exporter.nodeSelector.node\\.kubernetes\\.io/instance-type"
-    value = var.instance_type
+    name = "prometheus-node-exporter.nodeSelector.eks\\.amazonaws\\.com/compute-type"
+    value = "ec2"
   }
 
   dynamic "set" {
@@ -657,8 +657,8 @@ resource "helm_release" "fluent_bit" {
   ]
 
   set {
-    name = "nodeSelector.node\\.kubernetes\\.io/instance-type"
-    value = var.instance_type
+    name = "nodeSelector.eks\\.amazonaws\\.com/compute-type"
+    value = "ec2"
   }
 
 }

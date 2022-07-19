@@ -3,15 +3,12 @@ variable "cluster_name" {}
 variable "cluster_version" {}
 variable "vpc_id" {}
 variable "subnets_ids" {}
-variable "instance_type" {}
-variable "max_size" {}
-variable "min_size" {}
-variable "max_pods_per_node"{}
-variable "desired_capacity" {}
-variable "ignore_desired_capacity" {
-    default = false
+variable "max_pods_per_node"{
+    default = null
 }
-variable "eks_worker_ami_id" {}
+
+variable "custom_node_groups"{}
+variable "managed_node_groups"{}
 
 variable "k8s_auth_api" {
     default = "client.authentication.k8s.io/v1alpha1"
