@@ -50,7 +50,7 @@ resource "aws_launch_template" "eks_node_groups" {
   vpc_security_group_ids                = can(each.value.extra_sg_ids) ? flatten(aws_security_group.eks_worker.id, each.value.extra_sg_ids) : [aws_security_group.eks_worker.id]
 
   key_name                              = aws_key_pair.eks.key_name
-  instance_initiated_shutdown_behavior  = "terminate"
+  instance_initiated_shutdown_behavior  = each.value.type == "custom" ? "terminate" : null 
   ebs_optimized                         = true
 
   user_data                             =  base64encode(templatefile("${path.module}/resources/eks_worker_userdata.tpl", 
@@ -75,8 +75,11 @@ resource "aws_launch_template" "eks_node_groups" {
     }
   }
 
-  iam_instance_profile {
-    name = can(each.value.instance_profile) ? each.value.instance_profile : aws_iam_instance_profile.eks_worker.name
+  dynamic "iam_instance_profile" {
+    for_each = each.value.type == "custom" ? ["do it"] : []
+    content {
+      name = can(each.value.instance_profile) ? each.value.instance_profile : aws_iam_instance_profile.eks_worker.name
+    }
   }
 
   monitoring {
@@ -134,8 +137,13 @@ resource "aws_eks_node_group" "eks" {
 
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = each.key
-  node_role_arn   = can(each.value.instance_profile) ? each.value.instance_profile : aws_iam_instance_profile.eks_worker.name
+  node_role_arn   = can(each.value.iam_role_arn) ? each.value.iam_role_arn : aws_iam_role.eks_worker.arn
   subnet_ids      = each.value.subnets_ids
+
+  launch_template {
+    id      = aws_launch_template.eks_node_groups[each.key].id
+    version = "$Latest"
+  }
 
   labels = can(each.value.k8s_labels) ? each.value.k8s_labels : null
 
