@@ -28,7 +28,8 @@ locals {
     }
   ]
 
-
+  managed_node_groups = {for node_group in var.managed_node_groups: node_group.name => merge(node_group.values, {type = "managed"})}
+  custom_node_groups = {for node_group in var.custom_node_groups: node_group.name => merge(node_group.values, {type = "custom"})}
 
 }
 
@@ -42,12 +43,12 @@ resource "aws_key_pair" "eks" {
 
 
 resource "aws_launch_template" "eks_node_groups" {
-  for_each                              = merge(var.custom_node_groups, var.managed_node_groups)
+  for_each                              = merge(local.custom_node_groups, local.managed_node_groups)
   name                                  = each.key
   image_id                              = each.value.ami_id
   instance_type                         = each.value.instance_type
 
-  vpc_security_group_ids                = can(each.value.extra_sg_ids) ? flatten(aws_security_group.eks_worker.id, each.value.extra_sg_ids) : [aws_security_group.eks_worker.id]
+  vpc_security_group_ids                = each.value.extra_sg_ids != null ? concat([aws_security_group.eks_worker.id], each.value.extra_sg_ids) : [aws_security_group.eks_worker.id]
 
   key_name                              = aws_key_pair.eks.key_name
   instance_initiated_shutdown_behavior  = each.value.type == "custom" ? "terminate" : null 
@@ -60,7 +61,7 @@ resource "aws_launch_template" "eks_node_groups" {
         cluster_name        = aws_eks_cluster.main.name,
         max_pods_enabled    = var.max_pods_per_node != null ? "--use-max-pods false" : "",
         max_pods_per_node   = var.max_pods_per_node != null ? "--max-pods=${var.max_pods_per_node}" : "",
-        node_labels         = can(each.value.k8s_labels) ? join(",", [ for k, v in merge(each.value.k8s_labels, local.nodes_common_labels) : "${k}=${v}"]) : join(",", [ for k,v in local.nodes_common_labels : "${k}=${v},"])
+        node_labels         = each.value.k8s_labels != null ? join(",", [ for k, v in merge(each.value.k8s_labels, local.nodes_common_labels) : "${k}=${v}"]) : join(",", [ for k,v in local.nodes_common_labels : "${k}=${v},"])
       }
     ))
 
@@ -69,7 +70,7 @@ resource "aws_launch_template" "eks_node_groups" {
     ebs {
       volume_size           = each.value.volume_size
       volume_type           = each.value.volume_type
-      iops                  = can(each.value.volume_iops) ? each.value.volume_iops : null
+      iops                  = each.value.volume_iops != null ? each.value.volume_iops : null
       delete_on_termination = true
 
     }
@@ -78,7 +79,7 @@ resource "aws_launch_template" "eks_node_groups" {
   dynamic "iam_instance_profile" {
     for_each = each.value.type == "custom" ? ["do it"] : []
     content {
-      name = can(each.value.instance_profile) ? each.value.instance_profile : aws_iam_instance_profile.eks_worker.name
+      name = each.value.instance_profile != null ? each.value.instance_profile : aws_iam_instance_profile.eks_worker.name
     }
   }
 
@@ -102,7 +103,7 @@ resource "aws_launch_template" "eks_node_groups" {
 
 
 resource "aws_autoscaling_group" "eks" {
-  for_each             = var.custom_node_groups
+  for_each             = local.custom_node_groups
   min_size             = each.value.asg_min
   desired_capacity     = each.value.asg_min
   max_size             = each.value.asg_max
@@ -133,11 +134,11 @@ resource "aws_autoscaling_group" "eks" {
 }
 
 resource "aws_eks_node_group" "eks" {
-  for_each             = var.managed_node_groups
+  for_each             = local.managed_node_groups
 
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = each.key
-  node_role_arn   = can(each.value.iam_role_arn) ? each.value.iam_role_arn : aws_iam_role.eks_worker.arn
+  node_role_arn   = each.value.iam_role_arn != null ? each.value.iam_role_arn : aws_iam_role.eks_worker.arn
   subnet_ids      = each.value.subnets_ids
 
   launch_template {
@@ -145,10 +146,10 @@ resource "aws_eks_node_group" "eks" {
     version = "$Latest"
   }
 
-  labels = can(each.value.k8s_labels) ? each.value.k8s_labels : null
+  labels = each.value.k8s_labels != null ? each.value.k8s_labels : null
 
   dynamic "taint" {
-    for_each  = can(each.value.k8s_taint) ? each.value.k8s_taint : {}
+    for_each  = each.value.k8s_taint != null ? each.value.k8s_taint : []
     content {
       key     = taint.value.key
       value   = taint.value.value

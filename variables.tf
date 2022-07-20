@@ -1,14 +1,71 @@
-variable "environment" {}
-variable "cluster_name" {}
-variable "cluster_version" {}
-variable "vpc_id" {}
-variable "subnets_ids" {}
+variable "environment" {
+    type = string
+}
+variable "cluster_name" {
+    type = string
+}
+variable "cluster_version" {
+    type = string
+}
+variable "vpc_id" {
+    type = string
+}
+variable "subnets_ids" {
+    type = list(string)
+}
 variable "max_pods_per_node"{
+    type    = number
     default = null
 }
 
-variable "custom_node_groups"{}
-variable "managed_node_groups"{}
+variable "custom_node_groups"{
+    type = list(object({
+        name = string
+        values = object({
+            ami_id           = string,
+            instance_type    = string,
+            extra_sg_ids     = optional(list(string)),
+            instance_profile = optional(string),
+            asg_min          = number,
+            asg_max          = number,
+            subnets_ids      = list(string),
+            volume_type      = string,
+            volume_size      = number,
+            volume_iops      = optional(number),
+            k8s_labels       = optional(map(string)),
+            asg_tags         = optional(list(object({
+                key                  = string,
+                value                = string,
+                propagate_at_launch  = bool
+            })))
+        })
+  }))
+}
+
+variable "managed_node_groups"{
+    type = list(object({
+        name = string
+        values = object({
+            ami_id          = string,
+            instance_type   = string,
+            extra_sg_ids    = optional(list(string)),
+            iam_role_arn    = optional(string),
+            asg_min         = number,
+            asg_max         = number,
+            subnets_ids     = list(string),
+            volume_type     = string,
+            volume_size     = number,
+            volume_iops     = optional(number),
+            k8s_labels      = optional(map(string)),
+            k8s_taint       = optional(list(object({
+                key     = string,
+                value   = string,
+                effect  = string
+            })))
+        })
+  }))
+
+}
 
 variable "k8s_auth_api" {
     default = "client.authentication.k8s.io/v1alpha1"
