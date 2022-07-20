@@ -28,8 +28,8 @@ locals {
     }
   ]
 
-  managed_node_groups = {for node_group in var.managed_node_groups: node_group.name => merge(node_group.values, {type = "managed"})}
-  custom_node_groups = {for node_group in var.custom_node_groups: node_group.name => merge(node_group.values, {type = "custom"})}
+  managed_node_groups = var.managed_node_groups != null ? {for node_group in var.managed_node_groups: node_group.name => merge(node_group.values, {type = "managed"})} : null
+  custom_node_groups = var.custom_node_groups != null ? {for node_group in var.custom_node_groups: node_group.name => merge(node_group.values, {type = "custom"})} : null
 
 }
 
@@ -103,7 +103,7 @@ resource "aws_launch_template" "eks_node_groups" {
 
 
 resource "aws_autoscaling_group" "eks" {
-  for_each             = local.custom_node_groups
+  for_each             = local.custom_node_groups != null ? local.custom_node_groups : {}
   min_size             = each.value.asg_min
   desired_capacity     = each.value.asg_min
   max_size             = each.value.asg_max
@@ -134,7 +134,7 @@ resource "aws_autoscaling_group" "eks" {
 }
 
 resource "aws_eks_node_group" "eks" {
-  for_each             = local.managed_node_groups
+  for_each        = local.managed_node_groups != null ? local.managed_node_groups : {}
 
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = each.key

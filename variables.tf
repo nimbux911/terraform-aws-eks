@@ -40,6 +40,7 @@ variable "custom_node_groups"{
             })))
         })
   }))
+  default = null
 }
 
 variable "managed_node_groups"{
@@ -64,7 +65,7 @@ variable "managed_node_groups"{
             })))
         })
   }))
-
+    default = null
 }
 
 variable "k8s_auth_api" {
