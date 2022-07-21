@@ -69,7 +69,7 @@ variable "managed_node_groups"{
 }
 
 variable "k8s_auth_api" {
-    default = "client.authentication.k8s.io/v1alpha1"
+    default = "client.authentication.k8s.io/v1beta1"
 }
 variable "target_group_arns" {
     default = []
