@@ -136,9 +136,34 @@ resource "helm_release" "prometheus_stack" {
   }  
 
   set {
-    name = "prometheus-node-exporter.nodeSelector.node\\.kubernetes\\.io/instance-type"
-    value = var.instance_type
+    name = "prometheus-node-exporter.nodeSelector.eks\\.amazonaws\\.com/compute-type"
+    value = "ec2"
   }
+
+  dynamic "set" {
+    for_each = var.prometheus_node_selector != null ? var.prometheus_node_selector : {}
+    content {
+      name  = "alertmanager.alertmanagerSpec.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.prometheus_node_selector != null ? var.prometheus_node_selector : {}
+    content {
+      name  = "prometheus.prometheusSpec.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.prometheus_node_selector != null ? var.prometheus_node_selector : {}
+    content {
+      name  = "prometheusOperator.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
 
   dynamic "set" {
     for_each = var.prometheus_requests_cpu != null ? ["do it"] : []
@@ -259,6 +284,15 @@ resource "helm_release" "loki_distributed" {
 
   # loki - ingester
 
+  dynamic "set" {
+    for_each = var.loki_ingester_node_selector != null ? var.loki_ingester_node_selector : {}
+    content {
+      name  = "ingester.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
+
   set {
     name  = "ingester.replicas"
     value = var.loki_ingester_replicas
@@ -313,6 +347,15 @@ resource "helm_release" "loki_distributed" {
 
   # loki - distributor
 
+  dynamic "set" {
+    for_each = var.loki_distributor_node_selector != null ? var.loki_distributor_node_selector : {}
+    content {
+      name  = "distributor.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
+
   set {
     name  = "distributor.autoscaling.enabled"
     value = true
@@ -363,6 +406,14 @@ resource "helm_release" "loki_distributed" {
 
   # loki - querier
 
+  dynamic "set" {
+    for_each = var.loki_querier_node_selector != null ? var.loki_querier_node_selector : {}
+    content {
+      name  = "querier.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
   set {
     name  = "querier.autoscaling.enabled"
     value = true
@@ -411,6 +462,14 @@ resource "helm_release" "loki_distributed" {
   }
 
   # loki - query-frontend
+
+  dynamic "set" {
+    for_each = var.loki_query_frontend_node_selector != null ? var.loki_query_frontend_node_selector : {}
+    content {
+      name  = "queryFrontend.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
 
   set {
     name  = "queryFrontend.autoscaling.enabled"
@@ -467,6 +526,14 @@ resource "helm_release" "loki_distributed" {
   }
 
   dynamic "set" {
+    for_each = var.loki_compactor_node_selector != null ? var.loki_compactor_node_selector : {}
+    content {
+      name  = "compactor.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
     for_each = var.loki_compactor_requests_cpu != null ? ["do it"] : []
     content {
       name  = "compactor.resources.requests.cpu"
@@ -504,6 +571,14 @@ resource "helm_release" "loki_distributed" {
     name  = "indexGateway.enabled"
     value = var.loki_index_gateway_enabled
   }  
+
+  dynamic "set" {
+    for_each = var.loki_index_gateway_node_selector != null ? var.loki_index_gateway_node_selector : {}
+    content {
+      name  = "indexGateway.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
 
   set {
     name  = "indexGateway.replicas"
@@ -564,6 +639,14 @@ resource "helm_release" "loki_distributed" {
     name  = "gateway.enabled"
     value = var.loki_gateway_enabled
   }  
+
+  dynamic "set" {
+    for_each = var.loki_gateway_node_selector != null ? var.loki_gateway_node_selector : {}
+    content {
+      name  = "gateway.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
 
   set {
     name  = "gateway.autoscaling.enabled"
@@ -637,7 +720,6 @@ resource "helm_release" "loki_distributed" {
     value = var.loki_gateway_ingress_path_type
   }
 
-
 }
 
 # ================== fluent-bit ================== #
@@ -657,8 +739,8 @@ resource "helm_release" "fluent_bit" {
   ]
 
   set {
-    name = "nodeSelector.node\\.kubernetes\\.io/instance-type"
-    value = var.instance_type
+    name = "nodeSelector.eks\\.amazonaws\\.com/compute-type"
+    value = "ec2"
   }
 
 }

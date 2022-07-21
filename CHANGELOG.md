@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2022-07-20
+
+### Added
+- AWS managed node groups
+- multiple custom node groups
+- NodeSelector input for loki and prometheus components
+- Labels and taints for node groups
+- k8s default api version updated to "client.authentication.k8s.io/v1beta1"
+- Terraform Launch configuration replaced by Terraform launch template
+
+### Fixed
+- [Loki issue #5909](https://github.com/grafana/loki/issues/5909#issuecomment-1120821579) with image v2.5.0-with-pr-6123-a630ae3 
+
 ## [3.1.8] - 2022-07-14
 
 ### Added

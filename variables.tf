@@ -1,20 +1,75 @@
-variable "environment" {}
-variable "cluster_name" {}
-variable "cluster_version" {}
-variable "vpc_id" {}
-variable "subnets_ids" {}
-variable "instance_type" {}
-variable "max_size" {}
-variable "min_size" {}
-variable "max_pods_per_node"{}
-variable "desired_capacity" {}
-variable "ignore_desired_capacity" {
-    default = false
+variable "environment" {
+    type = string
 }
-variable "eks_worker_ami_id" {}
+variable "cluster_name" {
+    type = string
+}
+variable "cluster_version" {
+    type = string
+}
+variable "vpc_id" {
+    type = string
+}
+variable "subnets_ids" {
+    type = list(string)
+}
+variable "max_pods_per_node"{
+    type    = number
+    default = null
+}
+
+variable "custom_node_groups"{
+    type = list(object({
+        name = string
+        values = object({
+            ami_id           = string,
+            instance_type    = string,
+            extra_sg_ids     = optional(list(string)),
+            instance_profile = optional(string),
+            asg_min          = number,
+            asg_max          = number,
+            subnets_ids      = list(string),
+            volume_type      = string,
+            volume_size      = number,
+            volume_iops      = optional(number),
+            k8s_labels       = optional(map(string)),
+            asg_tags         = optional(list(object({
+                key                  = string,
+                value                = string,
+                propagate_at_launch  = bool
+            })))
+        })
+  }))
+  default = null
+}
+
+variable "managed_node_groups"{
+    type = list(object({
+        name = string
+        values = object({
+            ami_id          = string,
+            instance_type   = string,
+            extra_sg_ids    = optional(list(string)),
+            iam_role_arn    = optional(string),
+            asg_min         = number,
+            asg_max         = number,
+            subnets_ids     = list(string),
+            volume_type     = string,
+            volume_size     = number,
+            volume_iops     = optional(number),
+            k8s_labels      = optional(map(string)),
+            k8s_taint       = optional(list(object({
+                key     = string,
+                value   = string,
+                effect  = string
+            })))
+        })
+  }))
+    default = null
+}
 
 variable "k8s_auth_api" {
-    default = "client.authentication.k8s.io/v1alpha1"
+    default = "client.authentication.k8s.io/v1beta1"
 }
 variable "target_group_arns" {
     default = []
@@ -30,10 +85,6 @@ variable "eks_worker_max_pods_enabled" {
 
 variable "eks_worker_ssh_cidrs" {
     default = []
-}
-
-variable "asg_tags" {
-  default = []
 }
 
 variable "eks_tags" {
@@ -127,6 +178,10 @@ variable "loki_ingester_replicas" {
     default = 1
 }
 
+variable "loki_ingester_node_selector" {
+    default = null
+}
+
 variable "loki_ingester_storage_class" {
     default = "gp2"
 }
@@ -153,6 +208,10 @@ variable "loki_distributor_min_replicas" {
     default = 1
 }
 
+variable "loki_distributor_node_selector" {
+    default = null
+}
+
 variable "loki_distributor_requests_cpu" {
     default = null
 }
@@ -173,6 +232,10 @@ variable "loki_distributor_max_replicas" {
 # loki - querier
 variable "loki_querier_min_replicas" {
     default = 1
+}
+
+variable "loki_querier_node_selector" {
+    default = null
 }
 
 variable "loki_querier_max_replicas" {
@@ -197,6 +260,10 @@ variable "loki_query_frontend_min_replicas" {
     default = 1
 }
 
+variable "loki_query_frontend_node_selector" {
+    default = null
+}
+
 variable "loki_query_frontend_max_replicas" {
     default = 1
 }
@@ -218,6 +285,10 @@ variable "loki_query_frontend_limits_memory" {
 
 variable "loki_gateway_enabled" {
     default = false
+}
+
+variable "loki_gateway_node_selector" {
+    default = null
 }
 
 variable "loki_gateway_min_replicas" {
@@ -267,6 +338,10 @@ variable "loki_compactor_enabled" {
     default = true
 }
 
+variable "loki_compactor_node_selector" {
+    default = null
+}
+
 variable "loki_compactor_requests_cpu" {
     default = null
 }
@@ -284,6 +359,10 @@ variable "loki_compactor_limits_memory" {
 
 variable "loki_index_gateway_enabled" {
     default = true
+}
+
+variable "loki_index_gateway_node_selector" {
+    default = null
 }
 
 variable "loki_index_gateway_replicas" {
@@ -320,6 +399,10 @@ variable "helm_fluent_bit_enabled" {
 # ================== prometheus ================== #
 variable "helm_prometheus_enabled" {
     default = false
+}
+
+variable "prometheus_node_selector" {
+    default = null
 }
 
 variable "prometheus_replicas" {
