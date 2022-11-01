@@ -242,6 +242,7 @@ module "eks_main" {
 | loki\_query\_frontend\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_query\_frontend\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_query\_frontend\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_max\_query\_length | The limit to length of chunk store queries | `string` | `721h` | no |
 | loki\_gateway\_enabled | Enable loki gateway | `bool` | `false` | no |
 | loki\_gateway\_node\_selector | Loki gateway nodeSelector | `map{}` | `null` | no | 
 | loki\_gateway\_min\_replicas | loki gateway hpa min replicas | `int` | `1` | no |

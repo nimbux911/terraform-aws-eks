@@ -174,6 +174,10 @@ variable "loki_logs_retention" {
     default = "744h"
 }
 
+variable "loki_max_query_length" {
+    default = "721h"
+}
+
 # loki - ingester
 variable "loki_ingester_replicas" {
     default = 1
