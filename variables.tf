@@ -36,8 +36,9 @@ variable "custom_node_groups"{
             asg_tags         = optional(list(object({
                 key                  = string,
                 value                = string,
-                propagate_at_launch  = bool
-            })))
+                propagate_at_launch  = bool}))),
+            spot_nodes_enabled = optional(bool),
+            spot_options       = optional(map(string))
         })
   }))
   default = null
@@ -171,6 +172,10 @@ variable "loki_logs_retention_enabled" {
 
 variable "loki_logs_retention" {
     default = "744h"
+}
+
+variable "loki_max_query_length" {
+    default = "721h"
 }
 
 # loki - ingester

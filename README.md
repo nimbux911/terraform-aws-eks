@@ -96,6 +96,9 @@ module "eks_main" {
         asg_tags          = var.asg_tags
         k8s_labels        = {
           nodegroup       = "${var.environment}-${var.cluster_name}"
+        spot_nodes_enabled = true, // Just for custom node groups on Launch templates: https://docs.aws.amazon.com/eks/latest/APIReference/API_LaunchTemplateSpecification.html
+        spot_options       = {
+          max_price  = "0.0416" # t3.medium on-demand price
         }
       }
     }
@@ -225,7 +228,7 @@ module "eks_main" {
 | loki\_distributor\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_distributor\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_distributor\_max\_replicas | loki distributor hpa max replicas | `int` | `1` | no |
-| loki\_querier\_node\_selector | Loki querier nodeSelector | `map{}` | `null` | no | 
+| loki\_querier\_node\_selector | Loki querier nodeSelector | `map{}` | `null` | no |
 | loki\_querier\_min\_replicas | loki querier hpa min replicas | `int` | `1` | no |
 | loki\_querier\_max\_replicas | loki querier hpa max replicas | `int` | `1` | no |
 | loki\_querier\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
@@ -239,6 +242,7 @@ module "eks_main" {
 | loki\_query\_frontend\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_query\_frontend\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_query\_frontend\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_max\_query\_length | The limit to length of chunk store queries | `string` | `721h` | no |
 | loki\_gateway\_enabled | Enable loki gateway | `bool` | `false` | no |
 | loki\_gateway\_node\_selector | Loki gateway nodeSelector | `map{}` | `null` | no | 
 | loki\_gateway\_min\_replicas | loki gateway hpa min replicas | `int` | `1` | no |

@@ -282,6 +282,11 @@ resource "helm_release" "loki_distributed" {
     value = var.loki_logs_retention
   } 
 
+  set {
+    name  = "loki.structuredConfig.limits_config.max_query_length"
+    value = var.loki_max_query_length
+  }
+
   # loki - ingester
 
   dynamic "set" {

@@ -87,6 +87,22 @@ resource "aws_launch_template" "eks_node_groups" {
     enabled = true
   }
 
+  dynamic "instance_market_options" {
+    for_each = each.value.spot_nodes_enabled != null && each.value.spot_nodes_enabled == true ? ["do it"] : []
+    content {
+      market_type = "spot"
+
+      spot_options {
+          block_duration_minutes         = lookup(each.value.spot_options, "block_duration_minutes", null)
+          instance_interruption_behavior = lookup(each.value.spot_options, "instance_interruption_behavior", null)
+          max_price                      = lookup(each.value.spot_options, "max_price", null)
+          spot_instance_type             = lookup(each.value.spot_options, "spot_instance_type", null)
+          valid_until                    = lookup(each.value.spot_options, "valid_until", null)
+        }
+      }
+    }
+  
+
   tag_specifications {
     resource_type = "instance"
     tags = {
