@@ -137,6 +137,14 @@ variable "ingress_service_monitor_enabled" {
     default = false
 }
 
+variable "ingress_requests_cpu" {
+    default = "100m"
+}
+
+variable "ingress_requests_memory" {
+    default = "90Mi"
+}
+
 # cluster-autoscaler
 variable "helm_cluster_autoscaler_enabled" {
     default = false

@@ -205,6 +205,8 @@ module "eks_main" {
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
 | ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
+| ingress\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
+| ingress\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | helm\_cluster\_autoscaler\_enabled | Set if cluster-autoscaler Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_metrics\_server\_enabled | Set if metrics-server Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_cert\_manager\_enabled | Set if cert-manager helm chart will be installed on the cluster | `bool` | `false` | no |
