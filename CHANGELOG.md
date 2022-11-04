@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Request cpu and memory for ingress-nginx chart
 
+### Fixed 
+- Typo on "helm_ingress_nginx_enabled". Before it was "helm_ingress_ngnix_enabled"
+
 ## [4.1.0] - 2022-11-01
 
 ### Added

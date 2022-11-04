@@ -121,7 +121,7 @@ variable "eks_addons" {
 # ============================== helm releases ============================== #
 
 # ================== ingress-nginx =================
-variable "helm_ingress_ngnix_enabled" {
+variable "helm_ingress_nginx_enabled" {
     default = false
 }
 
