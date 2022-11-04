@@ -121,7 +121,7 @@ variable "eks_addons" {
 # ============================== helm releases ============================== #
 
 # ================== ingress-nginx =================
-variable "helm_ingress_ngnix_enabled" {
+variable "helm_ingress_nginx_enabled" {
     default = false
 }
 
@@ -135,6 +135,14 @@ variable "ingress_https_nodeport" {
 
 variable "ingress_service_monitor_enabled" {
     default = false
+}
+
+variable "ingress_requests_cpu" {
+    default = "100m"
+}
+
+variable "ingress_requests_memory" {
+    default = "90Mi"
 }
 
 # cluster-autoscaler

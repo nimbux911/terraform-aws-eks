@@ -35,6 +35,16 @@ resource "helm_release" "ingress_nginx" {
     value = var.ingress_https_nodeport
   }
 
+  set {
+    name  = "controller.resources.requests.cpu"
+    value = var.ingress_requests_cpu
+  }
+
+  set {
+    name  = "controller.resources.requests.memory"
+    value = var.ingress_requests_memory
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
