@@ -2,7 +2,7 @@
 # ========================= core charts ========================= #
 
 resource "helm_release" "ingress_nginx" {
-  count             = var.helm_ingress_ngnix_enabled ? 1 : 0
+  count             = var.helm_ingress_nginx_enabled ? 1 : 0
   name              = "ingress-nginx"
   namespace         = "ingress-nginx"
   create_namespace  = true
