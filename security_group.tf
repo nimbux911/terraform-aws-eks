@@ -111,7 +111,7 @@ resource "aws_security_group_rule" "eks_master_ingress_https_from_workers" {
 }
 
 resource "aws_security_group_rule" "eks_worker_ingress_nginx_from_vpc" {
-  count                    = var.helm_ingress_ngnix_enabled ? 1 : 0
+  count                    = var.helm_ingress_nginx_enabled ? 1 : 0
   description              = "Allow VPC CIDR to access ingress port"
   from_port                = 32080
   protocol                 = "tcp"
