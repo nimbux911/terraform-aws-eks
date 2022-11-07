@@ -28,9 +28,8 @@ locals {
     }
   ]
 
-  managed_node_groups = var.managed_node_groups != null ? {for node_group in var.managed_node_groups: node_group.name => merge(node_group.values, {type = "managed"})} : null
-  custom_node_groups = var.custom_node_groups != null ? {for node_group in var.custom_node_groups: node_group.name => merge(node_group.values, {type = "custom"})} : null
-
+  managed_node_groups = var.managed_node_groups != null ? {for node_group in var.managed_node_groups: node_group.name => merge(node_group.values, {type = "managed", spot_nodes_enabled = false})} : null
+  custom_node_groups = var.custom_node_groups != null ? {for node_group in var.custom_node_groups: node_group.name => merge(node_group.values, {type = "custom", spot_nodes_enabled = false})} : null
 }
 
 
@@ -88,7 +87,7 @@ resource "aws_launch_template" "eks_node_groups" {
   }
 
   dynamic "instance_market_options" {
-    for_each = each.value.spot_nodes_enabled != null && each.value.spot_nodes_enabled == true ? ["do it"] : []
+    for_each = each.value.type == "custom" && each.value.spot_nodes_enabled == true ? ["do it"] : []
     content {
       market_type = "spot"
 
