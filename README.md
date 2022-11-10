@@ -209,8 +209,8 @@ module "eks_main" {
 | ingress\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
 | ingress\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | ingress\_second\_http\_nodeport | Set port for second ingress http nodePort | `int` | `31080` | no |
-| ingress\_second_\https\_nodeport | Set port for second ingress https nodePort | `int` | `31443` | no |
-| ingress\_second_\https\_traffic\_enabled | Set https traffic for second ingress | `bool` | `false` | no | 
+| ingress\_second\_https\_nodeport | Set port for second ingress https nodePort | `int` | `31443` | no |
+| ingress\_second\_https\_traffic\_enabled | Set https traffic for second ingress | `bool` | `false` | no | 
 | ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
 | ingress\_second\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
 | ingress\_second\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
