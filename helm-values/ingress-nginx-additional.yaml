@@ -22,7 +22,7 @@ controller:
       additionalLabels:
         release: prometheus-stack
   ingressClassResource:
-    name: nginx-second
+    name: nginx-private
     enabled: true
     default: false
-    controllerValue: "k8s.io/ingress-nginx-second"
+    controllerValue: "k8s.io/ingress-nginx-additional"

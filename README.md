@@ -152,15 +152,15 @@ module "eks_main" {
   helm_fluent_bit_enabled = true
 
 # ================== prometheus ================== #
-  helm_prometheus_enabled       = true
-  prometheus_replicas           = 2
-  prometheus_ingress_enabled    = true
-  prometheus_ingress_host       = "prometheus.example.com"
-  prometheus_requests_cpu       = "200m"
-  prometheus_requests_memory    = "1024Mi"
-  prometheus_limits_cpu         = "500m"
-  prometheus_limits_memory      = "2048Mi"
-  prometheus_node_selector      = { "eks\\.amazonaws\\.com/nodegroup" = "monitoring-${var.cluster_name}" }
+  helm_prometheus_enabled     = true
+  prometheus_replicas         = 2
+  prometheus_ingress_enabled  = true
+  prometheus_ingress_host     = "prometheus.example.com"
+  prometheus_requests_cpu     = "200m"
+  prometheus_requests_memory  = "1024Mi"
+  prometheus_limits_cpu       = "500m"
+  prometheus_limits_memory    = "2048Mi"
+  prometheus_node_selector    = { "eks\\.amazonaws\\.com/nodegroup" = "monitoring-${var.cluster_name}" }
 
 # ================== tempo ================== #
   helm_tempo_enabled            = true

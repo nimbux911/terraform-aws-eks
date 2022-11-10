@@ -21,8 +21,3 @@ controller:
     serviceMonitor:
       additionalLabels:
         release: prometheus-stack
-  ingressClassResource:
-    name: nginx-public
-    enabled: true
-    default: false
-    controllerValue: "k8s.io/ingress-nginx-public"
