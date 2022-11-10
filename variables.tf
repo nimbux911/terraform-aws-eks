@@ -359,7 +359,7 @@ variable "loki_gateway_ingress_path_type" {
 }
 
 variable "loki_gateway_ingress_class_name" {
-    default = ""
+    default = "nginx"
 }
 
 variable "loki_gateway_requests_cpu" {
@@ -485,7 +485,7 @@ variable "prometheus_ingress_path_type" {
 }
 
 variable "prometheus_ingress_class_name" {
-    default = ""
+    default = "nginx"
 }
 
 variable "prometheus_storage_class_name" {
@@ -638,7 +638,7 @@ variable "tempo_ingress_path_type" {
 }
 
 variable "tempo_ingress_class_name" {
-    default = ""
+    default = "nginx"
 }
 
 # ============================== k8s manifests ============================== #

@@ -142,7 +142,6 @@ module "eks_main" {
   loki_gateway_node_selector            = { "eks\\.amazonaws\\.com/nodegroup" = "monitoring-${var.cluster_name}" }
   loki_gateway_ingress_enabled          = true
   loki_gateway_ingress_host             = "loki.example.com"
-  loki_gateway_ingress_class_name       = "nginx-private"
   loki_compactor_enabled                = true
   loki_compactor_node_selector          = { "eks\\.amazonaws\\.com/nodegroup" = "monitoring-${var.cluster_name}" }
   loki_index_gateway_enabled            = true
@@ -157,7 +156,6 @@ module "eks_main" {
   prometheus_replicas           = 2
   prometheus_ingress_enabled    = true
   prometheus_ingress_host       = "prometheus.example.com"
-  prometheus_ingress_class_name = "nginx-private"
   prometheus_requests_cpu       = "200m"
   prometheus_requests_memory    = "1024Mi"
   prometheus_limits_cpu         = "500m"
@@ -171,7 +169,6 @@ module "eks_main" {
   tempo_gateway_enabled         = true
   tempo_gateway_ingress_enabled = true
   tempo_gateway_ingress_host    = "tempo.example.com"
-  tempo_ingress_class_name      = "nginx-private"
 
 # open-telemetry
   k8s_opentelemetry_enabled = true
@@ -205,18 +202,18 @@ module "eks_main" {
 | eks\_worker\_ssh\_cidrs | Add SSH ingress rule to eks workers | `list` | `[]` | no |
 | enabled\_cluster\_log\_types | Enable CloudWatch Logs for control plane components | `list[string]` | `[]` | no |
 | helm\_ingress\_nginx\_enabled | Set if ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
-| helm\_ingress\_nginx\_second\_enabled | Set if second ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
+| helm\_ingress\_nginx\_additional\_enabled | Set if additional ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
 | ingress\_https\_traffic\_enabled | Set https traffic for ingress | `bool` | `false` | no | 
 | ingress\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
 | ingress\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
-| ingress\_second\_http\_nodeport | Set port for second ingress http nodePort | `int` | `31080` | no |
-| ingress\_second\_https\_nodeport | Set port for second ingress https nodePort | `int` | `31443` | no |
-| ingress\_second\_https\_traffic\_enabled | Set https traffic for second ingress | `bool` | `false` | no | 
+| ingress\_additional\_http\_nodeport | Set port for additional ingress http nodePort | `int` | `31080` | no |
+| ingress\_additional\_https\_nodeport | Set port for additional ingress https nodePort | `int` | `31443` | no |
+| ingress\_additional\_https\_traffic\_enabled | Set https traffic for additional ingress | `bool` | `false` | no | 
 | ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
-| ingress\_second\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
-| ingress\_second\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
+| ingress\_additional\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
+| ingress\_additional\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | helm\_cluster\_autoscaler\_enabled | Set if cluster-autoscaler Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_metrics\_server\_enabled | Set if metrics-server Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_cert\_manager\_enabled | Set if cert-manager helm chart will be installed on the cluster | `bool` | `false` | no |
