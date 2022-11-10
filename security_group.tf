@@ -110,9 +110,9 @@ resource "aws_security_group_rule" "eks_master_ingress_https_from_workers" {
   type                     = "ingress"
 }
 
-resource "aws_security_group_rule" "eks_worker_ingress_nginx_from_vpc" {
-  count                    = var.helm_ingress_nginx_enabled ? 1 : 0
-  description              = "Allow VPC CIDR to access ingress port"
+resource "aws_security_group_rule" "eks_worker_ingress_nginx_public_from_vpc" {
+  count                    = var.helm_ingress_nginx_public_enabled ? 1 : 0
+  description              = "Allow VPC CIDR to access public ingress port"
   from_port                = 32080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.eks_worker.id
@@ -121,9 +121,9 @@ resource "aws_security_group_rule" "eks_worker_ingress_nginx_from_vpc" {
   type                     = "ingress"
 }
 
-resource "aws_security_group_rule" "eks_worker_ingress_nginx_https_from_vpc" {
-  count                    = var.ingress_https_traffic_enabled ? 1 : 0
-  description              = "Allow VPC CIDR to access ingress https port"
+resource "aws_security_group_rule" "eks_worker_ingress_nginx_public_https_from_vpc" {
+  count                    = var.ingress_public_https_traffic_enabled ? 1 : 0
+  description              = "Allow VPC CIDR to access public ingress https port"
   from_port                = 32443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.eks_worker.id
@@ -132,9 +132,9 @@ resource "aws_security_group_rule" "eks_worker_ingress_nginx_https_from_vpc" {
   type                     = "ingress"
 }
 
-resource "aws_security_group_rule" "eks_worker_ingress_nginx_second_from_vpc" {
-  count                    = var.helm_ingress_nginx_second_enabled ? 1 : 0
-  description              = "Allow VPC CIDR to access second ingress port"
+resource "aws_security_group_rule" "eks_worker_ingress_nginx_private_from_vpc" {
+  count                    = var.helm_ingress_nginx_private_enabled ? 1 : 0
+  description              = "Allow VPC CIDR to access private ingress port"
   from_port                = 31080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.eks_worker.id
@@ -143,9 +143,9 @@ resource "aws_security_group_rule" "eks_worker_ingress_nginx_second_from_vpc" {
   type                     = "ingress"
 }
 
-resource "aws_security_group_rule" "eks_worker_ingress_nginx_second_https_from_vpc" {
-  count                    = var.ingress_second_https_traffic_enabled ? 1 : 0
-  description              = "Allow VPC CIDR to access second ingress https port"
+resource "aws_security_group_rule" "eks_worker_ingress_nginx_private_https_from_vpc" {
+  count                    = var.ingress_private_https_traffic_enabled ? 1 : 0
+  description              = "Allow VPC CIDR to access private ingress https port"
   from_port                = 31443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.eks_worker.id

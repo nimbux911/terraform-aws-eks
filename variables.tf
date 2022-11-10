@@ -120,20 +120,20 @@ variable "eks_addons" {
 
 # ============================== helm releases ============================== #
 
-# ================== ingress-nginx =================
-variable "helm_ingress_nginx_enabled" {
+# ================== ingress-nginx-public =================
+variable "helm_ingress_nginx_public_enabled" {
     default = false
 }
 
-variable "ingress_http_nodeport" {
+variable "ingress_public_http_nodeport" {
     default = 32080
 }
 
-variable "ingress_https_nodeport" {
+variable "ingress_public_https_nodeport" {
     default = 32443
 }
 
-variable "ingress_https_traffic_enabled" {
+variable "ingress_public_https_traffic_enabled" {
     default = false
 }
 
@@ -141,37 +141,37 @@ variable "ingress_service_monitor_enabled" {
     default = false
 }
 
-variable "ingress_requests_cpu" {
+variable "ingress_public_requests_cpu" {
     default = "100m"
 }
 
-variable "ingress_requests_memory" {
+variable "ingress_public_requests_memory" {
     default = "90Mi"
 }
 
-# ================== ingress-nginx-second =================
+# ================== ingress-nginx-private =================
 
-variable "helm_ingress_nginx_second_enabled" {
+variable "helm_ingress_nginx_private_enabled" {
     default = false
 }
 
-variable "ingress_second_http_nodeport" {
+variable "ingress_private_http_nodeport" {
     default = 31080
 }
 
-variable "ingress_second_https_nodeport" {
+variable "ingress_private_https_nodeport" {
     default = 31443
 }
 
-variable "ingress_second_https_traffic_enabled" {
+variable "ingress_private_https_traffic_enabled" {
     default = false
 }
 
-variable "ingress_second_requests_cpu" {
+variable "ingress_private_requests_cpu" {
     default = "100m"
 }
 
-variable "ingress_second_requests_memory" {
+variable "ingress_private_requests_memory" {
     default = "90Mi"
 }
 
@@ -359,7 +359,7 @@ variable "loki_gateway_ingress_path_type" {
 }
 
 variable "loki_gateway_ingress_class_name" {
-    default = "nginx"
+    default = ""
 }
 
 variable "loki_gateway_requests_cpu" {
@@ -485,7 +485,7 @@ variable "prometheus_ingress_path_type" {
 }
 
 variable "prometheus_ingress_class_name" {
-    default = "nginx"
+    default = ""
 }
 
 variable "prometheus_storage_class_name" {
@@ -638,7 +638,7 @@ variable "tempo_ingress_path_type" {
 }
 
 variable "tempo_ingress_class_name" {
-    default = "nginx"
+    default = ""
 }
 
 # ============================== k8s manifests ============================== #

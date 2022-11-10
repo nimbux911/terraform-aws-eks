@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.2.0] - 2022-11-10
 
 ### Added
-- Second nginx controller instance
+- Prviate/public nginx controller instances
 - Enable https traffic to nginx 
 
 ## [4.1.1] - 2022-11-04
