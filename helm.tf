@@ -49,6 +49,54 @@ resource "helm_release" "ingress_nginx" {
 
 }
 
+resource "helm_release" "ingress_nginx_second" {
+  count             = var.helm_ingress_nginx_second_enabled ? 1 : 0
+  name              = "ingress-nginx-second"
+  namespace         = "ingress-nginx"
+  create_namespace  = true
+  repository        = "https://kubernetes.github.io/ingress-nginx"
+  chart             = "ingress-nginx"
+  version           = "4.0.18"
+
+  values            = [
+    file("${path.module}/helm-values/ingress-nginx-second.yaml")
+  ]
+
+  set {
+    name  = "controller.metrics.enabled"
+    value = var.ingress_service_monitor_enabled
+  }
+
+  set {
+    name  = "controller.metrics.serviceMonitor.enabled"
+    value = var.ingress_service_monitor_enabled
+  }
+
+
+  set {
+    name  = "controller.service.nodePorts.http"
+    value = var.ingress_second_http_nodeport
+  }
+
+  set {
+    name  = "controller.service.nodePorts.https"
+    value = var.ingress_second_https_nodeport
+  }
+
+  set {
+    name  = "controller.resources.requests.cpu"
+    value = var.ingress_second_requests_cpu
+  }
+
+  set {
+    name  = "controller.resources.requests.memory"
+    value = var.ingress_second_requests_memory
+  }
+
+  depends_on = [time_sleep.wait_20_seconds]
+
+}
+
 resource "helm_release" "cluster_autoscaler" {
   count      = var.helm_cluster_autoscaler_enabled ? 1 : 0
   name       = "cluster-autoscaler"

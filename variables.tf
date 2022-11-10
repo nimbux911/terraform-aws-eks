@@ -133,6 +133,10 @@ variable "ingress_https_nodeport" {
     default = 32443
 }
 
+variable "ingress_https_traffic_enabled" {
+    default = false
+}
+
 variable "ingress_service_monitor_enabled" {
     default = false
 }
@@ -142,6 +146,32 @@ variable "ingress_requests_cpu" {
 }
 
 variable "ingress_requests_memory" {
+    default = "90Mi"
+}
+
+# ================== ingress-nginx-second =================
+
+variable "helm_ingress_nginx_second_enabled" {
+    default = false
+}
+
+variable "ingress_second_http_nodeport" {
+    default = 31080
+}
+
+variable "ingress_second_https_nodeport" {
+    default = 31443
+}
+
+variable "ingress_second_https_traffic_enabled" {
+    default = false
+}
+
+variable "ingress_second_requests_cpu" {
+    default = "100m"
+}
+
+variable "ingress_second_requests_memory" {
     default = "90Mi"
 }
 
