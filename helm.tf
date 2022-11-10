@@ -1,9 +1,9 @@
 
 # ========================= core charts ========================= #
 
-resource "helm_release" "ingress_nginx_public" {
-  count             = var.helm_ingress_nginx_public_enabled ? 1 : 0
-  name              = "ingress-nginx-public"
+resource "helm_release" "ingress_nginx" {
+  count             = var.helm_ingress_nginx_enabled ? 1 : 0
+  name              = "ingress-nginx"
   namespace         = "ingress-nginx"
   create_namespace  = true
   repository        = "https://kubernetes.github.io/ingress-nginx"
@@ -11,7 +11,7 @@ resource "helm_release" "ingress_nginx_public" {
   version           = "4.0.18"
 
   values            = [
-    file("${path.module}/helm-values/ingress-nginx-public.yaml")
+    file("${path.module}/helm-values/ingress-nginx.yaml")
   ]
 
   set {
@@ -27,31 +27,31 @@ resource "helm_release" "ingress_nginx_public" {
 
   set {
     name  = "controller.service.nodePorts.http"
-    value = var.ingress_public_http_nodeport
+    value = var.ingress_http_nodeport
   }
 
   set {
     name  = "controller.service.nodePorts.https"
-    value = var.ingress_public_https_nodeport
+    value = var.ingress_https_nodeport
   }
 
   set {
     name  = "controller.resources.requests.cpu"
-    value = var.ingress_public_requests_cpu
+    value = var.ingress_requests_cpu
   }
 
   set {
     name  = "controller.resources.requests.memory"
-    value = var.ingress_public_requests_memory
+    value = var.ingress_requests_memory
   }
 
   depends_on = [time_sleep.wait_20_seconds]
 
 }
 
-resource "helm_release" "ingress_nginx_private" {
-  count             = var.helm_ingress_nginx_private_enabled ? 1 : 0
-  name              = "ingress-nginx-private"
+resource "helm_release" "ingress_nginx_additional" {
+  count             = var.helm_ingress_nginx_additional_enabled ? 1 : 0
+  name              = "ingress-nginx-additional"
   namespace         = "ingress-nginx"
   create_namespace  = true
   repository        = "https://kubernetes.github.io/ingress-nginx"
@@ -59,7 +59,7 @@ resource "helm_release" "ingress_nginx_private" {
   version           = "4.0.18"
 
   values            = [
-    file("${path.module}/helm-values/ingress-nginx-private.yaml")
+    file("${path.module}/helm-values/ingress-nginx-additional.yaml")
   ]
 
   set {
@@ -75,22 +75,22 @@ resource "helm_release" "ingress_nginx_private" {
 
   set {
     name  = "controller.service.nodePorts.http"
-    value = var.ingress_private_http_nodeport
+    value = var.ingress_additional_http_nodeport
   }
 
   set {
     name  = "controller.service.nodePorts.https"
-    value = var.ingress_private_https_nodeport
+    value = var.ingress_additional_https_nodeport
   }
 
   set {
     name  = "controller.resources.requests.cpu"
-    value = var.ingress_private_requests_cpu
+    value = var.ingress_additional_requests_cpu
   }
 
   set {
     name  = "controller.resources.requests.memory"
-    value = var.ingress_private_requests_memory
+    value = var.ingress_additional_requests_memory
   }
 
   depends_on = [time_sleep.wait_20_seconds]

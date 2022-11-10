@@ -125,15 +125,15 @@ variable "helm_ingress_nginx_public_enabled" {
     default = false
 }
 
-variable "ingress_public_http_nodeport" {
+variable "ingress_http_nodeport" {
     default = 32080
 }
 
-variable "ingress_public_https_nodeport" {
+variable "ingress_https_nodeport" {
     default = 32443
 }
 
-variable "ingress_public_https_traffic_enabled" {
+variable "ingress_https_traffic_enabled" {
     default = false
 }
 
@@ -141,11 +141,11 @@ variable "ingress_service_monitor_enabled" {
     default = false
 }
 
-variable "ingress_public_requests_cpu" {
+variable "ingress_requests_cpu" {
     default = "100m"
 }
 
-variable "ingress_public_requests_memory" {
+variable "ingress_requests_memory" {
     default = "90Mi"
 }
 
@@ -155,23 +155,23 @@ variable "helm_ingress_nginx_private_enabled" {
     default = false
 }
 
-variable "ingress_private_http_nodeport" {
+variable "ingress_additional_http_nodeport" {
     default = 31080
 }
 
-variable "ingress_private_https_nodeport" {
+variable "ingress_additional_https_nodeport" {
     default = 31443
 }
 
-variable "ingress_private_https_traffic_enabled" {
+variable "ingress_additional_https_traffic_enabled" {
     default = false
 }
 
-variable "ingress_private_requests_cpu" {
+variable "ingress_additional_requests_cpu" {
     default = "100m"
 }
 
-variable "ingress_private_requests_memory" {
+variable "ingress_additional_requests_memory" {
     default = "90Mi"
 }
 
