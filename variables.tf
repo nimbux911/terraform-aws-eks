@@ -120,7 +120,7 @@ variable "eks_addons" {
 
 # ============================== helm releases ============================== #
 
-# ================== ingress-nginx-public =================
+# ================== ingress-nginx =================
 variable "helm_ingress_nginx_enabled" {
     default = false
 }
@@ -149,7 +149,7 @@ variable "ingress_requests_memory" {
     default = "90Mi"
 }
 
-# ================== ingress-nginx-private =================
+# ================== ingress-nginx-additional =================
 
 variable "helm_ingress_nginx_additional_enabled" {
     default = false
