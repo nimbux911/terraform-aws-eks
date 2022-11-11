@@ -202,11 +202,18 @@ module "eks_main" {
 | eks\_worker\_ssh\_cidrs | Add SSH ingress rule to eks workers | `list` | `[]` | no |
 | enabled\_cluster\_log\_types | Enable CloudWatch Logs for control plane components | `list[string]` | `[]` | no |
 | helm\_ingress\_nginx\_enabled | Set if ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
+| helm\_ingress\_nginx\_additional\_enabled | Set if additional ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
-| ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
+| ingress\_https\_traffic\_enabled | Set https traffic for ingress | `bool` | `false` | no | 
 | ingress\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
 | ingress\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
+| ingress\_additional\_http\_nodeport | Set port for additional ingress http nodePort | `int` | `31080` | no |
+| ingress\_additional\_https\_nodeport | Set port for additional ingress https nodePort | `int` | `31443` | no |
+| ingress\_additional\_https\_traffic\_enabled | Set https traffic for additional ingress | `bool` | `false` | no | 
+| ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
+| ingress\_additional\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
+| ingress\_additional\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | helm\_cluster\_autoscaler\_enabled | Set if cluster-autoscaler Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_metrics\_server\_enabled | Set if metrics-server Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_cert\_manager\_enabled | Set if cert-manager helm chart will be installed on the cluster | `bool` | `false` | no |

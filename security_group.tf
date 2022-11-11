@@ -120,3 +120,36 @@ resource "aws_security_group_rule" "eks_worker_ingress_nginx_from_vpc" {
   to_port                  = 32080
   type                     = "ingress"
 }
+
+resource "aws_security_group_rule" "eks_worker_ingress_nginx_https_from_vpc" {
+  count                    = var.ingress_https_traffic_enabled ? 1 : 0
+  description              = "Allow VPC CIDR to access ingress https port"
+  from_port                = 32443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.eks_worker.id
+  cidr_blocks              = [data.aws_vpc.main.cidr_block]
+  to_port                  = 32443
+  type                     = "ingress"
+}
+
+resource "aws_security_group_rule" "eks_worker_ingress_nginx_additional_from_vpc" {
+  count                    = var.helm_ingress_nginx_additional_enabled ? 1 : 0
+  description              = "Allow VPC CIDR to access additional ingress port"
+  from_port                = 31080
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.eks_worker.id
+  cidr_blocks              = [data.aws_vpc.main.cidr_block]
+  to_port                  = 31080
+  type                     = "ingress"
+}
+
+resource "aws_security_group_rule" "eks_worker_ingress_nginx_additional_https_from_vpc" {
+  count                    = var.ingress_additional_https_traffic_enabled ? 1 : 0
+  description              = "Allow VPC CIDR to access additional ingress https port"
+  from_port                = 31443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.eks_worker.id
+  cidr_blocks              = [data.aws_vpc.main.cidr_block]
+  to_port                  = 31443
+  type                     = "ingress"
+}
