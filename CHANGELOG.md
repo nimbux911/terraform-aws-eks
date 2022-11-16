@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.2.1] - 2022-11-16
+
+### Fixed 
+- Typo on additional ingressclass "nginx-private". Before it was "nginx-additional"
+
 ## [4.2.0] - 2022-11-10
 
 ### Added
