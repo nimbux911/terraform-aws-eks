@@ -12,6 +12,7 @@ Terraform module which creates EKS Cluster and dependent resources on AWS.
 - [Loki Distributed Helm Chart](https://github.com/grafana/helm-charts/tree/main/charts/loki-distributed)
 - [Fluent Bit Helm Chart](https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit)
 - [Tempo Distributed Helm Chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo-distributed)
+- [Grafana Helm Chart](https://github.com/grafana/helm-charts/tree/main/charts/grafana)
 
 
 ## Usage
@@ -173,6 +174,13 @@ module "eks_main" {
 # open-telemetry
   k8s_opentelemetry_enabled = true
 
+# =================== grafana ================== #
+
+  helm_grafana_enabled    = true
+  grafana_ingress_enabled = true
+  grafana_ingress_host    = "grafana.example.com"
+
+
 }
 
 ```
@@ -330,6 +338,12 @@ module "eks_main" {
 | tempo\_gateway\_ingress\_path | Path for ingress rule | `string` | `/` | no |
 | tempo\_ingress\_path\_type | Path type for ingress rule | `string` | `Prefix` | no |
 | tempo\_ingress\_class\_name | ingress className | `string` | `nginx` | no |
+| helm\grafana\_enabled | install grafana helm chart | `bool` | `false` | no |
+| grafana\_ingress\_enabled | Enable ingress for grafana | `bool` | `false` | no |
+| grafana\_ingress\_host | Host for ingress rule | `string` | `""` | no |
+| grafana\_ingress\_path | Path for ingress rule | `string` | `/` | no |
+| grafana\_ingress\_path\_type | Path type for ingress rule | `string` | `Prefix` | no |
+| grafana\_ingress\_class\_name | ingress className | `string` | `nginx` | no 
 
 ## Outputs
 

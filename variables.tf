@@ -647,3 +647,28 @@ variable "tempo_ingress_class_name" {
 variable "k8s_opentelemetry_enabled" {
     default = false
 }
+
+# ============================== grafana ============================== #
+variable "helm_grafana_enabled" {
+    default = false
+}
+
+variable "grafana_ingress_enabled" {
+    default = false
+}
+
+variable "grafana_ingress_host" {
+    default = ""
+}
+
+variable "grafana_ingress_path" {
+    default = "/"
+}
+
+variable "grafana_ingress_path_type" {
+    default = "Prefix"
+}
+
+variable "grafana_ingress_class_name" {
+    default = "nginx"
+}
