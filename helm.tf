@@ -174,11 +174,6 @@ resource "helm_release" "prometheus_stack" {
   timeout           = 600
 
   set {
-    name = "grafana.enabled"
-    value = false
-  }
-
-  set {
     name  = "prometheus.prometheusSpec.replicas"
     value = var.prometheus_replicas
   }  
@@ -1075,4 +1070,43 @@ resource "helm_release" "tempo_distributed" {
     }
   }  
 
+}
+
+# ========================= grafana ========================= #
+
+resource "helm_release" "grafana_stack" {
+  count             = var.helm_grafana_enabled ? 1 : 0
+  name              = "grafana"
+  namespace         = "monitoring"
+  create_namespace  = true
+  repository        = "https://grafana.github.io/helm-charts"
+  chart             = "grafana"
+  version           = "6.45.0"
+  dependency_update = true
+  timeout           = 600
+
+set {
+    name  = "ingress.enabled"
+    value = var.grafana_ingress_enabled
+  }  
+
+  set {
+    name  = "ingress.hosts[0]"
+    value = var.grafana_ingress_host
+  }  
+
+  set {
+    name  = "ingress.path"
+    value = var.grafana_ingress_path
+  }  
+
+  set {
+    name  = "ingress.pathType"
+    value = var.grafana_ingress_path_type
+  }  
+
+  set {
+    name = "ingress.ingressClassName"
+    value = var.grafana_ingress_class_name
+  }
 }
