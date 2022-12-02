@@ -175,7 +175,6 @@ module "eks_main" {
   k8s_opentelemetry_enabled = true
 
 # =================== grafana ================== #
-
   helm_grafana_enabled    = true
   grafana_ingress_enabled = true
   grafana_ingress_host    = "grafana.example.com"
@@ -338,7 +337,7 @@ module "eks_main" {
 | tempo\_gateway\_ingress\_path | Path for ingress rule | `string` | `/` | no |
 | tempo\_ingress\_path\_type | Path type for ingress rule | `string` | `Prefix` | no |
 | tempo\_ingress\_class\_name | ingress className | `string` | `nginx` | no |
-| helm\grafana\_enabled | install grafana helm chart | `bool` | `false` | no |
+| helm\_grafana\_enabled | install grafana helm chart | `bool` | `false` | no |
 | grafana\_ingress\_enabled | Enable ingress for grafana | `bool` | `false` | no |
 | grafana\_ingress\_host | Host for ingress rule | `string` | `""` | no |
 | grafana\_ingress\_path | Path for ingress rule | `string` | `/` | no |
