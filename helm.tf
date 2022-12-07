@@ -1109,4 +1109,9 @@ set {
     name = "ingress.ingressClassName"
     value = var.grafana_ingress_class_name
   }
+  
+  set {
+    name = "persistence.enabled"
+    value = var.grafana_persistence_enabled
+  }
 }

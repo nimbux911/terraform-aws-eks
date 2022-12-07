@@ -342,7 +342,8 @@ module "eks_main" {
 | grafana\_ingress\_host | Host for ingress rule | `string` | `""` | no |
 | grafana\_ingress\_path | Path for ingress rule | `string` | `/` | no |
 | grafana\_ingress\_path\_type | Path type for ingress rule | `string` | `Prefix` | no |
-| grafana\_ingress\_class\_name | ingress className | `string` | `nginx` | no 
+| grafana\_ingress\_class\_name | ingress className | `string` | `nginx` | no |
+| grafana\_persistence\_enabled | Persistent volume | `bool` | `false` | no |
 
 ## Outputs
 

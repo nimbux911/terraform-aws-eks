@@ -672,3 +672,7 @@ variable "grafana_ingress_path_type" {
 variable "grafana_ingress_class_name" {
     default = "nginx"
 }
+
+variable "grafana_persistence_enabled" {
+    default = false
+}
