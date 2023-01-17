@@ -210,6 +210,8 @@ module "eks_main" {
 | enabled\_cluster\_log\_types | Enable CloudWatch Logs for control plane components | `list[string]` | `[]` | no |
 | helm\_ingress\_nginx\_enabled | Set if ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_ingress\_nginx\_additional\_enabled | Set if additional ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
+| ingress\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
+| ingress\_additional\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
 | ingress\_https\_traffic\_enabled | Set https traffic for ingress | `bool` | `false` | no | 
@@ -223,8 +225,11 @@ module "eks_main" {
 | ingress\_additional\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | helm\_cluster\_autoscaler\_enabled | Set if cluster-autoscaler Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | helm\_metrics\_server\_enabled | Set if metrics-server Helm chart will be installed on the cluster. | `bool` | `false` | no |
+| metrics\_server\_chart\_version | Set the version for the chart | `string` | `1.6.1` | no |
 | helm\_cert\_manager\_enabled | Set if cert-manager helm chart will be installed on the cluster | `bool` | `false` | no |
+| cert\_manager\_chart\_version | Set the version for the chart | `string` | `6.0.5` | no |
 | helm\_loki\_enabled | Set if loki-stack Helm chart will be installed on the cluster. | `bool` | `false` | no |
+| loki\_chart\_version | Set the version for the chart | `string` | `0.48.3` | no |
 | loki\_storage\_s3\_bucket | s3 bucket for loki logs | `string` | `""` | yes |
 | loki\_s3\_bucket\_region | s3 bucket for loki logs region | `string` | `""` | yes |
 | loki\_logs\_retention\_enabled | Enable logs retention. If s3 storage never stop growing | `bool` | `false` | no |
@@ -288,8 +293,10 @@ module "eks_main" {
 | loki\_index\_gateway\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_index\_gateway\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | helm\_fluent\_bit\_enabled | install fluent-bit helm chart | `bool` | `false` | no |
+| fluent\_bit\_chart\_version | Set the version for the chart | `string` | `0.19.24` | no |
 | k8s\_opentelemetry\_enabled | install opentelemetry manifests | `bool` | `false` | no |
 | helm\_prometheus\_enabled | install kube-prometheus-stack helm chart | `bool` | `false` | no |
+| prometheus\_chart\_version | Set the version for the chart | `string` | `35.0.3` | no |
 | prometheus\_node\_selector | Prometheus components nodeSelector | `map{}` | `null` | no | 
 | prometheus\_replicas | prometheus server replicas | `int` | `1` | no |
 | prometheus\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
@@ -305,6 +312,7 @@ module "eks_main" {
 | prometheus\_storage\_size | Prometheus storage size | `string` | `20Gi` | no |
 | prometheus\_metrics\_retention | Prometheus metrics period retention | `string` | `14d` | no |
 | helm\_tempo\_enabled | Install tempo-distributed helm chart | `bool` | `false` | no |
+| tempo\_chart\_version | Set the version for the chart | `string` | `0.17.1` | no |
 | tempo\_compactor\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_compactor\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | tempo\_compactor\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
@@ -338,6 +346,7 @@ module "eks_main" {
 | tempo\_ingress\_path\_type | Path type for ingress rule | `string` | `Prefix` | no |
 | tempo\_ingress\_class\_name | ingress className | `string` | `nginx` | no |
 | helm\_grafana\_enabled | install grafana helm chart | `bool` | `false` | no |
+| grafana\_chart\_version | Set the version for the chart | `string` | `6.45.0` | no |
 | grafana\_ingress\_enabled | Enable ingress for grafana | `bool` | `false` | no |
 | grafana\_ingress\_host | Host for ingress rule | `string` | `""` | no |
 | grafana\_ingress\_path | Path for ingress rule | `string` | `/` | no |

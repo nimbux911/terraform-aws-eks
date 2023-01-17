@@ -8,7 +8,7 @@ resource "helm_release" "ingress_nginx" {
   create_namespace  = true
   repository        = "https://kubernetes.github.io/ingress-nginx"
   chart             = "ingress-nginx"
-  version           = "4.0.18"
+  version           = var.ingress_chart_version
 
   values            = [
     file("${path.module}/helm-values/ingress-nginx.yaml")
@@ -56,8 +56,7 @@ resource "helm_release" "ingress_nginx_additional" {
   create_namespace  = true
   repository        = "https://kubernetes.github.io/ingress-nginx"
   chart             = "ingress-nginx"
-  version           = "4.0.18"
-
+  version           = var.ingress_additional_chart_version
   values            = [
     file("${path.module}/helm-values/ingress-nginx-additional.yaml")
   ]
@@ -103,7 +102,7 @@ resource "helm_release" "cluster_autoscaler" {
   namespace  = "kube-system"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
-  version    = "9.16.1"
+  version    = var.cluster_autoscaler_chart_version
 
   set {
     name  = "autoDiscovery.clusterName"
@@ -126,7 +125,7 @@ resource "helm_release" "metrics_server" {
   namespace  = "kube-system"
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "metrics-server"
-  version    = "5.11.3"
+  version    = var.metrics_server_chart_version
 
   set {
     name  = "hostNetwork"
@@ -149,7 +148,7 @@ resource "helm_release" "cert_manager" {
   repository        = "https://charts.jetstack.io"
   chart             = "cert-manager"
   create_namespace  = true
-  version           = "1.6.1"
+  version           = var.cert_manager_chart_version
 
   set {
     name  = "installCRDs"
@@ -169,7 +168,7 @@ resource "helm_release" "prometheus_stack" {
   create_namespace  = true
   repository        = "https://prometheus-community.github.io/helm-charts"
   chart             = "kube-prometheus-stack"
-  version           = "35.0.3"
+  version           = var.prometheus_chart_version
   dependency_update = true
   timeout           = 600
 
@@ -311,7 +310,7 @@ resource "helm_release" "loki_distributed" {
   create_namespace  = true
   repository        = "https://grafana.github.io/helm-charts"
   chart             = "loki-distributed"
-  version           = "0.48.3"
+  version           = var.loki_chart_version
   dependency_update = true
   timeout           = 600
 
@@ -789,7 +788,7 @@ resource "helm_release" "fluent_bit" {
   create_namespace  = true
   repository        = "https://fluent.github.io/helm-charts"
   chart             = "fluent-bit"
-  version           = "0.19.24"
+  version           = var.fluent_bit_chart_version
   dependency_update = true
 
   values            = [
@@ -812,7 +811,7 @@ resource "helm_release" "tempo_distributed" {
   create_namespace  = true
   repository        = "https://grafana.github.io/helm-charts"
   chart             = "tempo-distributed"
-  version           = "0.17.1"
+  version           = var.tempo_chart_versoin
   dependency_update = true
   timeout           = 600
 
@@ -1081,7 +1080,7 @@ resource "helm_release" "grafana_stack" {
   create_namespace  = true
   repository        = "https://grafana.github.io/helm-charts"
   chart             = "grafana"
-  version           = "6.45.0"
+  version           = var.grafana_chart_version
   dependency_update = true
   timeout           = 600
 
