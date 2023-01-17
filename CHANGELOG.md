@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.4.0] - 2023-01-17
+
+### Added
+
+- add version selector for helm charts
+- updated default version of the metrics server from 5.11.3 to 6.0.5
+
 ## [4.3.1] - 2022-12-07
 
 ### Added
