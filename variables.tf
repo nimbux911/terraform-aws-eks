@@ -125,6 +125,14 @@ variable "helm_ingress_nginx_enabled" {
     default = false
 }
 
+variable "ingress_chart_version" {
+    default = "4.0.18"
+}
+
+variable "ingress_additional_chart_version" {
+    default = "4.0.18"
+}
+
 variable "ingress_http_nodeport" {
     default = 32080
 }
@@ -180,9 +188,17 @@ variable "helm_cluster_autoscaler_enabled" {
     default = false
 }
 
+variable "cluster_autoscaler_chart_version" {
+    default = "9.16.1"
+}
+
 # metrics-server
 variable "helm_metrics_server_enabled" {
     default = false
+}
+
+variable "metrics_server_chart_version" {
+    default = "6.0.5"
 }
 
 # cert-manager
@@ -190,9 +206,17 @@ variable "helm_cert_manager_enabled" {
     default = false
 }
 
+variable "cert_manager_chart_version" {
+    default = "1.6.1"
+}
+
 # ================== loki-distributed ================= #
 variable "helm_loki_enabled" {
     default = false
+}
+
+variable "loki_chart_version" {
+    default = "0.48.3"  
 }
 
 # loki - storage
@@ -438,10 +462,18 @@ variable "helm_fluent_bit_enabled" {
     default = false
 }
 
+variable "fluent_bit_chart_version" {
+    default = "0.19.24"
+}
+
 
 # ================== prometheus ================== #
 variable "helm_prometheus_enabled" {
     default = false
+}
+
+variable "prometheus_chart_version" {
+    default = "35.0.3"  
 }
 
 variable "prometheus_node_selector" {
@@ -504,6 +536,10 @@ variable "prometheus_metrics_retention" {
 # ================== tempo ================== #
 variable "helm_tempo_enabled" {
     default = false
+}
+
+variable "tempo_chart_versoin" {
+    default = "0.17.1"  
 }
 
 # tempo - compactor
@@ -651,6 +687,10 @@ variable "k8s_opentelemetry_enabled" {
 # ============================== grafana ============================== #
 variable "helm_grafana_enabled" {
     default = false
+}
+
+variable "grafana_chart_version" {
+  default = "6.45.0"
 }
 
 variable "grafana_ingress_enabled" {
