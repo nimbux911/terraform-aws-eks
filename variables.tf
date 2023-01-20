@@ -156,6 +156,9 @@ variable "ingress_requests_cpu" {
 variable "ingress_requests_memory" {
     default = "90Mi"
 }
+variable "ingress_priorityclassName"{
+    default = ""
+}
 
 # ================== ingress-nginx-additional =================
 
@@ -183,6 +186,10 @@ variable "ingress_additional_requests_memory" {
     default = "90Mi"
 }
 
+variable "ingress_additional_priorityclassName"{
+    default = ""
+}
+
 # cluster-autoscaler
 variable "helm_cluster_autoscaler_enabled" {
     default = false
@@ -190,6 +197,10 @@ variable "helm_cluster_autoscaler_enabled" {
 
 variable "cluster_autoscaler_chart_version" {
     default = "9.16.1"
+}
+
+variable "cluster_autoscaler_priorityclass" {
+    default = ""
 }
 
 # metrics-server
@@ -201,6 +212,10 @@ variable "metrics_server_chart_version" {
     default = "6.0.5"
 }
 
+variable "metrics_server_priorityclass" {
+    default = ""
+}
+
 # cert-manager
 variable "helm_cert_manager_enabled" {
     default = false
@@ -210,6 +225,10 @@ variable "cert_manager_chart_version" {
     default = "1.6.1"
 }
 
+variable "cert_manager_priorityclass" {
+    default = ""
+}
+
 # ================== loki-distributed ================= #
 variable "helm_loki_enabled" {
     default = false
@@ -217,6 +236,10 @@ variable "helm_loki_enabled" {
 
 variable "loki_chart_version" {
     default = "0.48.3"  
+}
+
+variable "loki_priorityclass" {
+    default = ""
 }
 
 # loki - storage
@@ -466,6 +489,10 @@ variable "fluent_bit_chart_version" {
     default = "0.19.24"
 }
 
+variable "fluent_bit_priorityclass" {
+    default = ""
+}
+
 
 # ================== prometheus ================== #
 variable "helm_prometheus_enabled" {
@@ -474,6 +501,10 @@ variable "helm_prometheus_enabled" {
 
 variable "prometheus_chart_version" {
     default = "35.0.3"  
+}
+
+variable "prometheus_priorityclass" {
+    default = ""
 }
 
 variable "prometheus_node_selector" {
@@ -540,6 +571,11 @@ variable "helm_tempo_enabled" {
 
 variable "tempo_chart_versoin" {
     default = "0.17.1"  
+}
+
+variable "tempo_priorityclass" {
+    default = null
+  
 }
 
 # tempo - compactor
@@ -715,4 +751,8 @@ variable "grafana_ingress_class_name" {
 
 variable "grafana_persistence_enabled" {
     default = false
+}
+variable "grafana_priorityclass" {
+    default = ""
+  
 }
