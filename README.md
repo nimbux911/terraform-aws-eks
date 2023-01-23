@@ -209,25 +209,31 @@ module "eks_main" {
 | eks\_worker\_ssh\_cidrs | Add SSH ingress rule to eks workers | `list` | `[]` | no |
 | enabled\_cluster\_log\_types | Enable CloudWatch Logs for control plane components | `list[string]` | `[]` | no |
 | helm\_ingress\_nginx\_enabled | Set if ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
-| helm\_ingress\_nginx\_additional\_enabled | Set if additional ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | ingress\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
-| ingress\_additional\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
 | ingress\_https\_traffic\_enabled | Set https traffic for ingress | `bool` | `false` | no | 
 | ingress\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
 | ingress\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
+| ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
+| ingress\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
+| helm\_ingress\_nginx\_additional\_enabled | Set if additional ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
+| ingress\_additional\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
 | ingress\_additional\_http\_nodeport | Set port for additional ingress http nodePort | `int` | `31080` | no |
 | ingress\_additional\_https\_nodeport | Set port for additional ingress https nodePort | `int` | `31443` | no |
 | ingress\_additional\_https\_traffic\_enabled | Set https traffic for additional ingress | `bool` | `false` | no | 
-| ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
 | ingress\_additional\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
 | ingress\_additional\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
+| ingress\_additional\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
 | helm\_cluster\_autoscaler\_enabled | Set if cluster-autoscaler Helm chart will be installed on the cluster. | `bool` | `false` | no |
+| cluster\_autoscaler\_chart\_version | Set the version for the chart | `string` | `9.16.1` | no |
+| cluster\_autoscaler\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
 | helm\_metrics\_server\_enabled | Set if metrics-server Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | metrics\_server\_chart\_version | Set the version for the chart | `string` | `1.6.1` | no |
+| metrics\_server\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
 | helm\_cert\_manager\_enabled | Set if cert-manager helm chart will be installed on the cluster | `bool` | `false` | no |
 | cert\_manager\_chart\_version | Set the version for the chart | `string` | `6.0.5` | no |
+| cert\_manager\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
 | helm\_loki\_enabled | Set if loki-stack Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | loki\_chart\_version | Set the version for the chart | `string` | `0.48.3` | no |
 | loki\_storage\_s3\_bucket | s3 bucket for loki logs | `string` | `""` | yes |
@@ -292,8 +298,10 @@ module "eks_main" {
 | loki\_index\_gateway\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_index\_gateway\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_index\_gateway\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
+| loki\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
 | helm\_fluent\_bit\_enabled | install fluent-bit helm chart | `bool` | `false` | no |
 | fluent\_bit\_chart\_version | Set the version for the chart | `string` | `0.19.24` | no |
+| fluent\_bit\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
 | k8s\_opentelemetry\_enabled | install opentelemetry manifests | `bool` | `false` | no |
 | helm\_prometheus\_enabled | install kube-prometheus-stack helm chart | `bool` | `false` | no |
 | prometheus\_chart\_version | Set the version for the chart | `string` | `35.0.3` | no |
@@ -311,6 +319,7 @@ module "eks_main" {
 | prometheus\_storage\_class\_name | Prometheus storage className for pv | `string` | `gp2` | no |
 | prometheus\_storage\_size | Prometheus storage size | `string` | `20Gi` | no |
 | prometheus\_metrics\_retention | Prometheus metrics period retention | `string` | `14d` | no |
+| prometheus\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
 | helm\_tempo\_enabled | Install tempo-distributed helm chart | `bool` | `false` | no |
 | tempo\_chart\_version | Set the version for the chart | `string` | `0.17.1` | no |
 | tempo\_compactor\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
@@ -345,6 +354,7 @@ module "eks_main" {
 | tempo\_gateway\_ingress\_path | Path for ingress rule | `string` | `/` | no |
 | tempo\_ingress\_path\_type | Path type for ingress rule | `string` | `Prefix` | no |
 | tempo\_ingress\_class\_name | ingress className | `string` | `nginx` | no |
+| tempo\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
 | helm\_grafana\_enabled | install grafana helm chart | `bool` | `false` | no |
 | grafana\_chart\_version | Set the version for the chart | `string` | `6.45.0` | no |
 | grafana\_ingress\_enabled | Enable ingress for grafana | `bool` | `false` | no |
@@ -353,6 +363,7 @@ module "eks_main" {
 | grafana\_ingress\_path\_type | Path type for ingress rule | `string` | `Prefix` | no |
 | grafana\_ingress\_class\_name | ingress className | `string` | `nginx` | no |
 | grafana\_persistence\_enabled | Persistent volume | `bool` | `false` | no |
+| grafana\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
 
 ## Outputs
 

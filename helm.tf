@@ -45,6 +45,11 @@ resource "helm_release" "ingress_nginx" {
     value = var.ingress_requests_memory
   }
 
+  set {
+    name = "controller.priorityClassName"
+    value = var.ingress_priorityclassName
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
@@ -92,6 +97,11 @@ resource "helm_release" "ingress_nginx_additional" {
     value = var.ingress_additional_requests_memory
   }
 
+  set {
+    name = "controller.priorityClassName"
+    value = var.ingress_additional_priorityclassName
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
@@ -112,6 +122,11 @@ resource "helm_release" "cluster_autoscaler" {
   set {
     name  = "awsRegion"
     value = data.aws_region.current.name
+  }
+
+  set {
+    name = "priorityClassName"
+    value = var.cluster_autoscaler_priorityclass
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -137,6 +152,11 @@ resource "helm_release" "metrics_server" {
     value = true
   }
 
+  set {
+    name = "priorityClassName"
+    value = var.metrics_autoscaler_priorityclass
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
@@ -153,6 +173,11 @@ resource "helm_release" "cert_manager" {
   set {
     name  = "installCRDs"
     value = true
+  }
+
+  set {
+    name = "global.priorityClassName"
+    value = var.cert_manager_priorityclass
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -284,18 +309,35 @@ resource "helm_release" "prometheus_stack" {
     value = var.prometheus_storage_class_name
   }  
 
-
   set {
     name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage"
     value = var.prometheus_storage_size
   }  
-
 
   set {
     name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0]"
     value = "ReadWriteOnce"
   }  
 
+  set {
+    name = "alertmanager.alertmanagerSpec.priorityClassName"
+    value = var.prometheus_priorityclass
+  }
+
+  set {
+    name = "prometheusOperator.admissionWebhooks.patch.priorityClassName"
+    value = var.prometheus_priorityclass
+  }
+
+  set {
+    name = "prometheus.prometheusSpec.priorityClassName"
+    value = var.prometheus_priorityclass
+  }
+
+  set {
+    name = "thanosRuler.thanosRulerSpec.priorityClassName"
+    value = var.prometheus_priorityclass
+  }
 
   depends_on = [time_sleep.wait_20_seconds]
 
@@ -317,6 +359,11 @@ resource "helm_release" "loki_distributed" {
   values            = [
     file("${path.module}/helm-values/loki-distributed.yaml")
   ]
+
+  set {
+    name = "global.priorityClassName"
+    value = var.loki_priorityclass
+  }
 
   # loki - storage
   set {
@@ -348,7 +395,6 @@ resource "helm_release" "loki_distributed" {
       value = set.value
     }
   }
-
 
   set {
     name  = "ingester.replicas"
@@ -411,7 +457,6 @@ resource "helm_release" "loki_distributed" {
       value = set.value
     }
   }
-
 
   set {
     name  = "distributor.autoscaling.enabled"
@@ -800,6 +845,11 @@ resource "helm_release" "fluent_bit" {
     value = "ec2"
   }
 
+  set {
+    name = "priorityClassName"
+    value = var.fluent_bit_priorityclass
+  }
+
 }
 
 # ================== tempo-distributed ================== #
@@ -818,6 +868,11 @@ resource "helm_release" "tempo_distributed" {
   values            = [
     file("${path.module}/helm-values/tempo-distributed.yaml")
   ]
+
+  set {
+    name = "prometheus_priorityclass"
+    value = var.tempo_priorityclass
+  }
 
   set {
     name  = "storage.trace.s3.bucket"
@@ -1112,5 +1167,11 @@ set {
   set {
     name = "persistence.enabled"
     value = var.grafana_persistence_enabled
+  }
+
+  set {
+    name = "imageRenderer.priorityClassName"
+    value = var.grafana_priorityclass
+
   }
 }
