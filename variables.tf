@@ -564,6 +564,10 @@ variable "prometheus_metrics_retention" {
     default = "14d"
 }
 
+variable "prometheus_additionalscrapeconfigs" {
+    default = ""
+}
+
 # ================== tempo ================== #
 variable "helm_tempo_enabled" {
     default = false

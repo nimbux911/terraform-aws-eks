@@ -154,7 +154,7 @@ resource "helm_release" "metrics_server" {
 
   set {
     name = "priorityClassName"
-    value = var.metrics_autoscaler_priorityclass
+    value = var.metrics_server_priorityclass
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -196,6 +196,11 @@ resource "helm_release" "prometheus_stack" {
   version           = var.prometheus_chart_version
   dependency_update = true
   timeout           = 600
+
+  set {
+    name = "prometheus.prometheusSpec.additionalScrapeConfigs"
+    value = var.prometheus_additionalscrapeconfigs
+  }
 
   set {
     name  = "prometheus.prometheusSpec.replicas"
