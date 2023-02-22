@@ -46,6 +46,7 @@ locals {
       }
     ]
 
+  prometheus_additionalscrapeconfigs = file("${path.root}/${var.prometheus_additionalscrapeconfigspath}")
 }
 
 
@@ -153,15 +154,16 @@ module "eks_main" {
   helm_fluent_bit_enabled = true
 
 # ================== prometheus ================== #
-  helm_prometheus_enabled     = true
-  prometheus_replicas         = 2
-  prometheus_ingress_enabled  = true
-  prometheus_ingress_host     = "prometheus.example.com"
-  prometheus_requests_cpu     = "200m"
-  prometheus_requests_memory  = "1024Mi"
-  prometheus_limits_cpu       = "500m"
-  prometheus_limits_memory    = "2048Mi"
-  prometheus_node_selector    = { "eks\\.amazonaws\\.com/nodegroup" = "monitoring-${var.cluster_name}" }
+  helm_prometheus_enabled             = true
+  prometheus_replicas                 = 2
+  prometheus_ingress_enabled          = true
+  prometheus_ingress_host             = "prometheus.example.com"
+  prometheus_requests_cpu             = "200m"
+  prometheus_requests_memory          = "1024Mi"
+  prometheus_limits_cpu               = "500m"
+  prometheus_limits_memory            = "2048Mi"
+  prometheus_node_selector            = { "eks\\.amazonaws\\.com/nodegroup" = "monitoring-${var.cluster_name}" }
+  prometheus_additionalscrapeconfigs  = local.prometheus_additionalscrapeconfigs
 
 # ================== tempo ================== #
   helm_tempo_enabled            = true
@@ -320,6 +322,7 @@ module "eks_main" {
 | prometheus\_storage\_size | Prometheus storage size | `string` | `20Gi` | no |
 | prometheus\_metrics\_retention | Prometheus metrics period retention | `string` | `14d` | no |
 | prometheus\_priorityclassName | allows you to set a priority class | `string` | `""` | no |
+| prometheus\_additionalscrapeconfigs | allows you to set a additional scrape config | `string` | `""` | no |
 | helm\_tempo\_enabled | Install tempo-distributed helm chart | `bool` | `false` | no |
 | tempo\_chart\_version | Set the version for the chart | `string` | `0.17.1` | no |
 | tempo\_compactor\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
