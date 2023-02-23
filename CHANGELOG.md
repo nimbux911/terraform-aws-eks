@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.6.0] - 2023-02-23
+
+### Added
+
+- Add additonal scrape configs for prometheus
+
+### Fixed
+
+- Typo in priority class name in some helm installations and metrics server
+
 ## [4.5.0] - 2023-01-20
 
 ### Added
