@@ -156,7 +156,7 @@ variable "ingress_requests_cpu" {
 variable "ingress_requests_memory" {
     default = "90Mi"
 }
-variable "ingress_priorityclassName"{
+variable "ingress_priority_class_name"{
     default = ""
 }
 
@@ -186,7 +186,7 @@ variable "ingress_additional_requests_memory" {
     default = "90Mi"
 }
 
-variable "ingress_additional_priorityclassName"{
+variable "ingress_additional_priority_class_name"{
     default = ""
 }
 
@@ -199,7 +199,7 @@ variable "cluster_autoscaler_chart_version" {
     default = "9.16.1"
 }
 
-variable "cluster_autoscaler_priorityclass" {
+variable "cluster_autoscaler_priority_class_name" {
     default = ""
 }
 
@@ -212,7 +212,7 @@ variable "metrics_server_chart_version" {
     default = "6.0.5"
 }
 
-variable "metrics_server_priorityclass" {
+variable "metrics_server_priority_class_name" {
     default = ""
 }
 
@@ -225,7 +225,7 @@ variable "cert_manager_chart_version" {
     default = "1.6.1"
 }
 
-variable "cert_manager_priorityclass" {
+variable "cert_manager_priority_class_name" {
     default = ""
 }
 
@@ -489,7 +489,7 @@ variable "fluent_bit_chart_version" {
     default = "0.19.24"
 }
 
-variable "fluent_bit_priorityclass" {
+variable "fluent_bit_priority_class_name" {
     default = ""
 }
 
@@ -503,7 +503,7 @@ variable "prometheus_chart_version" {
     default = "35.0.3"  
 }
 
-variable "prometheus_priorityclass" {
+variable "prometheus_priority_class_name" {
     default = ""
 }
 
@@ -564,7 +564,7 @@ variable "prometheus_metrics_retention" {
     default = "14d"
 }
 
-variable "prometheus_additionalscrapeconfigs" {
+variable "prometheus_additional_scrape_configs" {
     default = ""
 }
 
@@ -577,7 +577,7 @@ variable "tempo_chart_versoin" {
     default = "0.17.1"  
 }
 
-variable "tempo_priorityclass" {
+variable "tempo_priority_class_name" {
     default = null
   
 }
@@ -756,7 +756,7 @@ variable "grafana_ingress_class_name" {
 variable "grafana_persistence_enabled" {
     default = false
 }
-variable "grafana_priorityclass" {
+variable "grafana_priority_class_name" {
     default = ""
   
 }

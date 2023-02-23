@@ -47,7 +47,7 @@ resource "helm_release" "ingress_nginx" {
 
   set {
     name = "controller.priorityClassName"
-    value = var.ingress_priorityclassName
+    value = var.ingress_priority_class_name
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -99,7 +99,7 @@ resource "helm_release" "ingress_nginx_additional" {
 
   set {
     name = "controller.priorityClassName"
-    value = var.ingress_additional_priorityclassName
+    value = var.ingress_additional_priority_class_name
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -126,7 +126,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name = "priorityClassName"
-    value = var.cluster_autoscaler_priorityclass
+    value = var.cluster_autoscaler_priority_class_name
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -154,7 +154,7 @@ resource "helm_release" "metrics_server" {
 
   set {
     name = "priorityClassName"
-    value = var.metrics_server_priorityclass
+    value = var.metrics_server_priority_class_name
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -177,7 +177,7 @@ resource "helm_release" "cert_manager" {
 
   set {
     name = "global.priorityClassName"
-    value = var.cert_manager_priorityclass
+    value = var.cert_manager_priority_class_name
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -199,7 +199,7 @@ resource "helm_release" "prometheus_stack" {
 
   set {
     name = "prometheus.prometheusSpec.additionalScrapeConfigs"
-    value = var.prometheus_additionalscrapeconfigs
+    value = var.prometheus_additional_scrape_configs
   }
 
   set {
@@ -326,22 +326,22 @@ resource "helm_release" "prometheus_stack" {
 
   set {
     name = "alertmanager.alertmanagerSpec.priorityClassName"
-    value = var.prometheus_priorityclass
+    value = var.prometheus_priority_class_name
   }
 
   set {
     name = "prometheusOperator.admissionWebhooks.patch.priorityClassName"
-    value = var.prometheus_priorityclass
+    value = var.prometheus_priority_class_name
   }
 
   set {
     name = "prometheus.prometheusSpec.priorityClassName"
-    value = var.prometheus_priorityclass
+    value = var.prometheus_priority_class_name
   }
 
   set {
     name = "thanosRuler.thanosRulerSpec.priorityClassName"
-    value = var.prometheus_priorityclass
+    value = var.prometheus_priority_class_name
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -367,7 +367,7 @@ resource "helm_release" "loki_distributed" {
 
   set {
     name = "global.priorityClassName"
-    value = var.loki_priorityclass
+    value = var.loki_priority_class_name
   }
 
   # loki - storage
@@ -852,7 +852,7 @@ resource "helm_release" "fluent_bit" {
 
   set {
     name = "priorityClassName"
-    value = var.fluent_bit_priorityclass
+    value = var.fluent_bit_priority_class_name
   }
 
 }
@@ -875,8 +875,8 @@ resource "helm_release" "tempo_distributed" {
   ]
 
   set {
-    name = "prometheus_priorityclass"
-    value = var.tempo_priorityclass
+    name = "prometheus_priority_class_name"
+    value = var.tempo_priority_class_name
   }
 
   set {
@@ -1176,7 +1176,7 @@ set {
 
   set {
     name = "imageRenderer.priorityClassName"
-    value = var.grafana_priorityclass
+    value = var.grafana_priority_class_name
 
   }
 }
