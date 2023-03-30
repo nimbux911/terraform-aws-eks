@@ -214,8 +214,8 @@ resource "helm_release" "prometheus_stack" {
 
 
   set {
-    name = "kube-state-metrics.image.registry"
-    value = var.k8s_image_registry
+    name = "kube-state-metrics.image.repository"
+    value = "${var.k8s_image_registry}/kube-state-metrics/kube-state-metrics"
   }
 
   set {
