@@ -119,7 +119,9 @@ variable "eks_addons" {
 }
 
 # ============================== helm releases ============================== #
-
+variable "k8s_image_registry" {
+    default = "registry.k8s.io"
+}
 # ================== ingress-nginx =================
 variable "helm_ingress_nginx_enabled" {
     default = false

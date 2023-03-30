@@ -15,6 +15,11 @@ resource "helm_release" "ingress_nginx" {
   ]
 
   set {
+    name  = "controller.image.registry"
+    value = var.k8s_image_registry
+  }
+
+  set {
     name  = "controller.metrics.enabled"
     value = var.ingress_service_monitor_enabled
   }
@@ -67,6 +72,11 @@ resource "helm_release" "ingress_nginx_additional" {
   ]
 
   set {
+    name  = "controller.image.registry"
+    value = var.k8s_image_registry
+  }
+
+  set {
     name  = "controller.metrics.enabled"
     value = var.ingress_service_monitor_enabled
   }
@@ -113,6 +123,11 @@ resource "helm_release" "cluster_autoscaler" {
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
   version    = var.cluster_autoscaler_chart_version
+
+  set {
+    name  = "image.repository"
+    value = "${var.k8s_image_registry}/autoscaling/cluster-autoscaler"
+  }
 
   set {
     name  = "autoDiscovery.clusterName"
@@ -196,6 +211,12 @@ resource "helm_release" "prometheus_stack" {
   version           = var.prometheus_chart_version
   dependency_update = true
   timeout           = 600
+
+
+  set {
+    name = "admissionWebhooks.patch.image.registry"
+    value = var.k8s_image_registry
+  }
 
   set {
     name = "prometheus.prometheusSpec.additionalScrapeConfigs"
