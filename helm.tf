@@ -214,8 +214,8 @@ resource "helm_release" "prometheus_stack" {
 
 
   set {
-    name = "admissionWebhooks.patch.image.registry"
-    value = var.k8s_image_registry
+    name = "admissionWebhooks.patch.image.repository"
+    value = "${var.k8s_image_registry}/ingress-nginx/kube-webhook-certgen"
   }
 
   set {
