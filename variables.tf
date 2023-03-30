@@ -240,7 +240,7 @@ variable "loki_chart_version" {
     default = "0.48.3"  
 }
 
-variable "loki_priorityclass" {
+variable "loki_priority_class_name" {
     default = ""
 }
 
