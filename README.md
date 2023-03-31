@@ -367,6 +367,7 @@ module "eks_main" {
 | grafana\_ingress\_class\_name | ingress className | `string` | `nginx` | no |
 | grafana\_persistence\_enabled | Persistent volume | `bool` | `false` | no |
 | grafana\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |
+| k8s\_image\_registry | Kubernetes image registry. | `string` | `registry.k8s.io` | no |
 
 ## Outputs
 

@@ -119,7 +119,9 @@ variable "eks_addons" {
 }
 
 # ============================== helm releases ============================== #
-
+variable "k8s_image_registry" {
+    default = "registry.k8s.io"
+}
 # ================== ingress-nginx =================
 variable "helm_ingress_nginx_enabled" {
     default = false
@@ -238,7 +240,7 @@ variable "loki_chart_version" {
     default = "0.48.3"  
 }
 
-variable "loki_priorityclass" {
+variable "loki_priority_class_name" {
     default = ""
 }
 
@@ -573,13 +575,12 @@ variable "helm_tempo_enabled" {
     default = false
 }
 
-variable "tempo_chart_versoin" {
+variable "tempo_chart_version" {
     default = "0.17.1"  
 }
 
 variable "tempo_priority_class_name" {
     default = null
-  
 }
 
 # tempo - compactor

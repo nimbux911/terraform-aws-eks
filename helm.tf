@@ -15,6 +15,11 @@ resource "helm_release" "ingress_nginx" {
   ]
 
   set {
+    name  = "controller.image.registry"
+    value = var.k8s_image_registry
+  }
+
+  set {
     name  = "controller.metrics.enabled"
     value = var.ingress_service_monitor_enabled
   }
@@ -67,6 +72,11 @@ resource "helm_release" "ingress_nginx_additional" {
   ]
 
   set {
+    name  = "controller.image.registry"
+    value = var.k8s_image_registry
+  }
+
+  set {
     name  = "controller.metrics.enabled"
     value = var.ingress_service_monitor_enabled
   }
@@ -113,6 +123,11 @@ resource "helm_release" "cluster_autoscaler" {
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
   version    = var.cluster_autoscaler_chart_version
+
+  set {
+    name  = "image.repository"
+    value = "${var.k8s_image_registry}/autoscaling/cluster-autoscaler"
+  }
 
   set {
     name  = "autoDiscovery.clusterName"
@@ -196,6 +211,17 @@ resource "helm_release" "prometheus_stack" {
   version           = var.prometheus_chart_version
   dependency_update = true
   timeout           = 600
+
+
+  set {
+    name = "kube-state-metrics.image.repository"
+    value = "${var.k8s_image_registry}/kube-state-metrics/kube-state-metrics"
+  }
+
+  set {
+    name = "prometheusOperator.admissionWebhooks.patch.image.repository"
+    value = "${var.k8s_image_registry}/ingress-nginx/kube-webhook-certgen"
+  }
 
   set {
     name = "prometheus.prometheusSpec.additionalScrapeConfigs"
@@ -866,7 +892,7 @@ resource "helm_release" "tempo_distributed" {
   create_namespace  = true
   repository        = "https://grafana.github.io/helm-charts"
   chart             = "tempo-distributed"
-  version           = var.tempo_chart_versoin
+  version           = var.tempo_chart_version
   dependency_update = true
   timeout           = 600
 
@@ -875,7 +901,7 @@ resource "helm_release" "tempo_distributed" {
   ]
 
   set {
-    name = "prometheus_priority_class_name"
+    name = "global.priorityClassName"
     value = var.tempo_priority_class_name
   }
 
