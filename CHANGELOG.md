@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Update kubernetes registry from k8s.gcr.io Image to registry.k8s.io, based on this [announcement](https://kubernetes.io/blog/2023/02/06/k8s-gcr-io-freeze-announcement/) 
+- Update kubernetes registry from k8s.gcr.io Image to registry.k8s.io, based on this [announcement](https://kubernetes.io/blog/2023/02/06/k8s-gcr-io-freeze-announcement/)
+- Typo on Tempo Helm chart version variable name.
+- Typo on Tempo priority class name set value.
 
 ## [4.6.0] - 2023-02-23
 
