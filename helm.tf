@@ -892,7 +892,7 @@ resource "helm_release" "tempo_distributed" {
   create_namespace  = true
   repository        = "https://grafana.github.io/helm-charts"
   chart             = "tempo-distributed"
-  version           = var.tempo_chart_versoin
+  version           = var.tempo_chart_version
   dependency_update = true
   timeout           = 600
 
@@ -901,7 +901,7 @@ resource "helm_release" "tempo_distributed" {
   ]
 
   set {
-    name = "prometheus_priority_class_name"
+    name = "global.priorityClassName"
     value = var.tempo_priority_class_name
   }
 

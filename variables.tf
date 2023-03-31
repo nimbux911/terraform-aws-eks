@@ -575,13 +575,12 @@ variable "helm_tempo_enabled" {
     default = false
 }
 
-variable "tempo_chart_versoin" {
+variable "tempo_chart_version" {
     default = "0.17.1"  
 }
 
 variable "tempo_priority_class_name" {
     default = null
-  
 }
 
 # tempo - compactor

@@ -35,10 +35,8 @@ locals {
 resource "aws_key_pair" "eks" {
   key_name   = aws_eks_cluster.main.name
   public_key = base64decode(aws_ssm_parameter.eks_public_key.value)
-  tags = var.eks_tags
+  tags       = var.eks_tags
 }
-
-
 
 resource "aws_launch_template" "eks_node_groups" {
   for_each                              = merge(local.custom_node_groups, local.managed_node_groups)
@@ -139,7 +137,6 @@ resource "aws_autoscaling_group" "eks" {
       propagate_at_launch   = tag.value.propagate_at_launch
     }
   }
-
 
   lifecycle {
     ignore_changes = [desired_capacity]
