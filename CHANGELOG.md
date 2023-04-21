@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.7.0] - 2023-04-21
 
 ### Fixed
-- AWS Managed nodegroups are not added to ELB Target groups. [issue](https://github.com/nimbux911/terraform-aws-eks/issues/36)
-- Cluster autoscaler permissions to describe managed nodegroups.
+- AWS Managed nodegroups are not added to ELB Target groups. [issue 36](https://github.com/nimbux911/terraform-aws-eks/issues/36)
+- Cluster autoscaler permissions to describe managed nodegroups. [issue 37.1](https://github.com/nimbux911/terraform-aws-eks/issues/37)
 
 ### Added
 - OpenID Connect Provider for EKS to enable IRSA.
