@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [4.7.0] - 2023-04-21
+
+### Fixed
+- AWS Managed nodegroups are not added to ELB Target groups. [issue](https://github.com/nimbux911/terraform-aws-eks/issues/36)
+- Cluster autoscaler permissions to describe managed nodegroups.
+
+### Added
+- OpenID Connect Provider for EKS to enable IRSA.
+- IAM assumable role with oidc for EKS ebs-csi-controller.
+
 ## [4.6.2] - 2023-04-21
 
 ### Fixed

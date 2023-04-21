@@ -30,6 +30,16 @@ locals {
 
   managed_node_groups = var.managed_node_groups != null ? {for node_group in var.managed_node_groups: node_group.name => merge(node_group.values, {type = "managed", spot_nodes_enabled = false})} : null
   custom_node_groups = var.custom_node_groups != null ? {for node_group in var.custom_node_groups: node_group.name => merge(node_group.values, {type = "custom", spot_nodes_enabled = lookup(node_group, "spot_nodes_enabled", false)})} : null
+
+  eks_managed_node_groups_autoscaling_group_names = compact(flatten([for group in try(aws_eks_node_group.eks, {}) : group.resources[*].autoscaling_groups[*].name]))
+
+  config_autoscaling_attachment = var.managed_node_groups != null ? distinct(flatten([
+    for each_tg in tolist(var.target_group_arns) : [
+      for node_group_name in local.eks_managed_node_groups_autoscaling_group_names : {
+        autoscaling_group_name = node_group_name
+        lb_target_group_arn    = each_tg
+      }
+  ]])) : [] 
   }
 
 resource "aws_key_pair" "eks" {
@@ -178,4 +188,15 @@ resource "aws_eks_node_group" "eks" {
     ignore_changes = [scaling_config[0].desired_size]
   }
 
+}
+
+resource "aws_autoscaling_attachment" "autoscaling_attachment" {
+  for_each = { for asg in local.config_autoscaling_attachment:  asg.autoscaling_group_name => asg }
+  
+  autoscaling_group_name = lookup(each.value, "autoscaling_group_name", null)
+  lb_target_group_arn    = lookup(each.value, "lb_target_group_arn", null)
+  
+  depends_on = [
+	aws_eks_node_group.eks
+  ]
 }

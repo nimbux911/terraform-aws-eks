@@ -102,9 +102,31 @@ resource "kubernetes_config_map" "aws_auth_without_ignore" {
 # Addons
 
 resource "aws_eks_addon" "this" {
-  for_each          = var.eks_addons
-  cluster_name      = var.cluster_name
-  addon_name        = each.key
-  addon_version     = each.value["version"]
-  resolve_conflicts = "OVERWRITE"
+  for_each                 = var.eks_addons
+  cluster_name             = var.cluster_name
+  addon_name               = each.key
+  addon_version            = each.value["version"]
+  service_account_role_arn = try(each.value["service_account_role_arn"], null)
+  resolve_conflicts        = try(each.value["resolve_conflicts"], "OVERWRITE")
+}
+
+
+# IRSA
+
+data "tls_certificate" "cert" {
+  count = var.enable_irsa ? 1 : 0
+  url = aws_eks_cluster.main.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "oidc_provider" {
+  count = var.enable_irsa ? 1 : 0
+
+  client_id_list  = distinct(compact(concat(["sts.amazonaws.com"], var.openid_connect_audiences)))
+  thumbprint_list = concat(data.tls_certificate.cert[0].certificates[*].sha1_fingerprint, var.custom_oidc_thumbprints)
+  url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
+
+  tags = merge(
+    { Name = "${var.cluster_name}-eks-irsa" },
+    var.eks_tags
+  )
 }

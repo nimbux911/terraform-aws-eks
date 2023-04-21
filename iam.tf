@@ -168,6 +168,17 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
         ],
         "Effect": "Allow",
         "Resource": "*"
+       },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "autoscaling:SetDesiredCapacity",
+          "autoscaling:TerminateInstanceInAutoScalingGroup",
+          "ec2:DescribeImages",
+          "ec2:GetInstanceTypesFromInstanceRequirements",
+          "eks:DescribeNodegroup"
+        ],
+        "Resource": ["*"]
       }
     ]
   }
@@ -177,4 +188,26 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
 resource "aws_iam_instance_profile" "eks_worker" {
   name = "${var.environment}-eks-worker"
   role = aws_iam_role.eks_worker.name
+}
+
+
+module "ebs_csi_controller_role" {
+  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  version                       = "5.17.0"
+  create_role                   = var.enable_irsa && var.create_ebs_csi_role ? true : false
+  role_name                     = "${var.cluster_name}-ebs-csi-controller"
+  provider_url                  = replace(aws_eks_cluster.main.identity[0].oidc[0].issuer, "https://", "")
+  role_policy_arns              = [aws_iam_policy.ebs_csi_controller[0].arn]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+
+depends_on = [
+  aws_iam_policy.ebs_csi_controller
+]
+}
+
+resource "aws_iam_policy" "ebs_csi_controller" {
+  count       = var.enable_irsa && var.create_ebs_csi_role ? 1 : 0
+  name_prefix = "ebs-csi-controller"
+  description = "EKS ebs-csi-controller policy for cluster ${var.cluster_name}"
+  policy      = file("${path.module}/resources/policies/ebs_csi_controller_iam_policy.json")
 }
