@@ -580,7 +580,7 @@ variable "tempo_chart_version" {
 }
 
 variable "tempo_priority_class_name" {
-    default = null
+    default = ""
 }
 
 # tempo - compactor
