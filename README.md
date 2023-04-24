@@ -54,7 +54,7 @@ module "eks_main" {
   source                                      = "github.com/nimbux911/terraform-aws-eks.git"
   environment                                 = "dev"
   cluster_name                                = "dev-eks-main"
-  cluster_version                             = "1.21"
+  cluster_version                             = "1.23"
   vpc_id                                      = "vpc-abcd1234"
   subnets_ids                                 = ["subnet-abc1234", "subnet-efgh5678"]
   eks_api_private                             = true
@@ -111,15 +111,21 @@ module "eks_main" {
   helm_metrics_server_enabled      = true 
   helm_cert_manager_enabled        = true
 
+  create_ebs_csi_role = true
+
   eks_addons = {
     vpc-cni = {
-      version = "v1.10.2-eksbuild.1"
+      version = "v1.12.6-eksbuild.1"
     },
     coredns = {
-      version = "v1.8.3-eksbuild.1"
+      version = "v1.8.7-eksbuild.4"
     },
     kube-proxy = {
-      version = "v1.19.6-eksbuild.2"
+      version = "v1.22.17-eksbuild.2"
+    },
+    aws-ebs-csi-driver = {
+      version = "v1.17.0-eksbuild.1"
+      service_account_role_arn = "arn:aws:iam::${var.current_account_id}:role/test-eks-main-eks-ebs-csi-controller"
     }
   }
 
@@ -204,6 +210,10 @@ module "eks_main" {
 | eks\_tags | Tags to add to all resources except the autoscaling group. | `map` | `{}` | no |
 | eks\_api\_private | Defines it the Kubernetes API will be private or public. | `bool` | `false` | no |
 | eks\_addons | Adds EKS addons. | `map(map(string))` | `{}` | no |
+| enable\_irsa | Determines whether to create an OpenID Connect Provider for EKS to enable IRSA. | `bool` | `true` | no |
+| openid\_connect\_audiences | List of OpenID Connect audience client IDs to add to the IRSA provider. | `list[string]` | `[]` | no |
+| custom\_oidc\_thumbprints | Additional list of server certificate thumbprints for the OpenID Connect (OIDC) identity provider's server certificate(s). | `list[string]` | `[]` | no |
+| create\_ebs\_csi\_role | Indicates whether or not to create an IAM assumable role with oidc for EKS ebs-csi-controller. If true, the role will be created with the following name: `<cluster_name>-ebs-csi-controller`| `bool` | `false` | no |
 | add\_configmap\_roles | List of maps with the information of the IAM roles to be added to aws-auth configmap. | `list[map]` | `[]` | no |
 | add\_configmap\_users | List of maps with the information of the IAM users to be added to aws-auth configmap. | `list[map]` | `[]` | no |
 | aws\_auth\_ignore\_changes | Set if aws-auth configmap will be managed by Terraform or ignored. | `bool` | `true` | no |
@@ -376,5 +386,11 @@ module "eks_main" {
 | security\_group\_worker\_arn | The ARN of the workers security group. |
 | worker\_role\_arn | The ARN of the workers IAM Role. |
 | worker\_role\_id | The ID of the workers IAM Role. |
+| asg\_name | Name of the of the workers Autoscaling Group. |
 | eks\_certificate\_authority | Cluster's certificate authority. |
 | eks\_endpoint | Cluster's endpoint. |
+| eks\_managed\_node\_groups\_autoscaling\_group\_names | List of the autoscaling group names created by EKS managed node groups. |
+| oidc\_provider | The OpenID Connect identity provider (issuer URL without leading `https://`). |
+| oidc\_provider\_arn | The ARN of the OIDC Provider if `enable_irsa = true`. |
+| cluster\_tls\_certificate\_sha1\_fingerprint | The SHA1 fingerprint of the public key of the cluster's certificate. |
+| ebs\_csi\_iam\_role\_arn | The arn of the role created for ebs csi driver. |

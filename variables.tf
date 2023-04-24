@@ -118,6 +118,32 @@ variable "eks_addons" {
     default = {}
 }
 
+# ============================== IRSA ============================== #
+
+variable "enable_irsa" {
+  description = "Determines whether to create an OpenID Connect Provider for EKS to enable IRSA"
+  type        = bool
+  default     = true
+}
+
+variable "openid_connect_audiences" {
+  description = "List of OpenID Connect audience client IDs to add to the IRSA provider"
+  type        = list(string)
+  default     = []
+}
+
+variable "custom_oidc_thumbprints" {
+  description = "Additional list of server certificate thumbprints for the OpenID Connect (OIDC) identity provider's server certificate(s)"
+  type        = list(string)
+  default     = []
+}
+
+variable "create_ebs_csi_role" {
+  description = "Indicates whether or not to create an IAM assumable role with oidc for EKS ebs-csi-controller. If true, the role will be created with the following name: '<cluster_name>-ebs-csi-controller'"
+  type        = bool
+  default     = false
+}
+
 # ============================== helm releases ============================== #
 variable "k8s_image_registry" {
     default = "registry.k8s.io"
@@ -759,5 +785,4 @@ variable "grafana_persistence_enabled" {
 }
 variable "grafana_priority_class_name" {
     default = ""
-  
 }
