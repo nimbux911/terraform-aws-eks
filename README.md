@@ -229,6 +229,7 @@ module "eks_main" {
 | ingress\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
 | ingress\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |
+| ingress\_replicacount | Minimum Replicas count of ingress | `number` | `"1"` | no |
 | helm\_ingress\_nginx\_additional\_enabled | Set if additional ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | ingress\_additional\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
 | ingress\_additional\_http\_nodeport | Set port for additional ingress http nodePort | `int` | `31080` | no |
@@ -237,6 +238,7 @@ module "eks_main" {
 | ingress\_additional\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
 | ingress\_additional\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | ingress\_additional\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |
+| ingress\_additional\_replicacount | Minimum Replicas count of ingress additional | `number` | `"1"` | no |
 | helm\_cluster\_autoscaler\_enabled | Set if cluster-autoscaler Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | cluster\_autoscaler\_chart\_version | Set the version for the chart | `string` | `9.16.1` | no |
 | cluster\_autoscaler\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |
