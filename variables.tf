@@ -786,3 +786,15 @@ variable "grafana_persistence_enabled" {
 variable "grafana_priority_class_name" {
     default = ""
 }
+
+variable "ingress_replicacount" {
+    description = "Minimum Replicas count of ingress"
+    type        = number
+    default     = 1
+}
+
+variable "ingress_additional_replicacount" {
+    description = "Minimum Replicas count of ingress additional"
+    type        = number
+    default     = 1
+}

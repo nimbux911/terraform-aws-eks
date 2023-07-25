@@ -55,6 +55,11 @@ resource "helm_release" "ingress_nginx" {
     value = var.ingress_priority_class_name
   }
 
+  set {
+    name = "controller.replicaCount"
+    value = var.ingress_replicacount
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
@@ -110,6 +115,11 @@ resource "helm_release" "ingress_nginx_additional" {
   set {
     name = "controller.priorityClassName"
     value = var.ingress_additional_priority_class_name
+  }
+  
+  set {
+    name = "controller.replicaCount"
+    value = var.ingress_additional_replicacount
   }
 
   depends_on = [time_sleep.wait_20_seconds]
