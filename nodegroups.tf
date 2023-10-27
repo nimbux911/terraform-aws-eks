@@ -29,7 +29,7 @@ locals {
   ]
 
   managed_node_groups = var.managed_node_groups != null ? {for node_group in var.managed_node_groups: node_group.name => merge(node_group.values, {type = "managed", spot_nodes_enabled = false})} : null
-  custom_node_groups = var.custom_node_groups != null ? {for node_group in var.custom_node_groups: node_group.name => merge(node_group.values, {type = "custom", spot_nodes_enabled = lookup(node_group, "spot_nodes_enabled", false)})} : null
+  custom_node_groups = var.custom_node_groups != null ? {for node_group in var.custom_node_groups: node_group.name => merge(node_group.values, {type = "custom", spot_nodes_enabled = lookup(node_group.values, "spot_nodes_enabled", false)})} : null
 
   eks_managed_node_groups_autoscaling_group_names = compact(flatten([for group in try(aws_eks_node_group.eks, {}) : group.resources[*].autoscaling_groups[*].name]))
 
@@ -54,7 +54,14 @@ resource "aws_launch_template" "eks_node_groups" {
   image_id                              = each.value.ami_id
   instance_type                         = each.value.instance_type
 
-  vpc_security_group_ids                = each.value.extra_sg_ids != null ? concat([aws_security_group.eks_worker.id], each.value.extra_sg_ids) : [aws_security_group.eks_worker.id]
+#  vpc_security_group_ids                = each.value.extra_sg_ids != null ? concat([aws_security_group.eks_worker.id], each.value.extra_sg_ids) : [aws_security_group.eks_worker.id]
+
+  network_interfaces { 
+    associate_public_ip_address = each.value.workers_public 
+    delete_on_termination       = true 
+    security_groups             = each.value.extra_sg_ids != null ? concat([aws_security_group.eks_worker.id], each.value.extra_sg_ids) : [aws_security_group.eks_worker.id] 
+  }
+
 
   key_name                              = aws_key_pair.eks.key_name
   instance_initiated_shutdown_behavior  = each.value.type == "custom" ? "terminate" : null 
@@ -102,7 +109,7 @@ resource "aws_launch_template" "eks_node_groups" {
           block_duration_minutes         = lookup(each.value.spot_options, "block_duration_minutes", null)
           instance_interruption_behavior = lookup(each.value.spot_options, "instance_interruption_behavior", null)
           max_price                      = lookup(each.value.spot_options, "max_price", null)
-          spot_instance_type             = lookup(each.value.spot_options, "spot_instance_type", null)
+          spot_instance_type             = "persistent"
           valid_until                    = lookup(each.value.spot_options, "valid_until", null)
         }
       }
