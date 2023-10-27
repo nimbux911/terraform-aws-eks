@@ -109,7 +109,7 @@ resource "aws_launch_template" "eks_node_groups" {
           block_duration_minutes         = lookup(each.value.spot_options, "block_duration_minutes", null)
           instance_interruption_behavior = lookup(each.value.spot_options, "instance_interruption_behavior", null)
           max_price                      = lookup(each.value.spot_options, "max_price", null)
-          spot_instance_type             = "persistent"
+          spot_instance_type             = "one-time"
           valid_until                    = lookup(each.value.spot_options, "valid_until", null)
         }
       }
