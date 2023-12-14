@@ -79,7 +79,7 @@ resource "aws_launch_template" "eks_node_groups" {
     ))
 
   block_device_mappings {
-    device_name             = "/dev/sda1"
+    device_name             = data.aws_ami.this[each.key].root_device_name
     ebs {
       volume_size           = each.value.volume_size
       volume_type           = each.value.volume_type
