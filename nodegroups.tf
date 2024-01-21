@@ -54,14 +54,11 @@ resource "aws_launch_template" "eks_node_groups" {
   image_id                              = each.value.ami_id
   instance_type                         = each.value.instance_type
 
-#  vpc_security_group_ids                = each.value.extra_sg_ids != null ? concat([aws_security_group.eks_worker.id], each.value.extra_sg_ids) : [aws_security_group.eks_worker.id]
-
   network_interfaces { 
     associate_public_ip_address = each.value.workers_public 
     delete_on_termination       = true 
     security_groups             = each.value.extra_sg_ids != null ? concat([aws_security_group.eks_worker.id], each.value.extra_sg_ids) : [aws_security_group.eks_worker.id] 
   }
-
 
   key_name                              = aws_key_pair.eks.key_name
   instance_initiated_shutdown_behavior  = each.value.type == "custom" ? "terminate" : null 

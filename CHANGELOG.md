@@ -7,10 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.0] - 2024-01-21
+
+- Add dynamic root volume name depending on the AMI that is being used for the worker nodes.
+- Attach worker nodes security groups directly to ENIs.
+- Set spot instance type as "one-time".
+- Add output for EKS cluster name.
+- Add input to set if the worker nodes are public or private.
+
 ## [4.7.1] - 2023-07-25
 
 ### Added
-- Minimun Replica count for ingress-nginx and ingress-additional-nginx
+- Minimum Replica count for ingress-nginx and ingress-additional-nginx
 
 ## [4.7.0] - 2023-04-21
 
