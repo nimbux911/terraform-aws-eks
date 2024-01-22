@@ -18,6 +18,10 @@ output "eks_endpoint" {
   value = aws_eks_cluster.main.endpoint
 }
 
+output "eks_cluster_name" {
+  value = aws_eks_cluster.main.id
+}
+
 output "eks_managed_node_groups_autoscaling_group_names" {
   description = "List of the autoscaling group names created by EKS managed node groups"
   value       = compact(flatten([for group in aws_eks_node_group.eks : group.resources[*].autoscaling_groups[*].name]))

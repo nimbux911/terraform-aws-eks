@@ -106,6 +106,7 @@ resource "aws_eks_addon" "this" {
   cluster_name             = var.cluster_name
   addon_name               = each.key
   addon_version            = each.value["version"]
+  configuration_values     = try(jsonencode(each.value["configuration_values"]), null)
   service_account_role_arn = try(each.value["service_account_role_arn"], null)
   resolve_conflicts        = try(each.value["resolve_conflicts"], "OVERWRITE")
 }

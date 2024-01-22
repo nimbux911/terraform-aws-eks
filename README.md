@@ -115,7 +115,12 @@ module "eks_main" {
 
   eks_addons = {
     vpc-cni = {
-      version = "v1.12.6-eksbuild.1"
+      version              = "v1.12.6-eksbuild.1"
+      configuration_values = {
+        env = {
+          ENABLE_PREFIX_DELEGATION = "true"
+        }
+      }
     },
     coredns = {
       version = "v1.8.7-eksbuild.4"

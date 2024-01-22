@@ -24,6 +24,7 @@ variable "custom_node_groups"{
         values = object({
             ami_id           = string,
             instance_type    = string,
+            workers_public  = bool,
             extra_sg_ids     = optional(list(string)),
             instance_profile = optional(string),
             asg_min          = number,
@@ -50,6 +51,7 @@ variable "managed_node_groups"{
         values = object({
             ami_id          = string,
             instance_type   = string,
+            workers_public  = bool,
             extra_sg_ids    = optional(list(string)),
             iam_role_arn    = optional(string),
             asg_min         = number,
