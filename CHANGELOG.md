@@ -5,10 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [5.1.0] - 2024-01-21
-
-- Enable optional custom configurations for EKS addons.
-
 ## [5.0.0] - 2024-01-21
 
 - Add dynamic root volume name depending on the AMI that is being used for the worker nodes.
@@ -16,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set spot instance type as "one-time".
 - Add output for EKS cluster name.
 - Add input to set if the worker nodes are public or private.
+- Enable optional custom configurations for EKS addons.
 
 ## [4.7.1] - 2023-07-25
 
