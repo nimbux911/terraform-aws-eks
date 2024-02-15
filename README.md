@@ -110,6 +110,11 @@ module "eks_main" {
   helm_cluster_autoscaler_enabled  = true
   helm_metrics_server_enabled      = true 
   helm_cert_manager_enabled        = true
+  ingress_node_affinity            = {
+    enabled     = true,
+    label_key   = "nodegroup",
+    label_value = "${var.env}-eks-spot"
+  }
 
   create_ebs_csi_role = true
 
@@ -230,6 +235,7 @@ module "eks_main" {
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
 | ingress\_https\_traffic\_enabled | Set https traffic for ingress | `bool` | `false` | no | 
+| ingress\_node\_affinity | Set nodeAffinity for ingress | `map` | `{ enabled = false, label_key = null, label_value = null}` | no | 
 | ingress\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
 | ingress\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
