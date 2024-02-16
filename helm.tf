@@ -11,7 +11,12 @@ resource "helm_release" "ingress_nginx" {
   version           = var.ingress_chart_version
 
   values            = [
-    file("${path.module}/helm-values/ingress-nginx.yaml")
+    templatefile("${path.module}/helm-values/ingress-nginx.yaml.tpl", 
+    {
+      enableNodeAffinity = var.ingress_node_affinity["enabled"],
+      nodeAffinityLabelKey = var.ingress_node_affinity["label_key"],
+      nodeAffinityLabelValue = var.ingress_node_affinity["label_value"]
+    })
   ]
 
   set {

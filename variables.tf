@@ -186,8 +186,17 @@ variable "ingress_requests_cpu" {
 variable "ingress_requests_memory" {
     default = "90Mi"
 }
+
 variable "ingress_priority_class_name"{
     default = ""
+}
+
+variable "ingress_node_affinity" {
+  default = {
+    enabled     = "false",
+    label_key   = null,
+    label_value = null
+  }
 }
 
 # ================== ingress-nginx-additional =================
