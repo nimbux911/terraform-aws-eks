@@ -106,11 +106,12 @@ module "eks_main" {
     }
   ]
 
-  helm_ingress_nginx_enabled       = true 
-  helm_cluster_autoscaler_enabled  = true
-  helm_metrics_server_enabled      = true 
-  helm_cert_manager_enabled        = true
-  ingress_node_affinity            = {
+  helm_ingress_nginx_enabled           = true 
+  helm_cluster_autoscaler_enabled      = true
+  cluster_autoscaler_extra_helm_values = file("${path.root}/resources/helm/values/cluster-autoscaler.yaml")
+  helm_metrics_server_enabled          = true 
+  helm_cert_manager_enabled            = true
+  ingress_node_affinity                = {
     enabled     = true,
     label_key   = "nodegroup",
     label_value = "${var.env}-eks-spot"
@@ -253,6 +254,7 @@ module "eks_main" {
 | helm\_cluster\_autoscaler\_enabled | Set if cluster-autoscaler Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | cluster\_autoscaler\_chart\_version | Set the version for the chart | `string` | `9.16.1` | no |
 | cluster\_autoscaler\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |
+| cluster\_autoscaler\_extra\_helm\_values | Raw YAML containing additional cluster-autoscaler Helm values | `string` | `""` | no |
 | helm\_metrics\_server\_enabled | Set if metrics-server Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | metrics\_server\_chart\_version | Set the version for the chart | `string` | `1.6.1` | no |
 | metrics\_server\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |

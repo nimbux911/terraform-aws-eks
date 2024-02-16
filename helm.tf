@@ -159,6 +159,8 @@ resource "helm_release" "cluster_autoscaler" {
     value = var.cluster_autoscaler_priority_class_name
   }
 
+  values = [var.cluster_autoscaler_extra_helm_values]
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
