@@ -242,6 +242,10 @@ variable "cluster_autoscaler_priority_class_name" {
     default = ""
 }
 
+variable "cluster_autoscaler_extra_helm_values" {
+  default = ""
+}
+
 # metrics-server
 variable "helm_metrics_server_enabled" {
     default = false
