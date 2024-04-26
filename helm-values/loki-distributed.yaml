@@ -1,6 +1,6 @@
 loki:
   image:
-    tag: v2.5.0-with-pr-6123-a630ae3 # fix issue #5909 https://github.com/grafana/loki/issues/5909#issuecomment-1120821579
+    tag: v2.9.3
     
   config: |
     auth_enabled: false
