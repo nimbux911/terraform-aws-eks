@@ -263,7 +263,7 @@ variable "helm_loki_enabled" {
 }
 
 variable "loki_chart_version" {
-    default = "0.48.3"  
+    default = "0.67.2"  
 }
 
 variable "loki_priority_class_name" {

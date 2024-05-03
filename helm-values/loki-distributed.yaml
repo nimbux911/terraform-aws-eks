@@ -109,15 +109,6 @@ ingester:
     - name: wal
       mountPath: /data/loki/wal
 
-# Configuration for the querier
-querier:
-  extraVolumes:
-    - name: data
-      emptyDir: {}
-  extraVolumeMounts:
-    - name: data
-      mountPath: /data/loki
-
 # Configuration for the index-gateway
 indexGateway:
   extraVolumes:
