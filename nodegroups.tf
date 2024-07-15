@@ -167,6 +167,7 @@ resource "aws_autoscaling_group" "eks" {
     ignore_changes = [desired_capacity]
   }
 }
+}
 
 resource "aws_eks_node_group" "eks" {
   for_each        = local.managed_node_groups != null ? local.managed_node_groups : {}
