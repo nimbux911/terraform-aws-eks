@@ -158,40 +158,49 @@ resource "aws_autoscaling_group" "eks" {
 
 }
 
-resource "aws_eks_node_group" "eks" {
-  for_each        = local.managed_node_groups != null ? local.managed_node_groups : {}
-
-  cluster_name    = aws_eks_cluster.main.name
-  node_group_name = each.key
-  node_role_arn   = each.value.iam_role_arn != null ? each.value.iam_role_arn : aws_iam_role.eks_worker.arn
-  subnet_ids      = each.value.subnets_ids
+resource "aws_autoscaling_group" "eks" {
+  for_each             = local.custom_node_groups != null ? local.custom_node_groups : {}
+  min_size             = each.value.asg_min
+  desired_capacity     = each.value.asg_min
+  max_size             = each.value.asg_max
+  name                 = each.key
+  vpc_zone_identifier  = each.value.subnets_ids
+  target_group_arns    = var.target_group_arns
+  health_check_type    = var.health_check_type
 
   launch_template {
     id      = aws_launch_template.eks_node_groups[each.key].id
     version = "$Latest"
   }
 
-  labels = each.value.k8s_labels != null ? each.value.k8s_labels : null
-
-  dynamic "taint" {
-    for_each  = each.value.k8s_taint != null ? each.value.k8s_taint : []
+  dynamic "mixed_instances_policy" {
+    for_each = each.value.spot_nodes_enabled ? [1] : []
     content {
-      key     = taint.value.key
-      value   = taint.value.value
-      effect  = taint.value.effect
+      launch_template {
+        launch_template_specification {
+          launch_template_id = aws_launch_template.eks_node_groups[each.key].id
+          version            = "$Latest"
+        }
+      }
+      
+      instances_distribution {
+        spot_allocation_strategy = var.spot_allocation_strategy
+      }
     }
   }
 
-  scaling_config {
-    min_size     = each.value.asg_min
-    desired_size = each.value.asg_min
-    max_size     = each.value.asg_max
+  dynamic "tag" {
+    for_each  = toset(concat(local.asg_common_tags, each.value.asg_tags))
+    content {
+      key                 = tag.value.key
+      value               = tag.value.value
+      propagate_at_launch = tag.value.propagate_at_launch
+    }
   }
 
   lifecycle {
-    ignore_changes = [scaling_config[0].desired_size]
+    ignore_changes = [desired_capacity]
   }
-
 }
 
 resource "aws_autoscaling_attachment" "autoscaling_attachment" {

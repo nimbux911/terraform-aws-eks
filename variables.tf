@@ -82,6 +82,10 @@ variable "health_check_type" {
     default = "EC2"
 }
 
+variable "spot_allocation_strategy" {
+    default = "capacity-optimized" 
+}
+
 variable "eks_worker_max_pods_enabled" {
     default = false
 }
