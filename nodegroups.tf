@@ -140,7 +140,7 @@ resource "aws_autoscaling_group" "eks" {
 
   mixed_instances_policy {
     dynamic "instances_distribution" {
-      for_each = var.spot_nodes_enabled ? [1] : []
+      for_each = var.enable_spot_allocation_strategy ? [1] : []
       content {
         spot_allocation_strategy = var.spot_allocation_strategy
       }
@@ -152,8 +152,8 @@ resource "aws_autoscaling_group" "eks" {
         launch_template_id      = aws_launch_template.eks_node_groups[each.key].id
         version = "$Latest"
       }
-    }
   }
+  
   dynamic "tag" {
     for_each  = toset(concat(local.asg_common_tags, each.value.asg_tags))
     content {

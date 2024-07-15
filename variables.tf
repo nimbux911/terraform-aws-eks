@@ -45,10 +45,6 @@ variable "custom_node_groups"{
   default = null
 }
 
-variable "spot_nodes_enabled" {
-    default = false
-}
-
 variable "managed_node_groups"{
     type = list(object({
         name = string
@@ -84,6 +80,12 @@ variable "target_group_arns" {
 
 variable "health_check_type" {
     default = "EC2"
+}
+
+variable "enable_spot_allocation_strategy" {
+    description = "If enable_spot_allocation_strategy is true then we can distribute the capacity among the Spot pools"
+    type        = bool 
+    default     = false 
 }
 
 variable "spot_allocation_strategy" {
