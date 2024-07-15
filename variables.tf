@@ -45,6 +45,10 @@ variable "custom_node_groups"{
   default = null
 }
 
+variable "spot_nodes_enabled" {
+    default = false
+}
+
 variable "managed_node_groups"{
     type = list(object({
         name = string
