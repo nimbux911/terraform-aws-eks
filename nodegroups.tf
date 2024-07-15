@@ -127,37 +127,6 @@ resource "aws_launch_template" "eks_node_groups" {
 }
 
 
-
-resource "aws_autoscaling_group" "eks" {
-  for_each             = local.custom_node_groups != null ? local.custom_node_groups : {}
-  min_size             = each.value.asg_min
-  desired_capacity     = each.value.asg_min
-  max_size             = each.value.asg_max
-  name                 = each.key
-  vpc_zone_identifier  = each.value.subnets_ids
-  target_group_arns    = var.target_group_arns
-  health_check_type    = var.health_check_type
-
-  launch_template {
-    id      = aws_launch_template.eks_node_groups[each.key].id
-    version = "$Latest"
-  }
-
-  dynamic "tag" {
-    for_each  = toset(concat(local.asg_common_tags, each.value.asg_tags))
-    content {
-      key                   = tag.value.key
-      value                 = tag.value.value
-      propagate_at_launch   = tag.value.propagate_at_launch
-    }
-  }
-
-  lifecycle {
-    ignore_changes = [desired_capacity]
-  }
-
-}
-
 resource "aws_autoscaling_group" "eks" {
   for_each             = local.custom_node_groups != null ? local.custom_node_groups : {}
   min_size             = each.value.asg_min
