@@ -143,22 +143,22 @@ resource "aws_autoscaling_group" "eks" {
     version = "$Latest"
   }
 
-  dynamic "mixed_instances_policy" {
-    for_each = each.value.spot_nodes_enabled ? [1] : []
-    content {
-      launch_template {
-        launch_template_specification {
-          launch_template_id = aws_launch_template.eks_node_groups[each.key].id
-          version            = "$Latest"
-        }
-      }
-      
-      instances_distribution {
+  mixed_instances_policy {
+    dynamic "instances_distribution" {
+      for_each = var.spot_nodes_enabled ? [1] : []
+      content {
         spot_allocation_strategy = var.spot_allocation_strategy
       }
     }
-  }
 
+
+    launch_template {
+      launch_template_specification {
+        launch_template_id      = aws_launch_template.eks_node_groups[each.key].id
+        version = "$Latest"
+      }
+    }
+  }
   dynamic "tag" {
     for_each  = toset(concat(local.asg_common_tags, each.value.asg_tags))
     content {
