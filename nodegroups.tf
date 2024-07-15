@@ -127,6 +127,7 @@ resource "aws_launch_template" "eks_node_groups" {
 }
 
 
+
 resource "aws_autoscaling_group" "eks" {
   for_each             = local.custom_node_groups != null ? local.custom_node_groups : {}
   min_size             = each.value.asg_min
@@ -170,6 +171,42 @@ resource "aws_autoscaling_group" "eks" {
   lifecycle {
     ignore_changes = [desired_capacity]
   }
+}
+
+resource "aws_eks_node_group" "eks" {
+  for_each        = local.managed_node_groups != null ? local.managed_node_groups : {}
+
+  cluster_name    = aws_eks_cluster.main.name
+  node_group_name = each.key
+  node_role_arn   = each.value.iam_role_arn != null ? each.value.iam_role_arn : aws_iam_role.eks_worker.arn
+  subnet_ids      = each.value.subnets_ids
+
+  launch_template {
+    id      = aws_launch_template.eks_node_groups[each.key].id
+    version = "$Latest"
+  }
+
+  labels = each.value.k8s_labels != null ? each.value.k8s_labels : null
+
+  dynamic "taint" {
+    for_each  = each.value.k8s_taint != null ? each.value.k8s_taint : []
+    content {
+      key     = taint.value.key
+      value   = taint.value.value
+      effect  = taint.value.effect
+    }
+  }
+
+  scaling_config {
+    min_size     = each.value.asg_min
+    desired_size = each.value.asg_min
+    max_size     = each.value.asg_max
+  }
+
+  lifecycle {
+    ignore_changes = [scaling_config[0].desired_size]
+  }
+
 }
 
 resource "aws_autoscaling_attachment" "autoscaling_attachment" {
