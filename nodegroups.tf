@@ -153,7 +153,8 @@ resource "aws_autoscaling_group" "eks" {
         version = "$Latest"
       }
   }
-  
+  }
+
   dynamic "tag" {
     for_each  = toset(concat(local.asg_common_tags, each.value.asg_tags))
     content {
@@ -166,7 +167,6 @@ resource "aws_autoscaling_group" "eks" {
   lifecycle {
     ignore_changes = [desired_capacity]
   }
-}
 }
 
 resource "aws_eks_node_group" "eks" {
