@@ -138,11 +138,6 @@ resource "aws_autoscaling_group" "eks" {
   target_group_arns    = var.target_group_arns
   health_check_type    = var.health_check_type
 
-  launch_template {
-    id      = aws_launch_template.eks_node_groups[each.key].id
-    version = "$Latest"
-  }
-
   mixed_instances_policy {
     dynamic "instances_distribution" {
       for_each = var.spot_nodes_enabled ? [1] : []
