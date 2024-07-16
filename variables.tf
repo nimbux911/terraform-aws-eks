@@ -82,10 +82,8 @@ variable "health_check_type" {
     default = "EC2"
 }
 
-variable "enable_spot_allocation_strategy" {
-    description = "If enable_spot_allocation_strategy is true then we can distribute the capacity among the Spot pools"
-    type        = bool 
-    default     = false 
+variable "on_demand_percentage_above_base_capacity" {
+    description = "Percentage split between on-demand and Spot instances above the base on-demand capacity. "
 }
 
 variable "spot_allocation_strategy" {

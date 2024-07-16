@@ -96,23 +96,7 @@ resource "aws_launch_template" "eks_node_groups" {
   monitoring {
     enabled = true
   }
-
-  dynamic "instance_market_options" {
-    for_each =  each.value.spot_nodes_enabled == true ? ["do it"] : []
-    content {
-      market_type = "spot"
-
-      spot_options {
-          block_duration_minutes         = lookup(each.value.spot_options, "block_duration_minutes", null)
-          instance_interruption_behavior = lookup(each.value.spot_options, "instance_interruption_behavior", null)
-          max_price                      = lookup(each.value.spot_options, "max_price", null)
-          spot_instance_type             = "one-time"
-          valid_until                    = lookup(each.value.spot_options, "valid_until", null)
-        }
-      }
-    }
-  
-
+ 
   tag_specifications {
     resource_type = "instance"
     tags = {
@@ -138,11 +122,13 @@ resource "aws_autoscaling_group" "eks" {
   target_group_arns    = var.target_group_arns
   health_check_type    = var.health_check_type
 
-  mixed_instances_policy {
-    dynamic "instances_distribution" {
-      for_each = var.enable_spot_allocation_strategy ? [1] : []
+  dynamic  "mixed_instances_policy" {
+      for_each =  each.value.spot_nodes_enabled == true ? ["do it"] : []
+      instances_distribution {
       content {
         spot_allocation_strategy = var.spot_allocation_strategy
+        on_demand_percentage_above_base_capacity = var.on_demand_percentage_above_base_capacity
+      }
       }
     }
 
