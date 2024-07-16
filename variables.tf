@@ -83,7 +83,8 @@ variable "health_check_type" {
 }
 
 variable "on_demand_percentage_above_base_capacity" {
-    description = "Percentage split between on-demand and Spot instances above the base on-demand capacity. "
+    description = "Percentage split between on-demand and Spot instances above the base on-demand capacity."
+    default     = 100
 }
 
 variable "spot_allocation_strategy" {
