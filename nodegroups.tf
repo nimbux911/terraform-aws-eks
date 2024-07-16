@@ -130,8 +130,6 @@ resource "aws_autoscaling_group" "eks" {
         on_demand_percentage_above_base_capacity = var.on_demand_percentage_above_base_capacity
       }
       }
-    }
-
 
     launch_template {
       launch_template_specification {
