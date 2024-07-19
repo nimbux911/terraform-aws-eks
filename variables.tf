@@ -111,6 +111,11 @@ variable "enabled_cluster_log_types" {
     default = []
 }
 
+variable "monitoring" {
+    description = "If true, the launched EC2 instance will have detailed monitoring enabled."
+    default = true
+}
+
 variable "add_configmap_roles" {
     default = []
 }
