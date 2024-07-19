@@ -63,7 +63,6 @@ resource "aws_launch_template" "eks_node_groups" {
   key_name                              = aws_key_pair.eks.key_name
   instance_initiated_shutdown_behavior  = each.value.type == "custom" ? "terminate" : null 
   ebs_optimized                         = true
-  monitoring                            = var.monitoring
   user_data                             =  base64encode(templatefile("${path.module}/resources/eks_worker_userdata.tpl", 
       {
         cluster_endpoint    = aws_eks_cluster.main.endpoint,
@@ -94,7 +93,7 @@ resource "aws_launch_template" "eks_node_groups" {
   }
 
   monitoring {
-    enabled = true
+    enabled = var.monitoring
   }
  
   tag_specifications {
