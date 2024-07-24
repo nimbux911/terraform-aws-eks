@@ -91,6 +91,11 @@ variable "spot_allocation_strategy" {
     default = "capacity-optimized" 
 }
 
+variable "spot_instance_pools" {
+    description = "Number of Spot pools per availability zone to allocate capacity. EC2 Auto Scaling selects the cheapest Spot pools and evenly allocates Spot capacity across the number of Spot pools that you specify. "
+    default = 2
+}
+
 variable "eks_worker_max_pods_enabled" {
     default = false
 }

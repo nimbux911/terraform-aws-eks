@@ -127,6 +127,7 @@ resource "aws_autoscaling_group" "eks" {
       content {
         spot_allocation_strategy = var.spot_allocation_strategy
         on_demand_percentage_above_base_capacity = var.on_demand_percentage_above_base_capacity
+        spot_instance_pools = var.spot_instance_pools
       }
       }
 
