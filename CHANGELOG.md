@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add capacity across the Spot pools.
 - Add percentage split between on-demand and Spot instances.
 - Add number of Spot pools per availability zone to allocate capacity.
-- Add variable to choose whether to activate detail monitoring.
+- Add variable to choose whether to activate detailed monitoring.
 
 ## [5.2.0] - 2024-02-16
 
