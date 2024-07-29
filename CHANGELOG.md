@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [5.3.0] - 2024-07-29
+
+- Add mixed instances policy.
+- Add capacity across the Spot pools.
+- Add percentage split between on-demand and Spot instances.
+- Add number of Spot pools per availability zone to allocate capacity.
+- Add variable to choose whether to activate detail monitoring.
+
 ## [5.2.0] - 2024-02-16
 
 - Allow setting extra values to cluster-autoscaler Helm chart.

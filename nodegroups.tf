@@ -123,7 +123,7 @@ resource "aws_autoscaling_group" "eks" {
 
   mixed_instances_policy {
     dynamic "instances_distribution" {
-      for_each =  each.value.spot_nodes_enabled ? ["do it"] : []
+      for_each =  each.value.spot_nodes_enabled == true ? ["do it"] : []
       content {
         spot_allocation_strategy = var.spot_allocation_strategy
         on_demand_percentage_above_base_capacity = var.on_demand_percentage_above_base_capacity
