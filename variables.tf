@@ -82,6 +82,20 @@ variable "health_check_type" {
     default = "EC2"
 }
 
+variable "on_demand_percentage_above_base_capacity" {
+    description = "Percentage split between on-demand and Spot instances above the base on-demand capacity."
+    default     = 100
+}
+
+variable "spot_allocation_strategy" {
+    default = "capacity-optimized" 
+}
+
+variable "spot_instance_pools" {
+    description = "Number of Spot pools per availability zone to allocate capacity. EC2 Auto Scaling selects the cheapest Spot pools and evenly allocates Spot capacity across the number of Spot pools that you specify. "
+    default = 2
+}
+
 variable "eks_worker_max_pods_enabled" {
     default = false
 }
@@ -100,6 +114,11 @@ variable "eks_api_private" {
 
 variable "enabled_cluster_log_types" {
     default = []
+}
+
+variable "enable_detailed_monitoring" {
+    description = "If true, the launched EC2 instance will have detailed monitoring enabled."
+    default = true
 }
 
 variable "add_configmap_roles" {

@@ -218,6 +218,9 @@ module "eks_main" {
 | max\_pods\_per\_node | Max pods per Kubernetes worker node. | `string` | `"100"` | no |
 | target\_group\_arns | ARNs of the target groups for using the worker nodes behind of ELB | `list[string]` | `[]` | no |
 | health\_check\_type | Health check type for the worker nodes. | `string` | `"EC2"` | no |
+| on\_demand\_percentage\_above\_base\_capacity | Percentage split between on-demand and Spot instances above the base on-demand capacity. | `number` | `100` | no |
+| spot\_allocation\_strategy |  | `string` | `"capacity-optimized"` | no |
+| spot\_instance\_pools | Number of Spot pools per availability zone to allocate capacity. EC2 Auto Scaling selects the cheapest Spot pools and evenly allocates Spot capacity across the number of Spot pools that you specify. | `number` | `2` | no |
 | eks\_tags | Tags to add to all resources except the autoscaling group. | `map` | `{}` | no |
 | eks\_api\_private | Defines it the Kubernetes API will be private or public. | `bool` | `false` | no |
 | eks\_addons | Adds EKS addons. | `map(map(string))` | `{}` | no |

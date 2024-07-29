@@ -63,7 +63,6 @@ resource "aws_launch_template" "eks_node_groups" {
   key_name                              = aws_key_pair.eks.key_name
   instance_initiated_shutdown_behavior  = each.value.type == "custom" ? "terminate" : null 
   ebs_optimized                         = true
-
   user_data                             =  base64encode(templatefile("${path.module}/resources/eks_worker_userdata.tpl", 
       {
         cluster_endpoint    = aws_eks_cluster.main.endpoint,
@@ -94,25 +93,9 @@ resource "aws_launch_template" "eks_node_groups" {
   }
 
   monitoring {
-    enabled = true
+    enabled = var.enable_detailed_monitoring
   }
-
-  dynamic "instance_market_options" {
-    for_each =  each.value.spot_nodes_enabled == true ? ["do it"] : []
-    content {
-      market_type = "spot"
-
-      spot_options {
-          block_duration_minutes         = lookup(each.value.spot_options, "block_duration_minutes", null)
-          instance_interruption_behavior = lookup(each.value.spot_options, "instance_interruption_behavior", null)
-          max_price                      = lookup(each.value.spot_options, "max_price", null)
-          spot_instance_type             = "one-time"
-          valid_until                    = lookup(each.value.spot_options, "valid_until", null)
-        }
-      }
-    }
-  
-
+ 
   tag_specifications {
     resource_type = "instance"
     tags = {
@@ -138,24 +121,36 @@ resource "aws_autoscaling_group" "eks" {
   target_group_arns    = var.target_group_arns
   health_check_type    = var.health_check_type
 
-  launch_template {
-    id      = aws_launch_template.eks_node_groups[each.key].id
-    version = "$Latest"
+  mixed_instances_policy {
+    dynamic "instances_distribution" {
+      for_each =  each.value.spot_nodes_enabled == true ? ["do it"] : []
+      content {
+        spot_allocation_strategy = var.spot_allocation_strategy
+        on_demand_percentage_above_base_capacity = var.on_demand_percentage_above_base_capacity
+        spot_instance_pools = var.spot_instance_pools
+    }
+  }
+
+    launch_template {
+      launch_template_specification {
+        launch_template_id      = aws_launch_template.eks_node_groups[each.key].id
+        version = "$Latest"
+      }
+    }
   }
 
   dynamic "tag" {
     for_each  = toset(concat(local.asg_common_tags, each.value.asg_tags))
     content {
-      key                   = tag.value.key
-      value                 = tag.value.value
-      propagate_at_launch   = tag.value.propagate_at_launch
+      key                 = tag.value.key
+      value               = tag.value.value
+      propagate_at_launch = tag.value.propagate_at_launch
     }
   }
 
   lifecycle {
     ignore_changes = [desired_capacity]
   }
-
 }
 
 resource "aws_eks_node_group" "eks" {
