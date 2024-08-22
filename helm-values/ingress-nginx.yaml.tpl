@@ -32,3 +32,8 @@ controller:
             values:
               - ${nodeAffinityLabelValue}
   %{endif}
+
+  %{ if customConfiguration != null }
+  config:
+    ${ customConfiguration }
+  %{ endif }

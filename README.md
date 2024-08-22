@@ -236,6 +236,7 @@ module "eks_main" {
 | enabled\_cluster\_log\_types | Enable CloudWatch Logs for control plane components | `list[string]` | `[]` | no |
 | helm\_ingress\_nginx\_enabled | Set if ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | ingress\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
+| ingress\_custom\_configuration | Add custom configuration options (see controller.config in official ingress-nginx chart docs) | `string` | `null` | no |
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
 | ingress\_https\_traffic\_enabled | Set https traffic for ingress | `bool` | `false` | no | 
