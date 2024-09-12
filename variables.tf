@@ -218,6 +218,12 @@ variable "ingress_node_affinity" {
   }
 }
 
+variable "ingress_log_format_upstream" {
+  description = "Custom log format for ingress-nginx upstream logs"
+  type        = string
+  default     = ""
+}
+
 # ================== ingress-nginx-additional =================
 
 variable "helm_ingress_nginx_additional_enabled" {
