@@ -19,6 +19,11 @@ controller:
     serviceMonitor:
       additionalLabels:
         release: prometheus-stack
+        
+  %{ if ingress_log_format_enabled }
+  config:
+    log-format-upstream: "${ingress_log_format_upstream}"
+  %{ endif }
 
   %{if enableNodeAffinity }
   affinity:
