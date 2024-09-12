@@ -218,16 +218,10 @@ variable "ingress_node_affinity" {
   }
 }
 
-variable "ingress_log_format_enabled" {
-  description = "Enable custom log format for ingress-nginx"
-  type        = bool
-  default     = false
-}
-
 variable "ingress_log_format_upstream" {
   description = "Custom log format for ingress-nginx upstream logs"
   type        = string
-  default     = "timestamp=$time_iso8601 client_ip=$http_x_forwarded_for method=\"$request_method\" uri=\"$request_uri\" status=$status http_user_agent=\"$http_user_agent\" request_length=$request_length request_time=$request_time proxy_upstream_name=$proxy_upstream_name upstream_addr=$upstream_addr upstream_response_length=$upstream_response_length upstream_response_time=$upstream_response_time upstream_status=$upstream_status req_id=$req_id"
+  default     = ""
 }
 
 # ================== ingress-nginx-additional =================

@@ -20,10 +20,10 @@ controller:
       additionalLabels:
         release: prometheus-stack
 
-  %{ if ingress_log_format_enabled }
-  data:
-    log-format-upstream: "${ingress_log_format_upstream}"
-  %{ endif }
+    %{ if ingress_log_format_upstream != "" }
+    data:
+      log-format-upstream: ${ingress_log_format_upstream}
+    %{ endif }
 
   %{if enableNodeAffinity }
   affinity:
