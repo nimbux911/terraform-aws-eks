@@ -15,7 +15,9 @@ resource "helm_release" "ingress_nginx" {
     {
       enableNodeAffinity = var.ingress_node_affinity["enabled"],
       nodeAffinityLabelKey = var.ingress_node_affinity["label_key"],
-      nodeAffinityLabelValue = var.ingress_node_affinity["label_value"]
+      nodeAffinityLabelValue = var.ingress_node_affinity["label_value"],
+      ingress_log_format_enabled = var.ingress_log_format_enabled,
+      ingress_log_format_upstream = var.ingress_log_format_upstream
     })
   ]
 
@@ -63,11 +65,6 @@ resource "helm_release" "ingress_nginx" {
   set {
     name = "controller.replicaCount"
     value = var.ingress_replicacount
-  }
-
-  set {
-    name  = "controller.config.log-format-upstream"
-    value = var.ingress_log_format_upstream
   }
 
   depends_on = [time_sleep.wait_20_seconds]
