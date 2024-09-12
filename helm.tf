@@ -65,6 +65,12 @@ resource "helm_release" "ingress_nginx" {
     value = var.ingress_replicacount
   }
 
+  set {
+    name  = "controller.config.log-format-upstream"
+    value = var.ingress_log_format_upstream
+    condition = var.ingress_log_format_enabled
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
@@ -125,6 +131,12 @@ resource "helm_release" "ingress_nginx_additional" {
   set {
     name = "controller.replicaCount"
     value = var.ingress_additional_replicacount
+  }
+
+  set {
+    name  = "controller.config.log-format-upstream"
+    value = var.ingress_log_format_upstream
+    condition = var.ingress_log_format_enabled
   }
 
   depends_on = [time_sleep.wait_20_seconds]
