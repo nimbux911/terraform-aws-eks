@@ -20,7 +20,7 @@ controller:
       additionalLabels:
         release: prometheus-stack
 
-    %{ if ingress_log_format_upstream != "" }
+    %{ if ingress_log_format_upstream != null }
     data:
       log-format-upstream: ${ingress_log_format_upstream}
     %{ endif }
