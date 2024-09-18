@@ -15,7 +15,8 @@ resource "helm_release" "ingress_nginx" {
     {
       enableNodeAffinity = var.ingress_node_affinity["enabled"],
       nodeAffinityLabelKey = var.ingress_node_affinity["label_key"],
-      nodeAffinityLabelValue = var.ingress_node_affinity["label_value"]
+      nodeAffinityLabelValue = var.ingress_node_affinity["label_value"],
+      customConfiguration = var.ingress_custom_configuration
     })
   ]
 

@@ -65,6 +65,9 @@ module "eks_main" {
   eks_tags                                    = var.eks_tags
   health_check_type                           = "ELB"  
 
+  # Example for ingress-nginx log format in logfmt using real source ip as client_ip
+  ingress_custom_configuration                = "log-format-upstream: timestamp=$time_iso8601 client_ip=$http_x_forwarded_for method=$request_method uri=$request_uri status=$status http_user_agent=$http_user_agent request_length=$request_length request_time=$request_time proxy_upstream_name=$proxy_upstream_name upstream_addr=$upstream_addr upstream_response_length=$upstream_response_length upstream_response_time=$upstream_response_time upstream_status=$upstream_status req_id=$req_id" 
+
   managed_node_groups = [
     { 
       name    = "monitoring-${var.cluster_name}"
@@ -236,6 +239,7 @@ module "eks_main" {
 | enabled\_cluster\_log\_types | Enable CloudWatch Logs for control plane components | `list[string]` | `[]` | no |
 | helm\_ingress\_nginx\_enabled | Set if ingress-nginx Helm chart will be installed on the cluster. | `bool` | `false` | no |
 | ingress\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
+| ingress\_custom\_configuration | Add custom configuration options (see example above in module call inputs and https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml#L52) | `string` | `null` | no |
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
 | ingress\_https\_traffic\_enabled | Set https traffic for ingress | `bool` | `false` | no | 

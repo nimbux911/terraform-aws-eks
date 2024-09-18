@@ -218,6 +218,11 @@ variable "ingress_node_affinity" {
   }
 }
 
+variable "ingress_custom_configuration" {
+  type    = string
+  default = null
+}
+
 # ================== ingress-nginx-additional =================
 
 variable "helm_ingress_nginx_additional_enabled" {
