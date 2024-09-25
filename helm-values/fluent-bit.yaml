@@ -22,7 +22,7 @@ config:
         Name           tail
         Tag            kube.*
         Path           /var/log/containers/*.log
-        Parser         docker
+        Parser         cri
         DB             /run/fluent-bit/flb_kube.db
         Mem_Buf_Limit  5MB
   ## https://docs.fluentbit.io/manual/pipeline/filters
@@ -48,16 +48,17 @@ config:
         RemoveKeys kubernetes,stream
         AutoKubernetesLabels false
         LabelMapPath /fluent-bit/etc/labelmap.json
-        LineFormat json
+        LineFormat key_value
         LogLevel warn
 
-  ## https://docs.fluentbit.io/manual/pipeline/parsers
+  # https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
     [PARSER]
-        Name        docker
-        Format      json
+        Name cri
+        Format regex
+        Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*)$
         Time_Key    time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L          
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
 
   # This allows adding more files with arbitary filenames to /fluent-bit/etc by providing key/value pairs.
   # The key becomes the filename, the value becomes the file content.

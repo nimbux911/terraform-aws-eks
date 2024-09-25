@@ -6,6 +6,8 @@ loki:
     auth_enabled: false
     server:
       http_listen_port: 3100
+      grpc_server_max_recv_msg_size: 30000000
+      grpc_server_max_send_msg_size: 30000000
     distributor:
       ring:
         kvstore:
@@ -108,6 +110,13 @@ ingester:
       mountPath: /data/loki
     - name: wal
       mountPath: /data/loki/wal
+  resources:
+    requests:
+      cpu: 100m
+      memory: 500Mi
+    limits:
+      cpu: 1000m
+      memory: 2000Mi
 
 # Configuration for the index-gateway
 indexGateway:
