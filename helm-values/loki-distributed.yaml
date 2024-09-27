@@ -76,6 +76,7 @@ loki:
       reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
       split_queries_by_interval: 15m
+      max_query_series: 1000
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
