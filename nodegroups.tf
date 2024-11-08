@@ -53,6 +53,10 @@ resource "aws_launch_template" "eks_node_groups" {
   name                                  = each.key
   image_id                              = each.value.ami_id
   instance_type                         = each.value.instance_type
+    
+  credit_specification {
+    cpu_credits = var.cpu_credits
+  }
 
   network_interfaces { 
     associate_public_ip_address = each.value.workers_public 

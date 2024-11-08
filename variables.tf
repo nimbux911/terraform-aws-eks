@@ -133,6 +133,10 @@ variable "aws_auth_ignore_changes" {
     default = true
 }
 
+variable "cpu_credits" {
+    default = "unlimited"
+}
+
 # ============================== EKS Addons ============================== #
 
 variable "eks_addons" {
