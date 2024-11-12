@@ -215,6 +215,7 @@ module "eks_main" {
 | cluster\_version | Kubernetes version of the cluster. | `string` | `""` | yes |
 | managed\_node\_groups | AWS managed node groups configurations | `object(...)` | `null` | no |
 | custom\_node\_groups | Custom node groups configurations | `object(...)` | `null` | no |
+| cpu\_credits | CPU credits specification for T class EC2 instances | `string` | `unlimited` | no |
 | k8s\_auth\_api | Kubernetes authentication API for Terraform providers. | `string` | `client.authentication.k8s.io/v1beta1` | no |
 | vpc\_id | VPC ID where cluster will be deployed. | `string` | `""` | yes |
 | subnets\_ids | Subnets ids from the VPC ID where the workers will be deployed. They must be, at least, from 2 differents AZs. | `list[string]` | `[]` | yes |
