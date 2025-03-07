@@ -68,7 +68,7 @@ resource "helm_release" "ingress_nginx" {
 
   set {
     name  = "metrics.serviceMonitor.metricRelabelings"
-    value = var.prometheus_metric_relabelings
+    value = jsonencode(var.prometheus_metric_relabelings)
   }
 
   depends_on = [time_sleep.wait_20_seconds]

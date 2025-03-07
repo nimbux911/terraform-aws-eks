@@ -636,14 +636,20 @@ variable "prometheus_additional_scrape_configs" {
 }
 
 variable "prometheus_metric_relabelings" {
-  type = string
-  default = <<EOT
-- action: keep
-  regex: "nginx_ingress_controller_request_duration_seconds_sum|nginx_ingress_controller_request_duration_seconds_count|nginx_ingress_controller_requests"
-  sourceLabels:
-    - __name__
-EOT
+  type = list(object({
+    action      = string
+    regex       = string
+    sourceLabels = list(string)
+  }))
+  default = [
+    {
+      action      = "keep"
+      regex       = "nginx_ingress_controller_request_duration_seconds_sum|nginx_ingress_controller_request_duration_seconds_count|nginx_ingress_controller_requests"
+      sourceLabels = ["__name__"]
+    }
+  ]
 }
+
 
 
 # ================== tempo ================== #
