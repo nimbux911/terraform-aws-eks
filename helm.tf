@@ -81,6 +81,9 @@ set {
   value = var.prometheus_metric_relabelings[0].sourceLabels[0]
 }
 
+  depends_on = [time_sleep.wait_20_seconds]
+
+}
 
 resource "helm_release" "ingress_nginx_additional" {
   count             = var.helm_ingress_nginx_additional_enabled ? 1 : 0
