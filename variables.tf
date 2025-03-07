@@ -635,6 +635,15 @@ variable "prometheus_additional_scrape_configs" {
     default = ""
 }
 
+variable "prometheus_metric_relabelings" {
+  type = string
+  default = <<EOT
+- action: keep
+  regex: "nginx_ingress_controller_request_duration_seconds_sum|nginx_ingress_controller_request_duration_seconds_count|nginx_ingress_controller_requests"
+  sourceLabels: ["__name__"]
+EOT
+}
+
 # ================== tempo ================== #
 variable "helm_tempo_enabled" {
     default = false

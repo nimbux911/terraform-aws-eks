@@ -388,6 +388,11 @@ resource "helm_release" "prometheus_stack" {
     value = var.prometheus_priority_class_name
   }
 
+  set {
+  name  = "prometheus.prometheusSpec.metricRelabelings"
+  value = var.prometheus_metric_relabelings
+}
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
