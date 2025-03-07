@@ -67,18 +67,8 @@ resource "helm_release" "ingress_nginx" {
   }
 
 set {
-  name  = "metrics.serviceMonitor.metricRelabelings[0].action"
-  value = var.prometheus_metric_relabelings[0].action
-}
-
-set {
-  name  = "metrics.serviceMonitor.metricRelabelings[0].regex"
-  value = var.prometheus_metric_relabelings[0].regex
-}
-
-set {
-  name  = "metrics.serviceMonitor.metricRelabelings[0].sourceLabels[0]"
-  value = var.prometheus_metric_relabelings[0].sourceLabels[0]
+  name  = "metrics.serviceMonitor.metricRelabelings"
+  value = yamlencode(var.prometheus_metric_relabelings)
 }
 
   depends_on = [time_sleep.wait_20_seconds]

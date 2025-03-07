@@ -651,7 +651,6 @@ variable "prometheus_metric_relabelings" {
 }
 
 
-
 # ================== tempo ================== #
 variable "helm_tempo_enabled" {
     default = false
