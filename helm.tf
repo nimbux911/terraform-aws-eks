@@ -66,14 +66,21 @@ resource "helm_release" "ingress_nginx" {
     value = var.ingress_replicacount
   }
 
-  set {
-    name  = "metrics.serviceMonitor.metricRelabelings"
-    value = jsonencode(var.prometheus_metric_relabelings)
-  }
-
-  depends_on = [time_sleep.wait_20_seconds]
-
+set {
+  name  = "metrics.serviceMonitor.metricRelabelings[0].action"
+  value = var.prometheus_metric_relabelings[0].action
 }
+
+set {
+  name  = "metrics.serviceMonitor.metricRelabelings[0].regex"
+  value = var.prometheus_metric_relabelings[0].regex
+}
+
+set {
+  name  = "metrics.serviceMonitor.metricRelabelings[0].sourceLabels[0]"
+  value = var.prometheus_metric_relabelings[0].sourceLabels[0]
+}
+
 
 resource "helm_release" "ingress_nginx_additional" {
   count             = var.helm_ingress_nginx_additional_enabled ? 1 : 0
