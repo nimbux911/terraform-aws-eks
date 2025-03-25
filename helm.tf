@@ -66,6 +66,14 @@ resource "helm_release" "ingress_nginx" {
     value = var.ingress_replicacount
   }
 
+  dynamic "set" {
+    for_each = var.ingress_extra_args
+    content {
+      name  = "controller.extraArgs.${set.key}"
+      value = set.value
+    }
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
@@ -126,6 +134,14 @@ resource "helm_release" "ingress_nginx_additional" {
   set {
     name = "controller.replicaCount"
     value = var.ingress_additional_replicacount
+  }
+
+    dynamic "set" {
+    for_each = var.ingress_extra_args
+    content {
+      name  = "controller.extraArgs.${set.key}"
+      value = set.value
+    }
   }
 
   depends_on = [time_sleep.wait_20_seconds]

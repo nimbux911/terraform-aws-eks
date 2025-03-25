@@ -227,6 +227,11 @@ variable "ingress_custom_configuration" {
   default = null
 }
 
+variable "ingress_extra_args" {
+  type    = map(string)
+  default = {}
+}
+
 # ================== ingress-nginx-additional =================
 
 variable "helm_ingress_nginx_additional_enabled" {
@@ -298,6 +303,11 @@ variable "cert_manager_chart_version" {
 
 variable "cert_manager_priority_class_name" {
     default = ""
+}
+
+variable "ingress_additional_extra_args" {
+  type    = map(string)
+  default = {}
 }
 
 # ================== loki-distributed ================= #
