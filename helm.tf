@@ -232,16 +232,6 @@ resource "helm_release" "prometheus_stack" {
 
 
   set {
-    name = "kube-state-metrics.image.repository"
-    value = "${var.k8s_image_registry}/kube-state-metrics/kube-state-metrics"
-  }
-
-  set {
-    name = "prometheusOperator.admissionWebhooks.patch.image.repository"
-    value = "${var.k8s_image_registry}/ingress-nginx/kube-webhook-certgen"
-  }
-
-  set {
     name = "prometheus.prometheusSpec.additionalScrapeConfigs"
     value = var.prometheus_additional_scrape_configs
   }

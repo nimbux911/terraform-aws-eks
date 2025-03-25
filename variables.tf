@@ -571,7 +571,7 @@ variable "helm_prometheus_enabled" {
 }
 
 variable "prometheus_chart_version" {
-    default = "35.0.3"  
+    default = "44.2.1"  
 }
 
 variable "prometheus_priority_class_name" {
