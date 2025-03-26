@@ -66,6 +66,14 @@ resource "helm_release" "ingress_nginx" {
     value = var.ingress_replicacount
   }
 
+  dynamic "set" {
+    for_each = var.ingress_extra_args
+    content {
+      name  = "controller.extraArgs.${set.key}"
+      value = set.value
+    }
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
@@ -126,6 +134,14 @@ resource "helm_release" "ingress_nginx_additional" {
   set {
     name = "controller.replicaCount"
     value = var.ingress_additional_replicacount
+  }
+
+    dynamic "set" {
+    for_each = var.ingress_extra_args
+    content {
+      name  = "controller.extraArgs.${set.key}"
+      value = set.value
+    }
   }
 
   depends_on = [time_sleep.wait_20_seconds]
@@ -230,16 +246,6 @@ resource "helm_release" "prometheus_stack" {
   dependency_update = true
   timeout           = 600
 
-
-  set {
-    name = "kube-state-metrics.image.repository"
-    value = "${var.k8s_image_registry}/kube-state-metrics/kube-state-metrics"
-  }
-
-  set {
-    name = "prometheusOperator.admissionWebhooks.patch.image.repository"
-    value = "${var.k8s_image_registry}/ingress-nginx/kube-webhook-certgen"
-  }
 
   set {
     name = "prometheus.prometheusSpec.additionalScrapeConfigs"

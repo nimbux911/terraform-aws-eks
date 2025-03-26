@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.7.1] - 2025-03-25
+
+- Fix duplicate item in local.config_autoscaling_attachment & asg.autoscaling_group_name
+- Add extraArgs input for Ingress-Nginx deployments
+- Remove kube-state-metrics.image.repository in Prometheus Helm Release, this value is deprecated
+- Remove prometheusOperator.admissionWebhooks.patch.image.repository in Prometheus Helm Release, its not necesary in new versions
+- Update Prometheus helm chart version was updated to 44.2.1 
 
 ## [5.7.0] - 2024-11-12
 
