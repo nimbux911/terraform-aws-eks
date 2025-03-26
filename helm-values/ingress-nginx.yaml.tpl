@@ -35,5 +35,5 @@ controller:
 
   %{ if customConfiguration != null }
   config:
-    ${ customConfiguration }
+    ${indent(4, customConfiguration)}
   %{ endif }
