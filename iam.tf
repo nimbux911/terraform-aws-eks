@@ -192,6 +192,7 @@ resource "aws_iam_instance_profile" "eks_worker" {
 
 
 module "ebs_csi_controller_role" {
+  count                         = var.enable_irsa && var.create_ebs_csi_role ? 1 : 0
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version                       = "5.17.0"
   create_role                   = var.enable_irsa && var.create_ebs_csi_role ? true : false
