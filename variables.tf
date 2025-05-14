@@ -34,6 +34,9 @@ variable "custom_node_groups"{
             volume_size      = number,
             volume_iops      = optional(number),
             k8s_labels       = optional(map(string)),
+            override = optional(list(object({
+                instance_type = any  
+            })))
             asg_tags         = optional(list(object({
                 key                  = string,
                 value                = string,
@@ -61,6 +64,9 @@ variable "managed_node_groups"{
             volume_size     = number,
             volume_iops     = optional(number),
             k8s_labels      = optional(map(string)),
+            override = optional(list(object({
+                instance_type = any  
+            })))
             k8s_taint       = optional(list(object({
                 key     = string,
                 value   = string,
