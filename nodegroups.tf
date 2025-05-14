@@ -149,6 +149,13 @@ resource "aws_autoscaling_group" "eks" {
         launch_template_id      = aws_launch_template.eks_node_groups[each.key].id
         version = "$Latest"
       }
+
+      dynamic "override" {
+        for_each = each.value.override != null ? each.value.override : []
+        content {
+          instance_type = override.value.instance_type
+        }
+      }
     }
   }
 

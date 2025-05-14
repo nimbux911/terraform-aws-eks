@@ -258,6 +258,7 @@ module "eks_main" {
 | ingress\_additional\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
 | ingress\_additional\_http\_nodeport | Set port for additional ingress http nodePort | `int` | `31080` | no |
 | ingress\_additional\_https\_nodeport | Set port for additional ingress https nodePort | `int` | `31443` | no |
+| override | List of instance type configurations for node groups. Can be used to specify multiple instance types for spot instances or mixed instance policies. | `list(object({ instance_type = string }))` | `null` | no |
 | ingress\_additional\_https\_traffic\_enabled | Set https traffic for additional ingress | `bool` | `false` | no | 
 | ingress\_additional\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
 | ingress\_additional\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
