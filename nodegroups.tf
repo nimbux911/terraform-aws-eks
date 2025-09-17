@@ -81,8 +81,8 @@ resource "aws_launch_template" "eks_node_groups" {
         cluster_endpoint    = aws_eks_cluster.main.endpoint,
         cluster_ca          = aws_eks_cluster.main.certificate_authority.0.data,
         cluster_name        = aws_eks_cluster.main.name,
-        max_pods_enabled    = var.max_pods_per_node != null ? "--use-max-pods false" : "",
-        max_pods_per_node   = var.max_pods_per_node != null ? "--max-pods=${var.max_pods_per_node}" : "",
+        service_cidr        = aws_eks_cluster.main.service_ipv4_cidr,
+        max_pods_per_node   = var.max_pods_per_node != null ? var.max_pods_per_node : "",
         node_labels         = each.value.k8s_labels != null ? join(",", [ for k, v in merge(each.value.k8s_labels, local.nodes_common_labels) : "${k}=${v}"]) : join(",", [ for k,v in local.nodes_common_labels : "${k}=${v},"])
       }
     ))
@@ -107,6 +107,10 @@ resource "aws_launch_template" "eks_node_groups" {
 
   monitoring {
     enabled = var.enable_detailed_monitoring
+  }
+
+  metadata_options {
+    http_put_response_hop_limit = 2
   }
  
   tag_specifications {
