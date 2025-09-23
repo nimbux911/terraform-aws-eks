@@ -27,7 +27,7 @@ EKS Cluster with ELB:
 locals {
   configmap_roles = [
     {
-      "role_arn" = aws_iam_role.jobs_runner.arn 
+      "role_arn" = aws_iam_role.jobs_runner.arn
       "k8s_user" = "jobs-runner"
       "k8s_groups" = [
         "system:masters"
@@ -63,13 +63,13 @@ module "eks_main" {
   add_configmap_roles                         = local.configmap_roles
   target_group_arns                           = local.tg_arns
   eks_tags                                    = var.eks_tags
-  health_check_type                           = "ELB"  
+  health_check_type                           = "ELB"
 
   # Example for ingress-nginx log format in logfmt using real source ip as client_ip
-  ingress_custom_configuration                = "log-format-upstream: timestamp=$time_iso8601 client_ip=$http_x_forwarded_for method=$request_method uri=$request_uri status=$status http_user_agent=$http_user_agent request_length=$request_length request_time=$request_time proxy_upstream_name=$proxy_upstream_name upstream_addr=$upstream_addr upstream_response_length=$upstream_response_length upstream_response_time=$upstream_response_time upstream_status=$upstream_status req_id=$req_id" 
+  ingress_custom_configuration                = "log-format-upstream: timestamp=$time_iso8601 client_ip=$http_x_forwarded_for method=$request_method uri=$request_uri status=$status http_user_agent=$http_user_agent request_length=$request_length request_time=$request_time proxy_upstream_name=$proxy_upstream_name upstream_addr=$upstream_addr upstream_response_length=$upstream_response_length upstream_response_time=$upstream_response_time upstream_status=$upstream_status req_id=$req_id"
 
   managed_node_groups = [
-    { 
+    {
       name    = "monitoring-${var.cluster_name}"
       values  = {
         ami_id            = var.eks_worker_ami_id,
@@ -109,10 +109,10 @@ module "eks_main" {
     }
   ]
 
-  helm_ingress_nginx_enabled           = true 
+  helm_ingress_nginx_enabled           = true
   helm_cluster_autoscaler_enabled      = true
   cluster_autoscaler_extra_helm_values = file("${path.root}/resources/helm/values/cluster-autoscaler.yaml")
-  helm_metrics_server_enabled          = true 
+  helm_metrics_server_enabled          = true
   helm_cert_manager_enabled            = true
   ingress_node_affinity                = {
     enabled     = true,
@@ -246,9 +246,9 @@ module "eks_main" {
 | ingress\_custom\_configuration | Add custom configuration options (see example above in module call inputs and https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml#L52) | `string` | `null` | no |
 | ingress\_http\_nodeport | Set port for ingress http nodePort | `int` | `32080` | no |
 | ingress\_https\_nodeport | Set port for ingress https nodePort | `int` | `32443` | no |
-| ingress\_https\_traffic\_enabled | Set https traffic for ingress | `bool` | `false` | no | 
-| ingress\_node\_affinity | Set nodeAffinity for ingress | `map` | `{ enabled = false, label_key = null, label_value = null}` | no | 
-| ingress\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
+| ingress\_https\_traffic\_enabled | Set https traffic for ingress | `bool` | `false` | no |
+| ingress\_node\_affinity | Set nodeAffinity for ingress | `map` | `{ enabled = false, label_key = null, label_value = null}` | no |
+| ingress\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no |
 | ingress\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | ingress\_service\_monitor\_enabled | Enable serviceMonitor for ingress-nginx helm chart | `bool` | `false` | no |
 | ingress\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |
@@ -258,8 +258,8 @@ module "eks_main" {
 | ingress\_additional\_chart\_version | Set the version for the chart | `string` | `4.0.18` | no |
 | ingress\_additional\_http\_nodeport | Set port for additional ingress http nodePort | `int` | `31080` | no |
 | ingress\_additional\_https\_nodeport | Set port for additional ingress https nodePort | `int` | `31443` | no |
-| ingress\_additional\_https\_traffic\_enabled | Set https traffic for additional ingress | `bool` | `false` | no | 
-| ingress\_additional\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no | 
+| ingress\_additional\_https\_traffic\_enabled | Set https traffic for additional ingress | `bool` | `false` | no |
+| ingress\_additional\_requests\_cpu | Set how much cpu will be assigned to the request | `string` | `100m` | no |
 | ingress\_additional\_requests\_memory | Set how much memory will be assigned to the request | `string` | `90Mi` | no |
 | ingress\_additional\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |
 | ingress\_additional\_replicacount | Minimum Replicas count of ingress additional | `number` | `"1"` | no |
@@ -280,15 +280,15 @@ module "eks_main" {
 | loki\_s3\_bucket\_region | s3 bucket for loki logs region | `string` | `""` | yes |
 | loki\_logs\_retention\_enabled | Enable logs retention. If s3 storage never stop growing | `bool` | `false` | no |
 | loki\_logs\_retention | Set logs retention period | `string` | `744h` | no |
-| loki\_ingester\_replicas | Loki ingester replicas | `int` | `1` | no | 
-| loki\_ingester\_node\_selector | Loki ingester nodeSelector | `map{}` | `null` | no | 
+| loki\_ingester\_replicas | Loki ingester replicas | `int` | `1` | no |
+| loki\_ingester\_node\_selector | Loki ingester nodeSelector | `map{}` | `null` | no |
 | loki\_ingester\_storage\_class | storageClass for ingesters pv | `string` | `gp2` | no |
 | loki\_ingester\_storage\_size | size of ingesters pv | `string` | `10Gi` | no |
 | loki\_ingester\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_ingester\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_ingester\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_ingester\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_distributor\_node\_selector | Loki distributor nodeSelector | `map{}` | `null` | no | 
+| loki\_distributor\_node\_selector | Loki distributor nodeSelector | `map{}` | `null` | no |
 | loki\_distributor\_min\_replicas | loki distributor hpa min replicas | `int` | `1` | no |
 | loki\_distributor\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_distributor\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
@@ -302,7 +302,7 @@ module "eks_main" {
 | loki\_querier\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_querier\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_querier\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
-| loki\_query\_frontend\_node\_selector | Loki query-frontend nodeSelector | `map{}` | `null` | no | 
+| loki\_query\_frontend\_node\_selector | Loki query-frontend nodeSelector | `map{}` | `null` | no |
 | loki\_query\_frontend\_min\_replicas | loki query-frontend hpa min replicas | `int` | `1` | no |
 | loki\_query\_frontend\_max\_replicas | loki query-frontend hpa max replicas | `int` | `1` | no |
 | loki\_query\_frontend\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
@@ -311,7 +311,7 @@ module "eks_main" {
 | loki\_query\_frontend\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_max\_query\_length | The limit to length of chunk store queries | `string` | `721h` | no |
 | loki\_gateway\_enabled | Enable loki gateway | `bool` | `false` | no |
-| loki\_gateway\_node\_selector | Loki gateway nodeSelector | `map{}` | `null` | no | 
+| loki\_gateway\_node\_selector | Loki gateway nodeSelector | `map{}` | `null` | no |
 | loki\_gateway\_min\_replicas | loki gateway hpa min replicas | `int` | `1` | no |
 | loki\_gateway\_max\_replicas | loki gateway hpa max replicas | `int` | `1` | no |
 | loki\_gateway\_ingress\_enabled | Enable ingress for loki gateway | `bool` | `false` | no |
@@ -324,13 +324,13 @@ module "eks_main" {
 | loki\_gateway\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_gateway\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_compactor\_enabled | Enable loki compactor | `bool` | `false` | no |
-| loki\_compactor\_node\_selector | Loki compactor nodeSelector | `map{}` | `null` | no | 
+| loki\_compactor\_node\_selector | Loki compactor nodeSelector | `map{}` | `null` | no |
 | loki\_compactor\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_compactor\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_compactor\_limits\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_compactor\_limits\_memory | resources config for kubernetes pod | `string` | `null` | no |
 | loki\_index\_gateway\_enabled | Enable loki index gateway | `bool` | `false` | no |
-| loki\_index\_gateway\_node\_selector | Loki _index gateway nodeSelector | `map{}` | `null` | no | 
+| loki\_index\_gateway\_node\_selector | Loki _index gateway nodeSelector | `map{}` | `null` | no |
 | loki\_index\_gateway\_replicas | Set loki index gateway replicas | `int` | `1` | no |
 | loki\_index\_gateway\_storage\_class | storageClass for index gateway pv | `string` | `gp2` | no |
 | loki\_index\_gateway\_storage\_size | storage size for index gateway pv | `string` | `10Gi` | no |
@@ -345,7 +345,7 @@ module "eks_main" {
 | k8s\_opentelemetry\_enabled | install opentelemetry manifests | `bool` | `false` | no |
 | helm\_prometheus\_enabled | install kube-prometheus-stack helm chart | `bool` | `false` | no |
 | prometheus\_chart\_version | Set the version for the chart | `string` | `35.0.3` | no |
-| prometheus\_node\_selector | Prometheus components nodeSelector | `map{}` | `null` | no | 
+| prometheus\_node\_selector | Prometheus components nodeSelector | `map{}` | `null` | no |
 | prometheus\_replicas | prometheus server replicas | `int` | `1` | no |
 | prometheus\_requests\_cpu | resources config for kubernetes pod | `string` | `null` | no |
 | prometheus\_requests\_memory | resources config for kubernetes pod | `string` | `null` | no |
@@ -406,6 +406,9 @@ module "eks_main" {
 | grafana\_persistence\_enabled | Persistent volume | `bool` | `false` | no |
 | grafana\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |
 | k8s\_image\_registry | Kubernetes image registry. | `string` | `registry.k8s.io` | no |
+| on\_demand\_percentage\_above\_base\_capacity | Percentage of on-demand EC2 instances in ASG over spot. | `number` | `100` | no |
+| spot\_allocation\_strategy | Spot instances allocation strategy. | `string` | `capacity-optimized` | no |
+| spot\_instance\_pools | Spot instance pools. | `number` | `0` | no |
 
 ## Outputs
 
