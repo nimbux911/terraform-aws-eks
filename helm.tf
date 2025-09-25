@@ -206,6 +206,16 @@ resource "helm_release" "metrics_server" {
     value = var.metrics_server_priority_class_name
   }
 
+  set {
+    name  = "image.repository"
+    value = "bitnamilegacy/metrics-server"
+  }
+
+  set {
+    name  = "image.tag"
+    value = "0.7.1-debian-12-r2"
+  }
+
   depends_on = [time_sleep.wait_20_seconds]
 
 }
