@@ -208,7 +208,7 @@ resource "helm_release" "metrics_server" {
 
   set {
     name  = "image.repository"
-    value = "docker.io/bitnamilegacy/metrics-server"
+    value = "bitnamilegacy/metrics-server"
   }
 
   set {
