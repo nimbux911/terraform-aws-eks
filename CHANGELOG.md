@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.7.3] - 2025-09-23
+
+- Set spot_instance_pools to 0 by default to be compatible with default value of spot_allocation_strategy (capacity-optimized).
+
 ## [5.7.2] - 2025-03-26
 
 - Fix correct indentation for single-line config values
@@ -16,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add extraArgs input for Ingress-Nginx deployments
 - Remove kube-state-metrics.image.repository in Prometheus Helm Release, this value is deprecated
 - Remove prometheusOperator.admissionWebhooks.patch.image.repository in Prometheus Helm Release, its not necesary in new versions
-- Update Prometheus helm chart version was updated to 44.2.1 
+- Update Prometheus helm chart version was updated to 44.2.1
 
 ## [5.7.0] - 2024-11-12
 
@@ -124,28 +128,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.2.1] - 2022-11-16
 
-### Fixed 
+### Fixed
 - Typo on additional ingressclass "nginx-additional". Before it was "nginx-private"
 
 ## [4.2.0] - 2022-11-10
 
 ### Added
 - Additional nginx controller instance
-- Enable https traffic to nginx 
+- Enable https traffic to nginx
 
 ## [4.1.1] - 2022-11-04
 
 ### Added
 - Request cpu and memory for ingress-nginx chart
 
-### Fixed 
+### Fixed
 - Typo on "helm_ingress_nginx_enabled". Before it was "helm_ingress_ngnix_enabled"
 
 ## [4.1.0] - 2022-11-01
 
 ### Added
 - Instance market options to use spot instances on custom node groups.
-- Added a new variable under loki called "loki_max_query_length" 
+- Added a new variable under loki called "loki_max_query_length"
 
 ## [4.0.0] - 2022-07-20
 
@@ -158,7 +162,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Terraform Launch configuration replaced by Terraform launch template
 
 ### Fixed
-- [Loki issue #5909](https://github.com/grafana/loki/issues/5909#issuecomment-1120821579) with image v2.5.0-with-pr-6123-a630ae3 
+- [Loki issue #5909](https://github.com/grafana/loki/issues/5909#issuecomment-1120821579) with image v2.5.0-with-pr-6123-a630ae3
 
 ## [3.1.8] - 2022-07-14
 
@@ -280,5 +284,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - First version of the eks module.
-
-
