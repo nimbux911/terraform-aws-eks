@@ -2,21 +2,21 @@
 # ========================= core charts ========================= #
 
 resource "helm_release" "ingress_nginx" {
-  count             = var.helm_ingress_nginx_enabled ? 1 : 0
-  name              = "ingress-nginx"
-  namespace         = "ingress-nginx"
-  create_namespace  = true
-  repository        = "https://kubernetes.github.io/ingress-nginx"
-  chart             = "ingress-nginx"
-  version           = var.ingress_chart_version
+  count            = var.helm_ingress_nginx_enabled ? 1 : 0
+  name             = "ingress-nginx"
+  namespace        = "ingress-nginx"
+  create_namespace = true
+  repository       = "https://kubernetes.github.io/ingress-nginx"
+  chart            = "ingress-nginx"
+  version          = var.ingress_chart_version
 
-  values            = [
-    templatefile("${path.module}/helm-values/ingress-nginx.yaml.tpl", 
-    {
-      enableNodeAffinity = var.ingress_node_affinity["enabled"],
-      nodeAffinityLabelKey = var.ingress_node_affinity["label_key"],
-      nodeAffinityLabelValue = var.ingress_node_affinity["label_value"],
-      customConfiguration = var.ingress_custom_configuration
+  values = [
+    templatefile("${path.module}/helm-values/ingress-nginx.yaml.tpl",
+      {
+        enableNodeAffinity     = var.ingress_node_affinity["enabled"],
+        nodeAffinityLabelKey   = var.ingress_node_affinity["label_key"],
+        nodeAffinityLabelValue = var.ingress_node_affinity["label_value"],
+        customConfiguration    = var.ingress_custom_configuration
     })
   ]
 
@@ -57,12 +57,12 @@ resource "helm_release" "ingress_nginx" {
   }
 
   set {
-    name = "controller.priorityClassName"
+    name  = "controller.priorityClassName"
     value = var.ingress_priority_class_name
   }
 
   set {
-    name = "controller.replicaCount"
+    name  = "controller.replicaCount"
     value = var.ingress_replicacount
   }
 
@@ -79,14 +79,14 @@ resource "helm_release" "ingress_nginx" {
 }
 
 resource "helm_release" "ingress_nginx_additional" {
-  count             = var.helm_ingress_nginx_additional_enabled ? 1 : 0
-  name              = "ingress-nginx-additional"
-  namespace         = "ingress-nginx"
-  create_namespace  = true
-  repository        = "https://kubernetes.github.io/ingress-nginx"
-  chart             = "ingress-nginx"
-  version           = var.ingress_additional_chart_version
-  values            = [
+  count            = var.helm_ingress_nginx_additional_enabled ? 1 : 0
+  name             = "ingress-nginx-additional"
+  namespace        = "ingress-nginx"
+  create_namespace = true
+  repository       = "https://kubernetes.github.io/ingress-nginx"
+  chart            = "ingress-nginx"
+  version          = var.ingress_additional_chart_version
+  values = [
     file("${path.module}/helm-values/ingress-nginx-additional.yaml")
   ]
 
@@ -127,16 +127,16 @@ resource "helm_release" "ingress_nginx_additional" {
   }
 
   set {
-    name = "controller.priorityClassName"
+    name  = "controller.priorityClassName"
     value = var.ingress_additional_priority_class_name
   }
-  
+
   set {
-    name = "controller.replicaCount"
+    name  = "controller.replicaCount"
     value = var.ingress_additional_replicacount
   }
 
-    dynamic "set" {
+  dynamic "set" {
     for_each = var.ingress_extra_args
     content {
       name  = "controller.extraArgs.${set.key}"
@@ -172,7 +172,7 @@ resource "helm_release" "cluster_autoscaler" {
   }
 
   set {
-    name = "priorityClassName"
+    name  = "priorityClassName"
     value = var.cluster_autoscaler_priority_class_name
   }
 
@@ -187,47 +187,21 @@ resource "helm_release" "metrics_server" {
   count      = var.helm_metrics_server_enabled ? 1 : 0
   name       = "metrics-server"
   namespace  = "kube-system"
-  repository = "https://charts.bitnami.com/bitnami"
+  repository = "https://kubernetes-sigs.github.io/metrics-server/"
   chart      = "metrics-server"
   version    = var.metrics_server_chart_version
 
-  set {
-    name  = "hostNetwork"
-    value = true
-  }
-
-  set {
-    name  = "apiService.create"
-    value = true
-  }
-
-  set {
-    name = "priorityClassName"
-    value = var.metrics_server_priority_class_name
-  }
-
-  set {
-    name  = "image.repository"
-    value = "bitnamilegacy/metrics-server"
-  }
-
-  set {
-    name  = "image.tag"
-    value = "0.7.1-debian-12-r2"
-  }
-
   depends_on = [time_sleep.wait_20_seconds]
-
 }
 
 resource "helm_release" "cert_manager" {
-  count             = var.helm_cert_manager_enabled || var.k8s_opentelemetry_enabled ? 1 : 0
-  name              = "cert-manager"
-  namespace         = "cert-manager"
-  repository        = "https://charts.jetstack.io"
-  chart             = "cert-manager"
-  create_namespace  = true
-  version           = var.cert_manager_chart_version
+  count            = var.helm_cert_manager_enabled || var.k8s_opentelemetry_enabled ? 1 : 0
+  name             = "cert-manager"
+  namespace        = "cert-manager"
+  repository       = "https://charts.jetstack.io"
+  chart            = "cert-manager"
+  create_namespace = true
+  version          = var.cert_manager_chart_version
 
   set {
     name  = "installCRDs"
@@ -235,7 +209,7 @@ resource "helm_release" "cert_manager" {
   }
 
   set {
-    name = "global.priorityClassName"
+    name  = "global.priorityClassName"
     value = var.cert_manager_priority_class_name
   }
 
@@ -258,14 +232,14 @@ resource "helm_release" "prometheus_stack" {
 
 
   set {
-    name = "prometheus.prometheusSpec.additionalScrapeConfigs"
+    name  = "prometheus.prometheusSpec.additionalScrapeConfigs"
     value = var.prometheus_additional_scrape_configs
   }
 
   set {
     name  = "prometheus.prometheusSpec.replicas"
     value = var.prometheus_replicas
-  }  
+  }
 
   set {
     name  = "prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues"
@@ -275,10 +249,10 @@ resource "helm_release" "prometheus_stack" {
   set {
     name  = "prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues"
     value = false
-  }  
+  }
 
   set {
-    name = "prometheus-node-exporter.nodeSelector.eks\\.amazonaws\\.com/compute-type"
+    name  = "prometheus-node-exporter.nodeSelector.eks\\.amazonaws\\.com/compute-type"
     value = "ec2"
   }
 
@@ -342,65 +316,65 @@ resource "helm_release" "prometheus_stack" {
   set {
     name  = "prometheus.prometheusSpec.retention"
     value = var.prometheus_metrics_retention
-  }  
+  }
 
   set {
     name  = "prometheus.ingress.enabled"
     value = var.prometheus_ingress_enabled
-  }  
+  }
 
   set {
     name  = "prometheus.ingress.hosts[0]"
     value = var.prometheus_ingress_host
-  }  
+  }
 
   set {
     name  = "prometheus.ingress.paths[0]"
     value = var.prometheus_ingress_path
-  }  
+  }
 
   set {
     name  = "prometheus.ingress.pathType"
     value = var.prometheus_ingress_path_type
-  }  
+  }
 
   set {
     name  = "prometheus.ingress.ingressClassName"
     value = var.prometheus_ingress_class_name
-  }  
+  }
 
   set {
     name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName"
     value = var.prometheus_storage_class_name
-  }  
+  }
 
   set {
     name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage"
     value = var.prometheus_storage_size
-  }  
+  }
 
   set {
     name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0]"
     value = "ReadWriteOnce"
-  }  
+  }
 
   set {
-    name = "alertmanager.alertmanagerSpec.priorityClassName"
+    name  = "alertmanager.alertmanagerSpec.priorityClassName"
     value = var.prometheus_priority_class_name
   }
 
   set {
-    name = "prometheusOperator.admissionWebhooks.patch.priorityClassName"
+    name  = "prometheusOperator.admissionWebhooks.patch.priorityClassName"
     value = var.prometheus_priority_class_name
   }
 
   set {
-    name = "prometheus.prometheusSpec.priorityClassName"
+    name  = "prometheus.prometheusSpec.priorityClassName"
     value = var.prometheus_priority_class_name
   }
 
   set {
-    name = "thanosRuler.thanosRulerSpec.priorityClassName"
+    name  = "thanosRuler.thanosRulerSpec.priorityClassName"
     value = var.prometheus_priority_class_name
   }
 
@@ -421,12 +395,12 @@ resource "helm_release" "loki_distributed" {
   dependency_update = true
   timeout           = 600
 
-  values            = [
+  values = [
     file("${path.module}/helm-values/loki-distributed.yaml")
   ]
 
   set {
-    name = "global.priorityClassName"
+    name  = "global.priorityClassName"
     value = var.loki_priority_class_name
   }
 
@@ -434,7 +408,7 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "loki.storageConfig.aws.s3"
     value = "s3://${var.loki_s3_bucket_region}/${var.loki_storage_s3_bucket}"
-  } 
+  }
 
   set {
     name  = "loki.structuredConfig.compactor.retention_enabled"
@@ -444,7 +418,7 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "loki.structuredConfig.limits_config.retention_period"
     value = var.loki_logs_retention
-  } 
+  }
 
   set {
     name  = "loki.structuredConfig.limits_config.max_query_length"
@@ -526,17 +500,17 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "distributor.autoscaling.enabled"
     value = true
-  }  
+  }
 
   set {
     name  = "distributor.autoscaling.minReplicas"
     value = var.loki_distributor_min_replicas
-  }  
+  }
 
   set {
     name  = "distributor.autoscaling.maxReplicas"
     value = var.loki_distributor_max_replicas
-  } 
+  }
 
 
   dynamic "set" {
@@ -584,12 +558,12 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "querier.autoscaling.enabled"
     value = true
-  }  
+  }
 
   set {
     name  = "querier.autoscaling.minReplicas"
     value = var.loki_querier_min_replicas
-  }  
+  }
 
   set {
     name  = "querier.autoscaling.maxReplicas"
@@ -641,17 +615,17 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "queryFrontend.autoscaling.enabled"
     value = true
-  }  
+  }
 
   set {
     name  = "queryFrontend.autoscaling.minReplicas"
     value = var.loki_query_frontend_min_replicas
-  }  
+  }
 
   set {
     name  = "queryFrontend.autoscaling.maxReplicas"
     value = var.loki_query_frontend_max_replicas
-  }  
+  }
 
   dynamic "set" {
     for_each = var.loki_query_frontend_requests_cpu != null ? ["do it"] : []
@@ -737,7 +711,7 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "indexGateway.enabled"
     value = var.loki_index_gateway_enabled
-  }  
+  }
 
   dynamic "set" {
     for_each = var.loki_index_gateway_node_selector != null ? var.loki_index_gateway_node_selector : {}
@@ -805,7 +779,7 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "gateway.enabled"
     value = var.loki_gateway_enabled
-  }  
+  }
 
   dynamic "set" {
     for_each = var.loki_gateway_node_selector != null ? var.loki_gateway_node_selector : {}
@@ -818,17 +792,17 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "gateway.autoscaling.enabled"
     value = true
-  }  
+  }
 
   set {
     name  = "gateway.autoscaling.minReplicas"
     value = var.loki_gateway_min_replicas
-  }  
+  }
 
   set {
     name  = "gateway.autoscaling.maxReplicas"
     value = var.loki_gateway_max_replicas
-  }  
+  }
 
   dynamic "set" {
     for_each = var.loki_gateway_requests_cpu != null ? ["do it"] : []
@@ -865,7 +839,7 @@ resource "helm_release" "loki_distributed" {
   set {
     name  = "gateway.ingress.enabled"
     value = var.loki_gateway_ingress_enabled
-  }  
+  }
 
   set {
     name  = "gateway.ingress.hosts[0].host"
@@ -901,17 +875,17 @@ resource "helm_release" "fluent_bit" {
   version           = var.fluent_bit_chart_version
   dependency_update = true
 
-  values            = [
+  values = [
     file("${path.module}/helm-values/fluent-bit.yaml")
   ]
 
   set {
-    name = "nodeSelector.eks\\.amazonaws\\.com/compute-type"
+    name  = "nodeSelector.eks\\.amazonaws\\.com/compute-type"
     value = "ec2"
   }
 
   set {
-    name = "priorityClassName"
+    name  = "priorityClassName"
     value = var.fluent_bit_priority_class_name
   }
 
@@ -930,29 +904,29 @@ resource "helm_release" "tempo_distributed" {
   dependency_update = true
   timeout           = 600
 
-  values            = [
+  values = [
     file("${path.module}/helm-values/tempo-distributed.yaml")
   ]
 
   set {
-    name = "global.priorityClassName"
+    name  = "global.priorityClassName"
     value = var.tempo_priority_class_name
   }
 
   set {
     name  = "storage.trace.s3.bucket"
     value = var.tempo_storage_s3_bucket
-  }  
+  }
 
   set {
     name  = "storage.trace.s3.region"
     value = var.tempo_s3_bucket_region
-  }  
+  }
 
   set {
     name  = "storage.trace.s3.endpoint"
     value = "s3.dualstack.${var.tempo_s3_bucket_region}.amazonaws.com"
-  }  
+  }
 
 
   # tempo - gateway
@@ -960,12 +934,12 @@ resource "helm_release" "tempo_distributed" {
   set {
     name  = "gateway.enabled"
     value = var.tempo_gateway_enabled
-  }  
+  }
 
   set {
     name  = "gateway.ingress.enabled"
     value = var.tempo_gateway_ingress_enabled
-  }  
+  }
 
   set {
     name  = "gateway.ingress.hosts[0].host"
@@ -1051,7 +1025,7 @@ resource "helm_release" "tempo_distributed" {
       name  = "compactor.resources.limits.memory"
       value = var.tempo_compactor_limits_memory
     }
-  }  
+  }
 
   # tempo - distributor
 
@@ -1119,7 +1093,7 @@ resource "helm_release" "tempo_distributed" {
       name  = "ingester.resources.limits.memory"
       value = var.tempo_ingester_limits_memory
     }
-  }  
+  }
 
   # tempo - querier
 
@@ -1153,7 +1127,7 @@ resource "helm_release" "tempo_distributed" {
       name  = "querier.resources.limits.memory"
       value = var.tempo_querier_limits_memory
     }
-  }  
+  }
 
   # tempo - query-frontend
 
@@ -1187,7 +1161,7 @@ resource "helm_release" "tempo_distributed" {
       name  = "queryFrontend.resources.limits.memory"
       value = var.tempo_query_frontend_limits_memory
     }
-  }  
+  }
 
 }
 
@@ -1204,38 +1178,38 @@ resource "helm_release" "grafana_stack" {
   dependency_update = true
   timeout           = 600
 
-set {
+  set {
     name  = "ingress.enabled"
     value = var.grafana_ingress_enabled
-  }  
+  }
 
   set {
     name  = "ingress.hosts[0]"
     value = var.grafana_ingress_host
-  }  
+  }
 
   set {
     name  = "ingress.path"
     value = var.grafana_ingress_path
-  }  
+  }
 
   set {
     name  = "ingress.pathType"
     value = var.grafana_ingress_path_type
-  }  
+  }
 
   set {
-    name = "ingress.ingressClassName"
+    name  = "ingress.ingressClassName"
     value = var.grafana_ingress_class_name
   }
-  
+
   set {
-    name = "persistence.enabled"
+    name  = "persistence.enabled"
     value = var.grafana_persistence_enabled
   }
 
   set {
-    name = "imageRenderer.priorityClassName"
+    name  = "imageRenderer.priorityClassName"
     value = var.grafana_priority_class_name
 
   }

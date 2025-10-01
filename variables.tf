@@ -281,11 +281,11 @@ variable "cluster_autoscaler_extra_helm_values" {
 
 # metrics-server
 variable "helm_metrics_server_enabled" {
-  default = false
+  default = true
 }
 
 variable "metrics_server_chart_version" {
-  default = "6.0.5"
+  default = "3.13.0"
 }
 
 variable "metrics_server_priority_class_name" {
