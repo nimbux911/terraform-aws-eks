@@ -17,7 +17,8 @@ Terraform module which creates EKS Cluster and dependent resources on AWS.
 
 ## Usage
 
-#### Terraform required version >= 0.14.8
+#### Terraform required version >= 1.5.7
+#### EKS required version >= 1.31
 
 ## Elastic Kubernetes Service
 
