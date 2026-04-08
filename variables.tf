@@ -22,18 +22,19 @@ variable "custom_node_groups" {
   type = list(object({
     name = string
     values = object({
-      ami_id           = string,
-      instance_type    = string,
-      workers_public   = bool,
-      extra_sg_ids     = optional(list(string)),
-      instance_profile = optional(string),
-      asg_min          = number,
-      asg_max          = number,
-      subnets_ids      = list(string),
-      volume_type      = string,
-      volume_size      = number,
-      volume_iops      = optional(number),
-      k8s_labels       = optional(map(string)),
+      ami_id                  = string,
+      instance_type           = string,
+      instance_type_overrides = optional(list(string)),
+      workers_public          = bool,
+      extra_sg_ids            = optional(list(string)),
+      instance_profile        = optional(string),
+      asg_min                 = number,
+      asg_max                 = number,
+      subnets_ids             = list(string),
+      volume_type             = string,
+      volume_size             = number,
+      volume_iops             = optional(number),
+      k8s_labels              = optional(map(string)),
       asg_tags = optional(list(object({
         key   = string,
         value = string,
@@ -89,6 +90,10 @@ variable "on_demand_percentage_above_base_capacity" {
 
 variable "spot_allocation_strategy" {
   default = "capacity-optimized"
+}
+
+variable "capacity_rebalance" {
+  default = false
 }
 
 variable "spot_instance_pools" {
