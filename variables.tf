@@ -243,6 +243,28 @@ variable "helm_ingress_nginx_additional_enabled" {
   default = false
 }
 
+# ================== envoy gateway =================
+
+variable "helm_envoy_gateway_enabled" {
+  default = false
+}
+
+variable "envoy_gateway_chart_version" {
+  default = "v1.7.1"
+}
+
+variable "envoy_gateway_namespace" {
+  default = "envoy"
+}
+
+variable "envoy_gateway_release_name" {
+  default = "envoy-gateway"
+}
+
+variable "envoy_gateway_replicas" {
+  default = 1
+}
+
 variable "ingress_additional_http_nodeport" {
   default = 31080
 }

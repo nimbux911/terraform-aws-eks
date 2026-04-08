@@ -148,6 +148,23 @@ resource "helm_release" "ingress_nginx_additional" {
 
 }
 
+resource "helm_release" "envoy_gateway" {
+  count            = var.helm_envoy_gateway_enabled ? 1 : 0
+  name             = var.envoy_gateway_release_name
+  namespace        = var.envoy_gateway_namespace
+  create_namespace = true
+  repository       = "oci://docker.io/envoyproxy"
+  chart            = "gateway-helm"
+  version          = var.envoy_gateway_chart_version
+
+  set {
+    name  = "deployment.replicas"
+    value = var.envoy_gateway_replicas
+  }
+
+  depends_on = [time_sleep.wait_20_seconds]
+}
+
 resource "helm_release" "cluster_autoscaler" {
   count      = var.helm_cluster_autoscaler_enabled ? 1 : 0
   name       = "cluster-autoscaler"
