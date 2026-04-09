@@ -139,10 +139,6 @@ resource "kubernetes_manifest" "envoy_gateway_proxy_config" {
                         port     = 80
                         nodePort = var.envoy_gateway_http_nodeport
                       },
-                      {
-                        port     = 443
-                        nodePort = var.envoy_gateway_https_nodeport
-                      },
                     ]
                   }
                 }
@@ -269,10 +265,6 @@ resource "kubernetes_manifest" "envoy_internal_gateway_proxy_config" {
                         port     = 80
                         nodePort = var.envoy_internal_gateway_http_nodeport
                       },
-                      {
-                        port     = 443
-                        nodePort = var.envoy_internal_gateway_https_nodeport
-                      },
                     ]
                   }
                 }
@@ -319,4 +311,60 @@ resource "kubernetes_manifest" "envoy_internal_gateway" {
     kubernetes_manifest.envoy_internal_gatewayclass,
     kubernetes_manifest.envoy_internal_gateway_proxy_config,
   ]
+}
+
+resource "kubernetes_manifest" "envoy_cosun_backend_route" {
+  count = var.k8s_envoy_cosun_backend_route_enabled ? 1 : 0
+
+  manifest = {
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "HTTPRoute"
+    metadata = {
+      name      = "backend"
+      namespace = "cosun"
+      labels = {
+        app = "backend"
+      }
+    }
+    spec = {
+      parentRefs = [
+        {
+          name      = var.envoy_gateway_name
+          namespace = var.envoy_gateway_namespace
+        }
+      ]
+      hostnames = [var.envoy_cosun_backend_hostname]
+      rules = [
+        {
+          matches = [
+            {
+              path = {
+                type  = "PathPrefix"
+                value = "/"
+              }
+            }
+          ]
+          filters = [
+            {
+              type = "URLRewrite"
+              urlRewrite = {
+                path = {
+                  type            = "ReplaceFullPath"
+                  replaceFullPath = "/"
+                }
+              }
+            }
+          ]
+          backendRefs = [
+            {
+              name = "backend"
+              port = 80
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  depends_on = [kubernetes_manifest.envoy_gateway]
 }
