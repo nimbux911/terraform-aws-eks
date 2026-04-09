@@ -293,6 +293,10 @@ variable "envoy_gateway_https_nodeport" {
   default = 30443
 }
 
+variable "envoy_gateway_external_traffic_policy" {
+  default = "Cluster"
+}
+
 variable "k8s_envoy_internal_gateway_enabled" {
   default = false
 }
@@ -311,6 +315,10 @@ variable "envoy_internal_gateway_http_nodeport" {
 
 variable "envoy_internal_gateway_https_nodeport" {
   default = 30543
+}
+
+variable "envoy_internal_gateway_external_traffic_policy" {
+  default = "Cluster"
 }
 
 variable "ingress_additional_http_nodeport" {

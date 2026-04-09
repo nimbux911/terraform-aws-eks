@@ -126,7 +126,8 @@ resource "kubernetes_manifest" "envoy_gateway_proxy_config" {
         kubernetes = {
           envoyService = merge(
             {
-              type = var.envoy_gateway_service_type
+              type                  = var.envoy_gateway_service_type
+              externalTrafficPolicy = var.envoy_gateway_external_traffic_policy
             },
             var.envoy_gateway_service_type == "NodePort" ? {
               patch = {
@@ -255,7 +256,8 @@ resource "kubernetes_manifest" "envoy_internal_gateway_proxy_config" {
         kubernetes = {
           envoyService = merge(
             {
-              type = var.envoy_internal_gateway_service_type
+              type                  = var.envoy_internal_gateway_service_type
+              externalTrafficPolicy = var.envoy_internal_gateway_external_traffic_policy
             },
             var.envoy_internal_gateway_service_type == "NodePort" ? {
               patch = {
