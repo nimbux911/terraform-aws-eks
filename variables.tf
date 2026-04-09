@@ -265,6 +265,54 @@ variable "envoy_gateway_replicas" {
   default = 1
 }
 
+variable "k8s_envoy_gateway_enabled" {
+  default = false
+}
+
+variable "envoy_gatewayclass_name" {
+  default = "envoy-external"
+}
+
+variable "envoy_internal_gatewayclass_name" {
+  default = "envoy-internal"
+}
+
+variable "envoy_gateway_name" {
+  default = "envoy-external"
+}
+
+variable "envoy_gateway_service_type" {
+  default = "ClusterIP"
+}
+
+variable "envoy_gateway_http_nodeport" {
+  default = 30080
+}
+
+variable "envoy_gateway_https_nodeport" {
+  default = 30443
+}
+
+variable "k8s_envoy_internal_gateway_enabled" {
+  default = false
+}
+
+variable "envoy_internal_gateway_name" {
+  default = "envoy-internal"
+}
+
+variable "envoy_internal_gateway_service_type" {
+  default = "ClusterIP"
+}
+
+variable "envoy_internal_gateway_http_nodeport" {
+  default = 30180
+}
+
+variable "envoy_internal_gateway_https_nodeport" {
+  default = 30543
+}
+
 variable "ingress_additional_http_nodeport" {
   default = 31080
 }
