@@ -329,6 +329,10 @@ variable "envoy_cosun_backend_hostname" {
   default = "pildoc.dev.digidocapi.com"
 }
 
+variable "k8s_envoy_proxy_service_monitor_enabled" {
+  default = false
+}
+
 variable "ingress_additional_http_nodeport" {
   default = 31080
 }

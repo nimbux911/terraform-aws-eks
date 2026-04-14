@@ -313,6 +313,198 @@ resource "kubernetes_manifest" "envoy_internal_gateway" {
   ]
 }
 
+resource "kubernetes_service_v1" "envoy_external_metrics_service" {
+  count = var.k8s_envoy_proxy_service_monitor_enabled ? 1 : 0
+
+  metadata {
+    name      = "envoy-external-metrics"
+    namespace = var.envoy_gateway_namespace
+    annotations = {
+      "prometheus.io/path"   = "/stats/prometheus"
+      "prometheus.io/port"   = "19001"
+      "prometheus.io/scrape" = "true"
+    }
+    labels = {
+      "app.kubernetes.io/name" = "envoy-metrics"
+      "envoy-metrics"          = "external"
+    }
+  }
+
+  spec {
+    type = "ClusterIP"
+
+    port {
+      name        = "metrics"
+      port        = 19001
+      protocol    = "TCP"
+      target_port = "19001"
+    }
+
+    selector = {
+      "app.kubernetes.io/component"                    = "proxy"
+      "app.kubernetes.io/managed-by"                   = "envoy-gateway"
+      "app.kubernetes.io/name"                         = "envoy"
+      "gateway.envoyproxy.io/owning-gateway-name"      = var.envoy_gateway_name
+      "gateway.envoyproxy.io/owning-gateway-namespace" = var.envoy_gateway_namespace
+    }
+  }
+
+  depends_on = [kubernetes_manifest.envoy_gateway]
+}
+
+resource "kubernetes_service_v1" "envoy_internal_metrics_service" {
+  count = var.k8s_envoy_proxy_service_monitor_enabled && var.k8s_envoy_internal_gateway_enabled ? 1 : 0
+
+  metadata {
+    name      = "envoy-internal-metrics"
+    namespace = var.envoy_gateway_namespace
+    annotations = {
+      "prometheus.io/path"   = "/stats/prometheus"
+      "prometheus.io/port"   = "19001"
+      "prometheus.io/scrape" = "true"
+    }
+    labels = {
+      "app.kubernetes.io/name" = "envoy-metrics"
+      "envoy-metrics"          = "internal"
+    }
+  }
+
+  spec {
+    type = "ClusterIP"
+
+    port {
+      name        = "metrics"
+      port        = 19001
+      protocol    = "TCP"
+      target_port = "19001"
+    }
+
+    selector = {
+      "app.kubernetes.io/component"                    = "proxy"
+      "app.kubernetes.io/managed-by"                   = "envoy-gateway"
+      "app.kubernetes.io/name"                         = "envoy"
+      "gateway.envoyproxy.io/owning-gateway-name"      = var.envoy_internal_gateway_name
+      "gateway.envoyproxy.io/owning-gateway-namespace" = var.envoy_gateway_namespace
+    }
+  }
+
+  depends_on = [kubernetes_manifest.envoy_internal_gateway]
+}
+
+resource "kubernetes_manifest" "envoy_external_metrics_service_monitor" {
+  count = var.k8s_envoy_proxy_service_monitor_enabled ? 1 : 0
+
+  manifest = {
+    apiVersion = "monitoring.coreos.com/v1"
+    kind       = "ServiceMonitor"
+    metadata = {
+      name      = "envoy-external-proxy"
+      namespace = var.envoy_gateway_namespace
+      labels = {
+        release = "prometheus-stack"
+      }
+    }
+    spec = {
+      namespaceSelector = {
+        matchNames = [var.envoy_gateway_namespace]
+      }
+      selector = {
+        matchLabels = {
+          "app.kubernetes.io/name" = "envoy-metrics"
+          "envoy-metrics"          = "external"
+        }
+      }
+      endpoints = [
+        {
+          interval = "30s"
+          path     = "/stats/prometheus"
+          port     = "metrics"
+          metricRelabelings = [
+            {
+              action       = "keep"
+              sourceLabels = ["__name__"]
+              regex        = "envoy_http_downstream_rq_total|envoy_http_downstream_rq_time_bucket|envoy_http_downstream_rq_time_sum|envoy_http_downstream_rq_time_count|envoy_cluster_upstream_rq_total|envoy_cluster_upstream_rq_time_bucket|envoy_cluster_upstream_rq_time_sum|envoy_cluster_upstream_rq_time_count"
+            },
+            {
+              action       = "replace"
+              sourceLabels = ["envoy_cluster_name"]
+              regex        = "httproute/([^/]+)/([^/]+)/.*"
+              targetLabel  = "exported_namespace"
+              replacement  = "$1"
+            },
+            {
+              action       = "replace"
+              sourceLabels = ["envoy_cluster_name"]
+              regex        = "httproute/([^/]+)/([^/]+)/.*"
+              targetLabel  = "exported_service"
+              replacement  = "$2"
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  depends_on = [kubernetes_service_v1.envoy_external_metrics_service]
+}
+
+resource "kubernetes_manifest" "envoy_internal_metrics_service_monitor" {
+  count = var.k8s_envoy_proxy_service_monitor_enabled && var.k8s_envoy_internal_gateway_enabled ? 1 : 0
+
+  manifest = {
+    apiVersion = "monitoring.coreos.com/v1"
+    kind       = "ServiceMonitor"
+    metadata = {
+      name      = "envoy-internal-proxy"
+      namespace = var.envoy_gateway_namespace
+      labels = {
+        release = "prometheus-stack"
+      }
+    }
+    spec = {
+      namespaceSelector = {
+        matchNames = [var.envoy_gateway_namespace]
+      }
+      selector = {
+        matchLabels = {
+          "app.kubernetes.io/name" = "envoy-metrics"
+          "envoy-metrics"          = "internal"
+        }
+      }
+      endpoints = [
+        {
+          interval = "30s"
+          path     = "/stats/prometheus"
+          port     = "metrics"
+          metricRelabelings = [
+            {
+              action       = "keep"
+              sourceLabels = ["__name__"]
+              regex        = "envoy_http_downstream_rq_total|envoy_http_downstream_rq_time_bucket|envoy_http_downstream_rq_time_sum|envoy_http_downstream_rq_time_count|envoy_cluster_upstream_rq_total|envoy_cluster_upstream_rq_time_bucket|envoy_cluster_upstream_rq_time_sum|envoy_cluster_upstream_rq_time_count"
+            },
+            {
+              action       = "replace"
+              sourceLabels = ["envoy_cluster_name"]
+              regex        = "httproute/([^/]+)/([^/]+)/.*"
+              targetLabel  = "exported_namespace"
+              replacement  = "$1"
+            },
+            {
+              action       = "replace"
+              sourceLabels = ["envoy_cluster_name"]
+              regex        = "httproute/([^/]+)/([^/]+)/.*"
+              targetLabel  = "exported_service"
+              replacement  = "$2"
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  depends_on = [kubernetes_service_v1.envoy_internal_metrics_service]
+}
+
 resource "kubernetes_manifest" "envoy_cosun_backend_route" {
   count = var.k8s_envoy_cosun_backend_route_enabled ? 1 : 0
 
@@ -341,17 +533,6 @@ resource "kubernetes_manifest" "envoy_cosun_backend_route" {
               path = {
                 type  = "PathPrefix"
                 value = "/"
-              }
-            }
-          ]
-          filters = [
-            {
-              type = "URLRewrite"
-              urlRewrite = {
-                path = {
-                  type            = "ReplaceFullPath"
-                  replaceFullPath = "/"
-                }
               }
             }
           ]
