@@ -24,7 +24,7 @@ config:
         Path           /var/log/containers/*.log
         Parser         cri
         DB             /run/fluent-bit/flb_kube.db
-        Mem_Buf_Limit  5MB
+        Mem_Buf_Limit  50MB
   ## https://docs.fluentbit.io/manual/pipeline/filters
   filters: |
     [FILTER]
