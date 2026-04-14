@@ -321,14 +321,6 @@ variable "envoy_internal_gateway_external_traffic_policy" {
   default = "Cluster"
 }
 
-variable "k8s_envoy_cosun_backend_route_enabled" {
-  default = false
-}
-
-variable "envoy_cosun_backend_hostname" {
-  default = "pildoc.dev.digidocapi.com"
-}
-
 variable "k8s_envoy_proxy_service_monitor_enabled" {
   default = false
 }

@@ -113,42 +113,14 @@ resource "kubernetes_manifest" "otel-webhookvalidation" {
 resource "kubernetes_manifest" "envoy_gateway_proxy_config" {
   count = var.k8s_envoy_gateway_enabled ? 1 : 0
 
-  manifest = {
-    apiVersion = "gateway.envoyproxy.io/v1alpha1"
-    kind       = "EnvoyProxy"
-    metadata = {
-      name      = var.envoy_gateway_name
-      namespace = var.envoy_gateway_namespace
-    }
-    spec = {
-      provider = {
-        type = "Kubernetes"
-        kubernetes = {
-          envoyService = merge(
-            {
-              type                  = var.envoy_gateway_service_type
-              externalTrafficPolicy = var.envoy_gateway_external_traffic_policy
-            },
-            var.envoy_gateway_service_type == "NodePort" ? {
-              patch = {
-                type = "StrategicMerge"
-                value = {
-                  spec = {
-                    ports = [
-                      {
-                        port     = 80
-                        nodePort = var.envoy_gateway_http_nodeport
-                      },
-                    ]
-                  }
-                }
-              }
-            } : {}
-          )
-        }
-      }
-    }
-  }
+  manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-gateway-proxy-config.yaml.tpl", {
+    name                    = var.envoy_gateway_name
+    namespace               = var.envoy_gateway_namespace
+    service_type            = var.envoy_gateway_service_type
+    external_traffic_policy = var.envoy_gateway_external_traffic_policy
+    nodeport_enabled        = var.envoy_gateway_service_type == "NodePort"
+    http_nodeport           = var.envoy_gateway_http_nodeport
+  }))
 
   depends_on = [helm_release.envoy_gateway]
 }
@@ -156,22 +128,11 @@ resource "kubernetes_manifest" "envoy_gateway_proxy_config" {
 resource "kubernetes_manifest" "envoy_gatewayclass" {
   count = var.k8s_envoy_gateway_enabled ? 1 : 0
 
-  manifest = {
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "GatewayClass"
-    metadata = {
-      name = var.envoy_gatewayclass_name
-    }
-    spec = {
-      controllerName = "gateway.envoyproxy.io/gatewayclass-controller"
-      parametersRef = {
-        group     = "gateway.envoyproxy.io"
-        kind      = "EnvoyProxy"
-        name      = var.envoy_gateway_name
-        namespace = var.envoy_gateway_namespace
-      }
-    }
-  }
+  manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-gatewayclass.yaml.tpl", {
+    gatewayclass_name = var.envoy_gatewayclass_name
+    proxy_name        = var.envoy_gateway_name
+    namespace         = var.envoy_gateway_namespace
+  }))
 
   depends_on = [helm_release.envoy_gateway]
 }
@@ -179,29 +140,11 @@ resource "kubernetes_manifest" "envoy_gatewayclass" {
 resource "kubernetes_manifest" "envoy_gateway" {
   count = var.k8s_envoy_gateway_enabled ? 1 : 0
 
-  manifest = {
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "Gateway"
-    metadata = {
-      name      = var.envoy_gateway_name
-      namespace = var.envoy_gateway_namespace
-    }
-    spec = {
-      gatewayClassName = var.envoy_gatewayclass_name
-      listeners = [
-        {
-          name     = "http"
-          protocol = "HTTP"
-          port     = 80
-          allowedRoutes = {
-            namespaces = {
-              from = "All"
-            }
-          }
-        }
-      ]
-    }
-  }
+  manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-gateway.yaml.tpl", {
+    gateway_name      = var.envoy_gateway_name
+    namespace         = var.envoy_gateway_namespace
+    gatewayclass_name = var.envoy_gatewayclass_name
+  }))
 
   depends_on = [
     helm_release.envoy_gateway,
@@ -213,22 +156,11 @@ resource "kubernetes_manifest" "envoy_gateway" {
 resource "kubernetes_manifest" "envoy_internal_gatewayclass" {
   count = var.k8s_envoy_internal_gateway_enabled ? 1 : 0
 
-  manifest = {
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "GatewayClass"
-    metadata = {
-      name = var.envoy_internal_gatewayclass_name
-    }
-    spec = {
-      controllerName = "gateway.envoyproxy.io/gatewayclass-controller"
-      parametersRef = {
-        group     = "gateway.envoyproxy.io"
-        kind      = "EnvoyProxy"
-        name      = var.envoy_internal_gateway_name
-        namespace = var.envoy_gateway_namespace
-      }
-    }
-  }
+  manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-gatewayclass.yaml.tpl", {
+    gatewayclass_name = var.envoy_internal_gatewayclass_name
+    proxy_name        = var.envoy_internal_gateway_name
+    namespace         = var.envoy_gateway_namespace
+  }))
 
   depends_on = [
     helm_release.envoy_gateway,
@@ -239,42 +171,14 @@ resource "kubernetes_manifest" "envoy_internal_gatewayclass" {
 resource "kubernetes_manifest" "envoy_internal_gateway_proxy_config" {
   count = var.k8s_envoy_internal_gateway_enabled ? 1 : 0
 
-  manifest = {
-    apiVersion = "gateway.envoyproxy.io/v1alpha1"
-    kind       = "EnvoyProxy"
-    metadata = {
-      name      = var.envoy_internal_gateway_name
-      namespace = var.envoy_gateway_namespace
-    }
-    spec = {
-      provider = {
-        type = "Kubernetes"
-        kubernetes = {
-          envoyService = merge(
-            {
-              type                  = var.envoy_internal_gateway_service_type
-              externalTrafficPolicy = var.envoy_internal_gateway_external_traffic_policy
-            },
-            var.envoy_internal_gateway_service_type == "NodePort" ? {
-              patch = {
-                type = "StrategicMerge"
-                value = {
-                  spec = {
-                    ports = [
-                      {
-                        port     = 80
-                        nodePort = var.envoy_internal_gateway_http_nodeport
-                      },
-                    ]
-                  }
-                }
-              }
-            } : {}
-          )
-        }
-      }
-    }
-  }
+  manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-gateway-proxy-config.yaml.tpl", {
+    name                    = var.envoy_internal_gateway_name
+    namespace               = var.envoy_gateway_namespace
+    service_type            = var.envoy_internal_gateway_service_type
+    external_traffic_policy = var.envoy_internal_gateway_external_traffic_policy
+    nodeport_enabled        = var.envoy_internal_gateway_service_type == "NodePort"
+    http_nodeport           = var.envoy_internal_gateway_http_nodeport
+  }))
 
   depends_on = [helm_release.envoy_gateway]
 }
@@ -282,29 +186,11 @@ resource "kubernetes_manifest" "envoy_internal_gateway_proxy_config" {
 resource "kubernetes_manifest" "envoy_internal_gateway" {
   count = var.k8s_envoy_internal_gateway_enabled ? 1 : 0
 
-  manifest = {
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "Gateway"
-    metadata = {
-      name      = var.envoy_internal_gateway_name
-      namespace = var.envoy_gateway_namespace
-    }
-    spec = {
-      gatewayClassName = var.envoy_internal_gatewayclass_name
-      listeners = [
-        {
-          name     = "http"
-          protocol = "HTTP"
-          port     = 80
-          allowedRoutes = {
-            namespaces = {
-              from = "All"
-            }
-          }
-        }
-      ]
-    }
-  }
+  manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-gateway.yaml.tpl", {
+    gateway_name      = var.envoy_internal_gateway_name
+    namespace         = var.envoy_gateway_namespace
+    gatewayclass_name = var.envoy_internal_gatewayclass_name
+  }))
 
   depends_on = [
     helm_release.envoy_gateway,
@@ -394,56 +280,11 @@ resource "kubernetes_service_v1" "envoy_internal_metrics_service" {
 resource "kubernetes_manifest" "envoy_external_metrics_service_monitor" {
   count = var.k8s_envoy_proxy_service_monitor_enabled ? 1 : 0
 
-  manifest = {
-    apiVersion = "monitoring.coreos.com/v1"
-    kind       = "ServiceMonitor"
-    metadata = {
-      name      = "envoy-external-proxy"
-      namespace = var.envoy_gateway_namespace
-      labels = {
-        release = "prometheus-stack"
-      }
-    }
-    spec = {
-      namespaceSelector = {
-        matchNames = [var.envoy_gateway_namespace]
-      }
-      selector = {
-        matchLabels = {
-          "app.kubernetes.io/name" = "envoy-metrics"
-          "envoy-metrics"          = "external"
-        }
-      }
-      endpoints = [
-        {
-          interval = "30s"
-          path     = "/stats/prometheus"
-          port     = "metrics"
-          metricRelabelings = [
-            {
-              action       = "keep"
-              sourceLabels = ["__name__"]
-              regex        = "envoy_http_downstream_rq_total|envoy_http_downstream_rq_time_bucket|envoy_http_downstream_rq_time_sum|envoy_http_downstream_rq_time_count|envoy_cluster_upstream_rq_total|envoy_cluster_upstream_rq_time_bucket|envoy_cluster_upstream_rq_time_sum|envoy_cluster_upstream_rq_time_count"
-            },
-            {
-              action       = "replace"
-              sourceLabels = ["envoy_cluster_name"]
-              regex        = "httproute/([^/]+)/([^/]+)/.*"
-              targetLabel  = "exported_namespace"
-              replacement  = "$1"
-            },
-            {
-              action       = "replace"
-              sourceLabels = ["envoy_cluster_name"]
-              regex        = "httproute/([^/]+)/([^/]+)/.*"
-              targetLabel  = "exported_service"
-              replacement  = "$2"
-            }
-          ]
-        }
-      ]
-    }
-  }
+  manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-metrics-servicemonitor.yaml.tpl", {
+    name          = "envoy-external-proxy"
+    namespace     = var.envoy_gateway_namespace
+    metrics_scope = "external"
+  }))
 
   depends_on = [kubernetes_service_v1.envoy_external_metrics_service]
 }
@@ -451,101 +292,11 @@ resource "kubernetes_manifest" "envoy_external_metrics_service_monitor" {
 resource "kubernetes_manifest" "envoy_internal_metrics_service_monitor" {
   count = var.k8s_envoy_proxy_service_monitor_enabled && var.k8s_envoy_internal_gateway_enabled ? 1 : 0
 
-  manifest = {
-    apiVersion = "monitoring.coreos.com/v1"
-    kind       = "ServiceMonitor"
-    metadata = {
-      name      = "envoy-internal-proxy"
-      namespace = var.envoy_gateway_namespace
-      labels = {
-        release = "prometheus-stack"
-      }
-    }
-    spec = {
-      namespaceSelector = {
-        matchNames = [var.envoy_gateway_namespace]
-      }
-      selector = {
-        matchLabels = {
-          "app.kubernetes.io/name" = "envoy-metrics"
-          "envoy-metrics"          = "internal"
-        }
-      }
-      endpoints = [
-        {
-          interval = "30s"
-          path     = "/stats/prometheus"
-          port     = "metrics"
-          metricRelabelings = [
-            {
-              action       = "keep"
-              sourceLabels = ["__name__"]
-              regex        = "envoy_http_downstream_rq_total|envoy_http_downstream_rq_time_bucket|envoy_http_downstream_rq_time_sum|envoy_http_downstream_rq_time_count|envoy_cluster_upstream_rq_total|envoy_cluster_upstream_rq_time_bucket|envoy_cluster_upstream_rq_time_sum|envoy_cluster_upstream_rq_time_count"
-            },
-            {
-              action       = "replace"
-              sourceLabels = ["envoy_cluster_name"]
-              regex        = "httproute/([^/]+)/([^/]+)/.*"
-              targetLabel  = "exported_namespace"
-              replacement  = "$1"
-            },
-            {
-              action       = "replace"
-              sourceLabels = ["envoy_cluster_name"]
-              regex        = "httproute/([^/]+)/([^/]+)/.*"
-              targetLabel  = "exported_service"
-              replacement  = "$2"
-            }
-          ]
-        }
-      ]
-    }
-  }
+  manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-metrics-servicemonitor.yaml.tpl", {
+    name          = "envoy-internal-proxy"
+    namespace     = var.envoy_gateway_namespace
+    metrics_scope = "internal"
+  }))
 
   depends_on = [kubernetes_service_v1.envoy_internal_metrics_service]
-}
-
-resource "kubernetes_manifest" "envoy_cosun_backend_route" {
-  count = var.k8s_envoy_cosun_backend_route_enabled ? 1 : 0
-
-  manifest = {
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "HTTPRoute"
-    metadata = {
-      name      = "backend"
-      namespace = "cosun"
-      labels = {
-        app = "backend"
-      }
-    }
-    spec = {
-      parentRefs = [
-        {
-          name      = var.envoy_gateway_name
-          namespace = var.envoy_gateway_namespace
-        }
-      ]
-      hostnames = [var.envoy_cosun_backend_hostname]
-      rules = [
-        {
-          matches = [
-            {
-              path = {
-                type  = "PathPrefix"
-                value = "/"
-              }
-            }
-          ]
-          backendRefs = [
-            {
-              name = "backend"
-              port = 80
-            }
-          ]
-        }
-      ]
-    }
-  }
-
-  depends_on = [kubernetes_manifest.envoy_gateway]
 }
