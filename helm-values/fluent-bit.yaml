@@ -11,7 +11,7 @@ config:
         Daemon Off
         Flush {{ .Values.flush }}
         Log_Level {{ .Values.logLevel }}
-        Parsers_File /fluent-bit/etc/custom_parsers.conf
+        Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
         HTTP_Server On
         HTTP_Listen 0.0.0.0
         HTTP_Port {{ .Values.metricsPort }}
@@ -38,18 +38,16 @@ config:
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
     [OUTPUT]
-        Name grafana-loki
+        Name loki
         Match *
-        Url http://loki-distributed-distributor:3100/api/prom/push
-        TenantID ""
-        BatchWait 1
-        BatchSize 1048576
-        Labels {job="fluent-bit"}
+        Host loki-distributed-distributor
+        Port 3100
+        Uri /loki/api/v1/push
+        Labels job=fluent-bit
         RemoveKeys kubernetes,stream
-        AutoKubernetesLabels false
-        LabelMapPath /fluent-bit/etc/labelmap.json
-        LineFormat key_value
-        LogLevel warn
+        Auto_Kubernetes_Labels off
+        Label_Map_Path /fluent-bit/etc/conf/labelmap.json
+        Line_Format key_value
 
   # https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
