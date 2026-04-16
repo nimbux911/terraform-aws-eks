@@ -44,10 +44,11 @@ config:
         Port 3100
         Uri /loki/api/v1/push
         Labels job=fluent-bit
-        Remove_Keys kubernetes,stream
+        Remove_Keys kubernetes,stream,logtag
         Auto_Kubernetes_Labels off
         Label_Map_Path /fluent-bit/etc/conf/labelmap.json
-        Line_Format key_value
+        Line_Format json
+        Drop_Single_Key raw
 
   # https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
