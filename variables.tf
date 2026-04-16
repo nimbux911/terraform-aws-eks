@@ -567,7 +567,7 @@ variable "helm_fluent_bit_enabled" {
 }
 
 variable "fluent_bit_chart_version" {
-  default = "0.19.24"
+  default = "0.57.2"
 }
 
 variable "fluent_bit_priority_class_name" {

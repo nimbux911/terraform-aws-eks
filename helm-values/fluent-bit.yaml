@@ -1,7 +1,7 @@
 
 image:
-  repository: grafana/fluent-bit-plugin-loki
-  tag: 2.1.0-amd64
+  repository: cr.fluentbit.io/fluent/fluent-bit
+  tag: 5.0.3-amd64
   pullPolicy: IfNotPresent
 
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
