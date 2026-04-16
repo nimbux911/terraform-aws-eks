@@ -1,7 +1,7 @@
 
 image:
   repository: cr.fluentbit.io/fluent/fluent-bit
-  tag: 5.0.3-amd64
+  tag: 5.0.2
   pullPolicy: IfNotPresent
 
 ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file
