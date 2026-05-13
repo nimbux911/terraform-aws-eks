@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.10.0] - 2026-04-16
+
+- Upgrade Fluent Bit Helm chart to 0.57.2 and image to fluent-bit:5.0.2 versions.
+- Replace Grafana Loki plugin with the official Fluent Bit Loki output plugin.
+- Update Fluent Bit configuration and parsers for compatibility with Fluent Bit 5.x.
+- Improve Loki log formatting and remove unnecessary fields from exported logs.
+
 ## [5.9.0] - 2025-10-01
 
 - Use official metrics-server Helm chart, enable it by default and remove unneeded configuration.
