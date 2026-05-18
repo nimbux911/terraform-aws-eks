@@ -23,13 +23,8 @@ config:
         Tag            kube.*
         Path           /var/log/containers/*.log
         Parser         cri
-<<<<<<< HEAD
-        DB             /run/fluent-bit/flb_kube.db
-        Mem_Buf_Limit  5MB
-=======
         DB             /var/log/flb_kube.db
         Mem_Buf_Limit  50MB
->>>>>>> ebf6a26 (Chore/update fluentbit (#60))
   ## https://docs.fluentbit.io/manual/pipeline/filters
   filters: |
     [FILTER]
