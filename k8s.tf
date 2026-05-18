@@ -310,6 +310,13 @@ resource "kubernetes_manifest" "loki_gateway_httproute" {
     metadata = {
       name      = "loki-distributed-gateway"
       namespace = "monitoring"
+      labels = {
+        "app.kubernetes.io/component"  = "gateway"
+        "app.kubernetes.io/instance"   = "loki-distributed"
+        "app.kubernetes.io/managed-by" = "Helm"
+        "app.kubernetes.io/name"       = "loki-distributed"
+        "helm.sh/chart"                = "loki-distributed-${var.loki_chart_version}"
+      }
     }
     spec = {
       parentRefs = [
@@ -355,6 +362,15 @@ resource "kubernetes_manifest" "prometheus_httproute" {
     metadata = {
       name      = "prometheus-stack-kube-prom-prometheus"
       namespace = "monitoring"
+      labels = {
+        app                            = "kube-prometheus-stack-prometheus"
+        "app.kubernetes.io/instance"   = "prometheus-stack"
+        "app.kubernetes.io/managed-by" = "Helm"
+        "app.kubernetes.io/part-of"    = "kube-prometheus-stack"
+        chart                          = "kube-prometheus-stack-${var.prometheus_chart_version}"
+        heritage                       = "Helm"
+        release                        = "prometheus-stack"
+      }
     }
     spec = {
       parentRefs = [
