@@ -300,3 +300,93 @@ resource "kubernetes_manifest" "envoy_internal_metrics_service_monitor" {
 
   depends_on = [kubernetes_service_v1.envoy_internal_metrics_service]
 }
+
+resource "kubernetes_manifest" "loki_gateway_httproute" {
+  count = var.helm_loki_enabled && var.loki_gateway_enabled && var.loki_gateway_ingress_enabled && var.k8s_envoy_internal_gateway_enabled ? 1 : 0
+
+  manifest = {
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "HTTPRoute"
+    metadata = {
+      name      = "loki-distributed-gateway"
+      namespace = "monitoring"
+    }
+    spec = {
+      parentRefs = [
+        {
+          name      = var.envoy_internal_gateway_name
+          namespace = var.envoy_gateway_namespace
+        }
+      ]
+      hostnames = [var.loki_gateway_ingress_host]
+      rules = [
+        {
+          matches = [
+            {
+              path = {
+                type  = "PathPrefix"
+                value = var.loki_gateway_ingress_path
+              }
+            }
+          ]
+          backendRefs = [
+            {
+              name = "loki-distributed-gateway"
+              port = 80
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  depends_on = [
+    helm_release.loki_distributed,
+    kubernetes_manifest.envoy_internal_gateway,
+  ]
+}
+
+resource "kubernetes_manifest" "prometheus_httproute" {
+  count = var.helm_prometheus_enabled && var.prometheus_ingress_enabled && var.k8s_envoy_internal_gateway_enabled ? 1 : 0
+
+  manifest = {
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "HTTPRoute"
+    metadata = {
+      name      = "prometheus-stack-kube-prom-prometheus"
+      namespace = "monitoring"
+    }
+    spec = {
+      parentRefs = [
+        {
+          name      = var.envoy_internal_gateway_name
+          namespace = var.envoy_gateway_namespace
+        }
+      ]
+      hostnames = [var.prometheus_ingress_host]
+      rules = [
+        {
+          matches = [
+            {
+              path = {
+                type  = "PathPrefix"
+                value = var.prometheus_ingress_path
+              }
+            }
+          ]
+          backendRefs = [
+            {
+              name = "prometheus-stack-kube-prom-prometheus"
+              port = 9090
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  depends_on = [
+    helm_release.prometheus_stack,
+    kubernetes_manifest.envoy_internal_gateway,
+  ]
+}
