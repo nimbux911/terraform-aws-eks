@@ -21,7 +21,7 @@ spec:
         - action: keep
           sourceLabels:
             - __name__
-          regex: envoy_http_downstream_rq_total|envoy_http_downstream_rq_xx|envoy_http_downstream_rq_time_bucket|envoy_http_downstream_rq_time_sum|envoy_http_downstream_rq_time_count|envoy_cluster_upstream_rq_total|envoy_cluster_upstream_rq_xx|envoy_cluster_upstream_rq_time_bucket|envoy_cluster_upstream_rq_time_sum|envoy_cluster_upstream_rq_time_count
+          regex: envoy_http_downstream_rq_total|envoy_http_downstream_rq_xx|envoy_http_downstream_rq_time_bucket|envoy_http_downstream_rq_time_sum|envoy_http_downstream_rq_time_count|envoy_cluster_upstream_rq|envoy_cluster_upstream_rq_total|envoy_cluster_upstream_rq_xx|envoy_cluster_upstream_rq_time_bucket|envoy_cluster_upstream_rq_time_sum|envoy_cluster_upstream_rq_time_count
         - action: replace
           sourceLabels:
             - envoy_cluster_name
