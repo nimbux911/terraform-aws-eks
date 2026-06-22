@@ -736,6 +736,43 @@ variable "prometheus_additional_scrape_configs" {
   default = ""
 }
 
+# ================== prometheus-blackbox-exporter ================== #
+variable "helm_prometheus_blackbox_exporter_enabled" {
+  default = false
+}
+
+variable "prometheus_blackbox_exporter_chart_version" {
+  default = "9.0.0"
+}
+
+variable "prometheus_blackbox_exporter_release_name" {
+  default = "blackbox-exporter"
+}
+
+variable "prometheus_blackbox_exporter_namespace" {
+  default = "monitoring"
+}
+
+variable "prometheus_blackbox_exporter_service_monitor_enabled" {
+  default = true
+}
+
+variable "prometheus_blackbox_exporter_service_monitor_labels" {
+  type = map(string)
+  default = {
+    release = "prometheus"
+  }
+}
+
+variable "prometheus_blackbox_exporter_http_targets" {
+  type    = list(string)
+  default = []
+}
+
+variable "prometheus_blackbox_exporter_http_timeout" {
+  default = "5s"
+}
+
 # ================== tempo ================== #
 variable "helm_tempo_enabled" {
   default = false
