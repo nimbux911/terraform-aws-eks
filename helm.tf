@@ -148,6 +148,23 @@ resource "helm_release" "ingress_nginx_additional" {
 
 }
 
+resource "helm_release" "envoy_gateway" {
+  count            = var.helm_envoy_gateway_enabled ? 1 : 0
+  name             = var.envoy_gateway_release_name
+  namespace        = var.envoy_gateway_namespace
+  create_namespace = true
+  repository       = "oci://docker.io/envoyproxy"
+  chart            = "gateway-helm"
+  version          = var.envoy_gateway_chart_version
+
+  set {
+    name  = "deployment.replicas"
+    value = var.envoy_gateway_replicas
+  }
+
+  depends_on = [time_sleep.wait_20_seconds]
+}
+
 resource "helm_release" "cluster_autoscaler" {
   count      = var.helm_cluster_autoscaler_enabled ? 1 : 0
   name       = "cluster-autoscaler"
@@ -380,6 +397,48 @@ resource "helm_release" "prometheus_stack" {
 
   depends_on = [time_sleep.wait_20_seconds]
 
+}
+
+resource "helm_release" "prometheus_blackbox_exporter" {
+  count            = var.helm_prometheus_blackbox_exporter_enabled ? 1 : 0
+  name             = var.prometheus_blackbox_exporter_release_name
+  namespace        = var.prometheus_blackbox_exporter_namespace
+  create_namespace = true
+  repository       = "https://prometheus-community.github.io/helm-charts"
+  chart            = "prometheus-blackbox-exporter"
+  version          = var.prometheus_blackbox_exporter_chart_version
+
+  values = [yamlencode({
+    serviceMonitor = {
+      enabled = var.prometheus_blackbox_exporter_service_monitor_enabled
+      defaults = {
+        labels = var.prometheus_blackbox_exporter_service_monitor_labels
+      }
+      targets = [
+        for target in var.prometheus_blackbox_exporter_http_targets : {
+          name   = trimsuffix(replace(replace(replace(replace(replace(target, "https://", ""), "http://", ""), "/", "-"), "_", "-"), ":", "-"), "-")
+          url    = target
+          module = "http_2xx"
+        }
+      ]
+    }
+
+    config = {
+      modules = {
+        http_2xx = {
+          prober  = "http"
+          timeout = var.prometheus_blackbox_exporter_http_timeout
+          http = {
+            method                = "GET"
+            preferred_ip_protocol = "ip4"
+            valid_status_codes    = []
+          }
+        }
+      }
+    }
+  })]
+
+  depends_on = [time_sleep.wait_20_seconds]
 }
 
 # ================== loki-distributed ================== #

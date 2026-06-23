@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.11.0] - 2026-06-22
+
+- Add optional Envoy Gateway Helm deployment and Gateway API resources.
+- Add optional Prometheus blackbox exporter deployment with ServiceMonitor support for Kubernetes internet egress probes.
+
 ## [5.10.0] - 2026-04-16
 
 - Upgrade Fluent Bit Helm chart to 0.57.2 and image to fluent-bit:5.0.2 versions.

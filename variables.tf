@@ -22,18 +22,19 @@ variable "custom_node_groups" {
   type = list(object({
     name = string
     values = object({
-      ami_id           = string,
-      instance_type    = string,
-      workers_public   = bool,
-      extra_sg_ids     = optional(list(string)),
-      instance_profile = optional(string),
-      asg_min          = number,
-      asg_max          = number,
-      subnets_ids      = list(string),
-      volume_type      = string,
-      volume_size      = number,
-      volume_iops      = optional(number),
-      k8s_labels       = optional(map(string)),
+      ami_id                  = string,
+      instance_type           = string,
+      instance_type_overrides = optional(list(string)),
+      workers_public          = bool,
+      extra_sg_ids            = optional(list(string)),
+      instance_profile        = optional(string),
+      asg_min                 = number,
+      asg_max                 = number,
+      subnets_ids             = list(string),
+      volume_type             = string,
+      volume_size             = number,
+      volume_iops             = optional(number),
+      k8s_labels              = optional(map(string)),
       asg_tags = optional(list(object({
         key   = string,
         value = string,
@@ -89,6 +90,10 @@ variable "on_demand_percentage_above_base_capacity" {
 
 variable "spot_allocation_strategy" {
   default = "capacity-optimized"
+}
+
+variable "capacity_rebalance" {
+  default = false
 }
 
 variable "spot_instance_pools" {
@@ -235,6 +240,88 @@ variable "ingress_extra_args" {
 # ================== ingress-nginx-additional =================
 
 variable "helm_ingress_nginx_additional_enabled" {
+  default = false
+}
+
+# ================== envoy gateway =================
+
+variable "helm_envoy_gateway_enabled" {
+  default = false
+}
+
+variable "envoy_gateway_chart_version" {
+  default = "v1.7.1"
+}
+
+variable "envoy_gateway_namespace" {
+  default = "envoy"
+}
+
+variable "envoy_gateway_release_name" {
+  default = "envoy-gateway"
+}
+
+variable "envoy_gateway_replicas" {
+  default = 1
+}
+
+variable "k8s_envoy_gateway_enabled" {
+  default = false
+}
+
+variable "envoy_gatewayclass_name" {
+  default = "envoy-external"
+}
+
+variable "envoy_internal_gatewayclass_name" {
+  default = "envoy-internal"
+}
+
+variable "envoy_gateway_name" {
+  default = "envoy-external"
+}
+
+variable "envoy_gateway_service_type" {
+  default = "ClusterIP"
+}
+
+variable "envoy_gateway_http_nodeport" {
+  default = 30080
+}
+
+variable "envoy_gateway_https_nodeport" {
+  default = 30443
+}
+
+variable "envoy_gateway_external_traffic_policy" {
+  default = "Cluster"
+}
+
+variable "k8s_envoy_internal_gateway_enabled" {
+  default = false
+}
+
+variable "envoy_internal_gateway_name" {
+  default = "envoy-internal"
+}
+
+variable "envoy_internal_gateway_service_type" {
+  default = "ClusterIP"
+}
+
+variable "envoy_internal_gateway_http_nodeport" {
+  default = 30180
+}
+
+variable "envoy_internal_gateway_https_nodeport" {
+  default = 30543
+}
+
+variable "envoy_internal_gateway_external_traffic_policy" {
+  default = "Cluster"
+}
+
+variable "k8s_envoy_proxy_service_monitor_enabled" {
   default = false
 }
 
@@ -647,6 +734,43 @@ variable "prometheus_metrics_retention" {
 
 variable "prometheus_additional_scrape_configs" {
   default = ""
+}
+
+# ================== prometheus-blackbox-exporter ================== #
+variable "helm_prometheus_blackbox_exporter_enabled" {
+  default = false
+}
+
+variable "prometheus_blackbox_exporter_chart_version" {
+  default = "9.0.0"
+}
+
+variable "prometheus_blackbox_exporter_release_name" {
+  default = "blackbox-exporter"
+}
+
+variable "prometheus_blackbox_exporter_namespace" {
+  default = "monitoring"
+}
+
+variable "prometheus_blackbox_exporter_service_monitor_enabled" {
+  default = true
+}
+
+variable "prometheus_blackbox_exporter_service_monitor_labels" {
+  type = map(string)
+  default = {
+    release = "prometheus"
+  }
+}
+
+variable "prometheus_blackbox_exporter_http_targets" {
+  type    = list(string)
+  default = []
+}
+
+variable "prometheus_blackbox_exporter_http_timeout" {
+  default = "5s"
 }
 
 # ================== tempo ================== #

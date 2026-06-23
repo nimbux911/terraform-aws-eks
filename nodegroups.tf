@@ -137,6 +137,7 @@ resource "aws_autoscaling_group" "eks" {
   vpc_zone_identifier = each.value.subnets_ids
   target_group_arns   = var.target_group_arns
   health_check_type   = var.health_check_type
+  capacity_rebalance  = each.value.spot_nodes_enabled == true ? var.capacity_rebalance : null
 
   mixed_instances_policy {
     dynamic "instances_distribution" {
@@ -152,6 +153,13 @@ resource "aws_autoscaling_group" "eks" {
       launch_template_specification {
         launch_template_id = aws_launch_template.eks_node_groups[each.key].id
         version            = "$Latest"
+      }
+
+      dynamic "override" {
+        for_each = each.value.spot_nodes_enabled == true && each.value.instance_type_overrides != null ? each.value.instance_type_overrides : []
+        content {
+          instance_type = override.value
+        }
       }
     }
   }
