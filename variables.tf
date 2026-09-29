@@ -736,6 +736,34 @@ variable "prometheus_additional_scrape_configs" {
   default = ""
 }
 
+# ================== beyla ================== #
+variable "helm_beyla_enabled" {
+  description = "Deploy Grafana Beyla as a DaemonSet to expose application metrics to Prometheus."
+  type        = bool
+  default     = false
+}
+
+variable "beyla_chart_version" {
+  description = "Version of the Grafana Beyla Helm chart."
+  type        = string
+  default     = "1.16.11"
+}
+
+variable "beyla_discovery_instrument" {
+  description = "Beyla discovery.instrument selectors; an empty list instruments all applications. For example: [{ k8s_namespace = \"qbi2\", k8s_deployment_name = \"recipe\" }]."
+  type        = list(map(string))
+  default     = []
+}
+
+variable "beyla_resources" {
+  description = "Kubernetes resources for each Beyla DaemonSet pod (requests and limits)."
+  type = object({
+    requests = optional(map(string), {})
+    limits   = optional(map(string), {})
+  })
+  default = {}
+}
+
 # ================== prometheus-blackbox-exporter ================== #
 variable "helm_prometheus_blackbox_exporter_enabled" {
   default = false

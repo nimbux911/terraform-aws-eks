@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.12.0]
+
+- Add optional Grafana Beyla DaemonSet to export application HTTP/gRPC metrics for Prometheus to scrape via a ServiceMonitor.
+- Allow selecting workloads with `beyla_discovery_instrument` (or discovering eligible applications cluster-wide by default), and configuring the Beyla chart version and pod resources.
+
 ## [5.11.0] - 2026-06-22
 
 - Add optional Envoy Gateway Helm deployment and Gateway API resources.

@@ -399,6 +399,59 @@ resource "helm_release" "prometheus_stack" {
 
 }
 
+# ================== beyla ================== #
+
+resource "helm_release" "beyla" {
+  count            = var.helm_beyla_enabled ? 1 : 0
+  name             = "beyla"
+  namespace        = "monitoring"
+  create_namespace = true
+  repository       = "https://grafana.github.io/helm-charts"
+  chart            = "beyla"
+  version          = var.beyla_chart_version
+  timeout          = 600
+
+  values = [yamlencode({
+    contextPropagation = {
+      enabled = false
+    }
+    config = {
+      data = merge(
+        {
+          attributes = {
+            kubernetes = {
+              enable = true
+            }
+          }
+          prometheus_export = {
+            port = 9090
+            path = "/metrics"
+          }
+        },
+        # Without discovery.instrument, Beyla discovers all applications.
+        length(var.beyla_discovery_instrument) == 0 ? {} : {
+          discovery = {
+            instrument = var.beyla_discovery_instrument
+          }
+        }
+      )
+    }
+    resources = var.beyla_resources
+    service = {
+      enabled = true
+    }
+    serviceMonitor = {
+      enabled          = true
+      additionalLabels = { release = "prometheus-stack" }
+      endpoint = {
+        honorLabels = true
+      }
+    }
+  })]
+
+  # The ServiceMonitor CRD must be installed before enabling Beyla.
+}
+
 resource "helm_release" "prometheus_blackbox_exporter" {
   count            = var.helm_prometheus_blackbox_exporter_enabled ? 1 : 0
   name             = var.prometheus_blackbox_exporter_release_name
