@@ -13,7 +13,7 @@ Terraform module which creates EKS Cluster and dependent resources on AWS.
 - [Fluent Bit Helm Chart](https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit)
 - [Tempo Distributed Helm Chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo-distributed)
 - [Grafana Helm Chart](https://github.com/grafana/helm-charts/tree/main/charts/grafana)
-
+- [Grafana Beyla Helm Chart](https://github.com/grafana/beyla/tree/main/charts/beyla)
 
 ## Usage
 
