@@ -416,25 +416,23 @@ resource "helm_release" "beyla" {
       enabled = false
     }
     config = {
-      data = merge(
-        {
-          attributes = {
-            kubernetes = {
-              enable = true
-            }
-          }
-          prometheus_export = {
-            port = 9090
-            path = "/metrics"
-          }
-        },
-        # Without discovery.instrument, Beyla discovers all applications.
-        length(var.beyla_discovery_instrument) == 0 ? {} : {
-          discovery = {
-            instrument = var.beyla_discovery_instrument
+      data = {
+        attributes = {
+          kubernetes = {
+            enable = true
           }
         }
-      )
+        prometheus_export = {
+          port = 9090
+          path = "/metrics"
+        }
+        discovery = {
+          # Explicit selection is needed because setting discovery disables
+          # the chart's default cluster-wide discovery configuration.
+          instrument         = length(var.beyla_discovery_instrument) == 0 ? [{ k8s_namespace = "*" }] : var.beyla_discovery_instrument
+          exclude_instrument = var.beyla_discovery_exclude_instrument
+        }
+      }
     }
     resources = var.beyla_resources
     service = {
@@ -443,9 +441,15 @@ resource "helm_release" "beyla" {
     serviceMonitor = {
       enabled          = true
       additionalLabels = { release = "prometheus-stack" }
-      endpoint = {
+      endpoint = merge({
         honorLabels = true
-      }
+        }, length(var.beyla_prometheus_metric_names) == 0 ? {} : {
+        metricRelabelings = [{
+          sourceLabels = ["__name__"]
+          regex        = join("|", var.beyla_prometheus_metric_names)
+          action       = "keep"
+        }]
+      })
     }
   })]
 

@@ -750,9 +750,26 @@ variable "beyla_chart_version" {
 }
 
 variable "beyla_discovery_instrument" {
-  description = "Beyla discovery.instrument selectors; an empty list instruments all applications. For example: [{ k8s_namespace = \"qbi2\", k8s_deployment_name = \"recipe\" }]."
+  description = "Beyla discovery.instrument selectors; an empty list selects all Kubernetes namespaces, subject to exclusions. For example: [{ k8s_namespace = \"qbi2\", k8s_deployment_name = \"recipe\" }]."
   type        = list(map(string))
   default     = []
+}
+
+variable "beyla_discovery_exclude_instrument" {
+  description = "Beyla discovery.exclude_instrument selectors, in addition to Beyla's built-in exclusions. No additional workloads are excluded by default."
+  type        = list(map(string))
+  default     = []
+}
+
+variable "beyla_prometheus_metric_names" {
+  description = "Exact metric names to retain in Beyla's ServiceMonitor. An empty list disables the allowlist and retains all exported metrics."
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition     = alltrue([for name in var.beyla_prometheus_metric_names : can(regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$", name))])
+    error_message = "Each entry must be a valid Prometheus metric name, not a regular expression."
+  }
 }
 
 variable "beyla_resources" {
