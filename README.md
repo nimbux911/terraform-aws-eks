@@ -20,6 +20,39 @@ Terraform module which creates EKS Cluster and dependent resources on AWS.
 #### Terraform required version >= 1.5.7
 #### EKS required version >= 1.31
 
+### Grafana Beyla
+
+Set `helm_beyla_enabled = true` to deploy Beyla. By default it selects applications
+in all Kubernetes namespaces, subject to Beyla's built-in exclusions. The module
+adds no workload exclusions or metric allowlist by default.
+
+Use `beyla_discovery_instrument` to restrict selection and
+`beyla_discovery_exclude_instrument` to add client-specific exclusions.
+Selectors use Beyla's glob matching and actual Kubernetes metadata, not exported
+`service_namespace` labels. Infrastructure installed in other namespaces must
+be added to the exclusion list.
+
+Use `beyla_prometheus_metric_names` to retain exact metric names in Beyla's
+ServiceMonitor. An empty list retains all exported metrics. For example:
+
+```hcl
+beyla_discovery_exclude_instrument = [
+  { k8s_namespace = "monitoring" },
+  { k8s_namespace = "ingress-nginx" },
+]
+beyla_prometheus_metric_names = [
+  "http_server_request_duration_seconds_bucket",
+  "http_server_request_duration_seconds_sum",
+  "http_server_request_duration_seconds_count",
+]
+```
+
+This example supports request rates, average latency, error rates, and histogram
+percentiles. Other metrics are discarded before Prometheus ingestion; this filter
+does not prevent their generation in Beyla. Attributes, pod identity, and bucket
+boundaries are preserved. These settings affect only Beyla instrumentation and
+its scrape, not other exporters or ServiceMonitors.
+
 ## Elastic Kubernetes Service
 
 EKS Cluster with ELB:

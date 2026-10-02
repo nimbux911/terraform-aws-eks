@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.13.0]
+
+- Add optional `beyla_prometheus_metric_names` allowlist for Beyla's ServiceMonitor; all metrics are retained by default.
+- Add configurable `beyla_discovery_exclude_instrument` selectors without additional exclusions by default.
+
 ## [5.12.0]
 
 - Add optional Grafana Beyla DaemonSet to export application HTTP/gRPC metrics for Prometheus to scrape via a ServiceMonitor.
