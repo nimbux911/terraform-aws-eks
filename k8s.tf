@@ -117,6 +117,7 @@ resource "kubernetes_manifest" "envoy_gateway_proxy_config" {
     name                    = var.envoy_gateway_name
     namespace               = var.envoy_gateway_namespace
     replicas                = var.envoy_gateway_proxy_replicas
+    hpa                     = var.envoy_gateway_proxy_hpa
     service_type            = var.envoy_gateway_service_type
     external_traffic_policy = var.envoy_gateway_external_traffic_policy
     nodeport_enabled        = var.envoy_gateway_service_type == "NodePort"
@@ -176,6 +177,7 @@ resource "kubernetes_manifest" "envoy_internal_gateway_proxy_config" {
     name                    = var.envoy_internal_gateway_name
     namespace               = var.envoy_gateway_namespace
     replicas                = var.envoy_internal_gateway_proxy_replicas
+    hpa                     = var.envoy_internal_gateway_proxy_hpa
     service_type            = var.envoy_internal_gateway_service_type
     external_traffic_policy = var.envoy_internal_gateway_external_traffic_policy
     nodeport_enabled        = var.envoy_internal_gateway_service_type == "NodePort"

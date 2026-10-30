@@ -266,7 +266,7 @@ variable "envoy_gateway_replicas" {
 }
 
 variable "envoy_gateway_proxy_replicas" {
-  description = "Fixed number of external Envoy Proxy replicas, independent of the Gateway controller replicas."
+  description = "Fixed number of external Envoy Proxy replicas when its HPA is disabled, independent of the Gateway controller replicas."
   type        = number
   default     = 1
 
@@ -277,13 +277,57 @@ variable "envoy_gateway_proxy_replicas" {
 }
 
 variable "envoy_internal_gateway_proxy_replicas" {
-  description = "Fixed number of internal Envoy Proxy replicas, independent of the Gateway controller replicas."
+  description = "Fixed number of internal Envoy Proxy replicas when its HPA is disabled, independent of the Gateway controller replicas."
   type        = number
   default     = 1
 
   validation {
     condition     = var.envoy_internal_gateway_proxy_replicas >= 1 && floor(var.envoy_internal_gateway_proxy_replicas) == var.envoy_internal_gateway_proxy_replicas
     error_message = "envoy_internal_gateway_proxy_replicas must be a positive integer."
+  }
+}
+
+variable "envoy_gateway_proxy_hpa" {
+  description = "Optional CPU-based HPA for the external Envoy Proxy. Set to {} to enable defaults; null keeps fixed replicas."
+  type = object({
+    min_replicas               = optional(number, 2)
+    max_replicas               = optional(number, 5)
+    cpu_utilization_percentage = optional(number, 70)
+  })
+  default = null
+
+  validation {
+    condition = var.envoy_gateway_proxy_hpa == null ? true : (
+      var.envoy_gateway_proxy_hpa.min_replicas >= 2 &&
+      floor(var.envoy_gateway_proxy_hpa.min_replicas) == var.envoy_gateway_proxy_hpa.min_replicas &&
+      var.envoy_gateway_proxy_hpa.max_replicas >= var.envoy_gateway_proxy_hpa.min_replicas &&
+      floor(var.envoy_gateway_proxy_hpa.max_replicas) == var.envoy_gateway_proxy_hpa.max_replicas &&
+      var.envoy_gateway_proxy_hpa.cpu_utilization_percentage > 0 &&
+      floor(var.envoy_gateway_proxy_hpa.cpu_utilization_percentage) == var.envoy_gateway_proxy_hpa.cpu_utilization_percentage
+    )
+    error_message = "External proxy HPA requires integer min_replicas >= 2, max_replicas >= min_replicas, and a positive integer CPU utilization percentage."
+  }
+}
+
+variable "envoy_internal_gateway_proxy_hpa" {
+  description = "Optional CPU-based HPA for the internal Envoy Proxy. Set to {} to enable defaults; null keeps fixed replicas."
+  type = object({
+    min_replicas               = optional(number, 2)
+    max_replicas               = optional(number, 5)
+    cpu_utilization_percentage = optional(number, 70)
+  })
+  default = null
+
+  validation {
+    condition = var.envoy_internal_gateway_proxy_hpa == null ? true : (
+      var.envoy_internal_gateway_proxy_hpa.min_replicas >= 2 &&
+      floor(var.envoy_internal_gateway_proxy_hpa.min_replicas) == var.envoy_internal_gateway_proxy_hpa.min_replicas &&
+      var.envoy_internal_gateway_proxy_hpa.max_replicas >= var.envoy_internal_gateway_proxy_hpa.min_replicas &&
+      floor(var.envoy_internal_gateway_proxy_hpa.max_replicas) == var.envoy_internal_gateway_proxy_hpa.max_replicas &&
+      var.envoy_internal_gateway_proxy_hpa.cpu_utilization_percentage > 0 &&
+      floor(var.envoy_internal_gateway_proxy_hpa.cpu_utilization_percentage) == var.envoy_internal_gateway_proxy_hpa.cpu_utilization_percentage
+    )
+    error_message = "Internal proxy HPA requires integer min_replicas >= 2, max_replicas >= min_replicas, and a positive integer CPU utilization percentage."
   }
 }
 

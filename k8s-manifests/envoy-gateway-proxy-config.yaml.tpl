@@ -7,8 +7,21 @@ spec:
   provider:
     type: Kubernetes
     kubernetes:
+%{ if hpa != null ~}
+      envoyHpa:
+        minReplicas: ${hpa.min_replicas}
+        maxReplicas: ${hpa.max_replicas}
+        metrics:
+          - type: Resource
+            resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: ${hpa.cpu_utilization_percentage}
+%{ else ~}
       envoyDeployment:
         replicas: ${replicas}
+%{ endif ~}
       envoyService:
         type: ${service_type}
         externalTrafficPolicy: ${external_traffic_policy}
