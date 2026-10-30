@@ -8,8 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [5.14.0]
 
 - Add independent fixed replica counts for the external and internal Envoy Proxy Deployments, preserving one replica by default and without enabling autoscaling.
-- Add an optional external Gateway `ClientTrafficPolicy` for X-Forwarded-For client IP detection with configurable trusted proxy hops.
-- Document how to move an existing caller-managed client IP policy into the module without recreating it.
 
 ## [5.13.0]
 

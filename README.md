@@ -20,7 +20,7 @@ Terraform module which creates EKS Cluster and dependent resources on AWS.
 #### Terraform required version >= 1.5.7
 #### EKS required version >= 1.31
 
-### Envoy Gateway replicas and client IP detection
+### Envoy Gateway replicas
 
 `envoy_gateway_replicas` controls the Envoy Gateway controller, not the proxies
 that handle application traffic. Configure fixed proxy replica counts separately:
@@ -32,38 +32,6 @@ envoy_internal_gateway_proxy_replicas = 2
 ```
 
 Both proxy replica counts default to `1`. These settings do not create an HPA.
-
-For an external Gateway behind an ALB, client IP detection can be managed once
-at the Gateway, rather than by each application's Helm release:
-
-```hcl
-envoy_external_client_ip_policy_enabled = true
-envoy_external_client_ip_trusted_hops   = 1
-```
-
-The policy is disabled by default and requires the Envoy CRDs, Helm release,
-and external Gateway to be enabled. Install the chart and CRDs before enabling
-Gateway resources and the policy in a first-time deployment. Set trusted hops
-to match the actual trusted proxy chain.
-
-#### Migrating an existing caller-managed client IP policy
-
-When the caller already manages the same policy, enable it in the module and
-remove the caller's resource declaration in the same change. Preserve its name,
-namespace, and trusted hops, and add a `moved` block in the caller to transfer
-Terraform ownership without deleting the Kubernetes object. For example, when
-the module is named `eks_main`:
-
-```hcl
-moved {
-  from = kubernetes_manifest.envoy_external_client_ip[0]
-  to   = module.eks_main.kubernetes_manifest.envoy_external_client_ip[0]
-}
-```
-
-Review the caller's plan to confirm that the policy is moved rather than
-destroyed and recreated. The module cannot declare this cross-module move on
-behalf of its caller.
 
 ### Grafana Beyla
 
