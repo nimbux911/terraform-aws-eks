@@ -49,9 +49,9 @@ envoy_internal_gateway_proxy_hpa = {
 ```
 
 Setting either HPA input to `{}` enables these defaults. Set it to `null` to
-use the corresponding fixed replica count instead. The minimum must be at least
-two replicas. When HPA is enabled, the module omits `envoyDeployment.replicas`
-so that Envoy Gateway and Terraform do not compete with the autoscaler.
+use the corresponding fixed replica count instead. When HPA is enabled, the
+module omits `envoyDeployment.replicas` so that Envoy Gateway and Terraform do
+not compete with the autoscaler.
 
 Envoy Gateway creates and manages the HPA through `EnvoyProxy.spec.provider.kubernetes.envoyHpa`.
 The CPU target is a percentage of pod CPU requests, not node CPU capacity.

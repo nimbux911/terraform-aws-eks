@@ -295,18 +295,6 @@ variable "envoy_gateway_proxy_hpa" {
     cpu_utilization_percentage = optional(number, 70)
   })
   default = null
-
-  validation {
-    condition = var.envoy_gateway_proxy_hpa == null ? true : (
-      var.envoy_gateway_proxy_hpa.min_replicas >= 2 &&
-      floor(var.envoy_gateway_proxy_hpa.min_replicas) == var.envoy_gateway_proxy_hpa.min_replicas &&
-      var.envoy_gateway_proxy_hpa.max_replicas >= var.envoy_gateway_proxy_hpa.min_replicas &&
-      floor(var.envoy_gateway_proxy_hpa.max_replicas) == var.envoy_gateway_proxy_hpa.max_replicas &&
-      var.envoy_gateway_proxy_hpa.cpu_utilization_percentage > 0 &&
-      floor(var.envoy_gateway_proxy_hpa.cpu_utilization_percentage) == var.envoy_gateway_proxy_hpa.cpu_utilization_percentage
-    )
-    error_message = "External proxy HPA requires integer min_replicas >= 2, max_replicas >= min_replicas, and a positive integer CPU utilization percentage."
-  }
 }
 
 variable "envoy_internal_gateway_proxy_hpa" {
@@ -317,18 +305,6 @@ variable "envoy_internal_gateway_proxy_hpa" {
     cpu_utilization_percentage = optional(number, 70)
   })
   default = null
-
-  validation {
-    condition = var.envoy_internal_gateway_proxy_hpa == null ? true : (
-      var.envoy_internal_gateway_proxy_hpa.min_replicas >= 2 &&
-      floor(var.envoy_internal_gateway_proxy_hpa.min_replicas) == var.envoy_internal_gateway_proxy_hpa.min_replicas &&
-      var.envoy_internal_gateway_proxy_hpa.max_replicas >= var.envoy_internal_gateway_proxy_hpa.min_replicas &&
-      floor(var.envoy_internal_gateway_proxy_hpa.max_replicas) == var.envoy_internal_gateway_proxy_hpa.max_replicas &&
-      var.envoy_internal_gateway_proxy_hpa.cpu_utilization_percentage > 0 &&
-      floor(var.envoy_internal_gateway_proxy_hpa.cpu_utilization_percentage) == var.envoy_internal_gateway_proxy_hpa.cpu_utilization_percentage
-    )
-    error_message = "Internal proxy HPA requires integer min_replicas >= 2, max_replicas >= min_replicas, and a positive integer CPU utilization percentage."
-  }
 }
 
 variable "k8s_envoy_gateway_enabled" {
