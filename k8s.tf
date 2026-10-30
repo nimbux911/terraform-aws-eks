@@ -154,7 +154,6 @@ resource "kubernetes_manifest" "envoy_gateway" {
   ]
 }
 
-# ClientTrafficPolicy targets are namespace-local and shared by the Gateway routes.
 resource "kubernetes_manifest" "envoy_external_client_ip" {
   count = var.envoy_external_client_ip_policy_enabled ? 1 : 0
 
