@@ -7,6 +7,8 @@ spec:
   provider:
     type: Kubernetes
     kubernetes:
+      envoyDeployment:
+        replicas: ${replicas}
       envoyService:
         type: ${service_type}
         externalTrafficPolicy: ${external_traffic_policy}

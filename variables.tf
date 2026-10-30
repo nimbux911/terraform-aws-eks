@@ -265,6 +265,45 @@ variable "envoy_gateway_replicas" {
   default = 1
 }
 
+variable "envoy_gateway_proxy_replicas" {
+  description = "Fixed number of external Envoy Proxy replicas, independent of the Gateway controller replicas."
+  type        = number
+  default     = 1
+
+  validation {
+    condition     = var.envoy_gateway_proxy_replicas >= 1 && floor(var.envoy_gateway_proxy_replicas) == var.envoy_gateway_proxy_replicas
+    error_message = "envoy_gateway_proxy_replicas must be a positive integer."
+  }
+}
+
+variable "envoy_internal_gateway_proxy_replicas" {
+  description = "Fixed number of internal Envoy Proxy replicas, independent of the Gateway controller replicas."
+  type        = number
+  default     = 1
+
+  validation {
+    condition     = var.envoy_internal_gateway_proxy_replicas >= 1 && floor(var.envoy_internal_gateway_proxy_replicas) == var.envoy_internal_gateway_proxy_replicas
+    error_message = "envoy_internal_gateway_proxy_replicas must be a positive integer."
+  }
+}
+
+variable "envoy_external_client_ip_policy_enabled" {
+  description = "Whether to configure X-Forwarded-For client IP detection on the external Envoy Gateway. Requires the Envoy CRDs and external Gateway."
+  type        = bool
+  default     = false
+}
+
+variable "envoy_external_client_ip_trusted_hops" {
+  description = "Number of trusted proxy hops before the external Envoy Gateway, such as a single ALB."
+  type        = number
+  default     = 1
+
+  validation {
+    condition     = var.envoy_external_client_ip_trusted_hops >= 0 && floor(var.envoy_external_client_ip_trusted_hops) == var.envoy_external_client_ip_trusted_hops
+    error_message = "envoy_external_client_ip_trusted_hops must be a non-negative integer."
+  }
+}
+
 variable "k8s_envoy_gateway_enabled" {
   default = false
 }

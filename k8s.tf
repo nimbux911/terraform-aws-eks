@@ -116,6 +116,7 @@ resource "kubernetes_manifest" "envoy_gateway_proxy_config" {
   manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-gateway-proxy-config.yaml.tpl", {
     name                    = var.envoy_gateway_name
     namespace               = var.envoy_gateway_namespace
+    replicas                = var.envoy_gateway_proxy_replicas
     service_type            = var.envoy_gateway_service_type
     external_traffic_policy = var.envoy_gateway_external_traffic_policy
     nodeport_enabled        = var.envoy_gateway_service_type == "NodePort"
@@ -153,6 +154,41 @@ resource "kubernetes_manifest" "envoy_gateway" {
   ]
 }
 
+# ClientTrafficPolicy targets are namespace-local and shared by the Gateway routes.
+resource "kubernetes_manifest" "envoy_external_client_ip" {
+  count = var.envoy_external_client_ip_policy_enabled ? 1 : 0
+
+  manifest = {
+    apiVersion = "gateway.envoyproxy.io/v1alpha1"
+    kind       = "ClientTrafficPolicy"
+    metadata = {
+      name      = "${var.envoy_gateway_name}-client-ip"
+      namespace = var.envoy_gateway_namespace
+    }
+    spec = {
+      targetRefs = [{
+        group = "gateway.networking.k8s.io"
+        kind  = "Gateway"
+        name  = var.envoy_gateway_name
+      }]
+      clientIPDetection = {
+        xForwardedFor = {
+          numTrustedHops = var.envoy_external_client_ip_trusted_hops
+        }
+      }
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition     = var.helm_envoy_gateway_enabled && var.k8s_envoy_gateway_enabled
+      error_message = "The external Envoy Gateway must be enabled to configure client IP detection."
+    }
+  }
+
+  depends_on = [kubernetes_manifest.envoy_gateway]
+}
+
 resource "kubernetes_manifest" "envoy_internal_gatewayclass" {
   count = var.k8s_envoy_internal_gateway_enabled ? 1 : 0
 
@@ -174,6 +210,7 @@ resource "kubernetes_manifest" "envoy_internal_gateway_proxy_config" {
   manifest = yamldecode(templatefile("${path.module}/k8s-manifests/envoy-gateway-proxy-config.yaml.tpl", {
     name                    = var.envoy_internal_gateway_name
     namespace               = var.envoy_gateway_namespace
+    replicas                = var.envoy_internal_gateway_proxy_replicas
     service_type            = var.envoy_internal_gateway_service_type
     external_traffic_policy = var.envoy_internal_gateway_external_traffic_policy
     nodeport_enabled        = var.envoy_internal_gateway_service_type == "NodePort"
