@@ -20,6 +20,45 @@ Terraform module which creates EKS Cluster and dependent resources on AWS.
 #### Terraform required version >= 1.5.7
 #### EKS required version >= 1.31
 
+### Envoy Gateway replicas and autoscaling
+
+`envoy_gateway_replicas` controls the Envoy Gateway controller, not the proxies
+that handle application traffic. Configure fixed proxy replica counts separately:
+
+```hcl
+envoy_gateway_replicas                = 2
+envoy_gateway_proxy_replicas          = 2
+envoy_internal_gateway_proxy_replicas = 2
+```
+
+Both proxy replica counts default to `1`. Autoscaling is disabled by default.
+
+To enable CPU-based autoscaling independently for both proxies:
+
+```hcl
+envoy_gateway_proxy_hpa = {
+  min_replicas               = 2
+  max_replicas               = 5
+  cpu_utilization_percentage = 70
+}
+envoy_internal_gateway_proxy_hpa = {
+  min_replicas               = 2
+  max_replicas               = 5
+  cpu_utilization_percentage = 70
+}
+```
+
+Setting either HPA input to `{}` enables these defaults. Set it to `null` to
+use the corresponding fixed replica count instead. When HPA is enabled, the
+module omits `envoyDeployment.replicas` so that Envoy Gateway and Terraform do
+not compete with the autoscaler.
+
+Envoy Gateway creates and manages the HPA through `EnvoyProxy.spec.provider.kubernetes.envoyHpa`.
+The CPU target is a percentage of pod CPU requests, not node CPU capacity.
+The cluster must provide resource metrics, and every proxy pod container must
+have a CPU request. Envoy Gateway v1.7.1 provides CPU requests for the default
+Envoy and shutdown-manager containers.
+
 ### Grafana Beyla
 
 Set `helm_beyla_enabled = true` to deploy Beyla. By default it selects applications

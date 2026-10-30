@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.14.0]
+
+- Add independent fixed replica counts for the external and internal Envoy Proxy Deployments, preserving one replica by default.
+- Add optional CPU-based autoscaling for each Envoy Proxy through Envoy Gateway-managed HPAs, with a default minimum of two replicas, a default maximum of five, and a default CPU utilization target of 70%.
+- Keep autoscaling disabled by default and omit fixed deployment replicas when an HPA is configured.
+
 ## [5.13.0]
 
 - Add optional `beyla_prometheus_metric_names` allowlist for Beyla's ServiceMonitor; all metrics are retained by default.
