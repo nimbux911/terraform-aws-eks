@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.15.0]
+
+- Add optional per-container CPU and memory requests and limits for the external and internal Envoy proxies, including shutdown-manager.
+- Preserve Envoy Gateway resource defaults when no overrides are configured and keep replica ownership with the HPA when autoscaling is enabled.
+
 ## [5.14.0]
 
 - Add independent fixed replica counts for the external and internal Envoy Proxy Deployments, preserving one replica by default.

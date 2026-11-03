@@ -307,6 +307,26 @@ variable "envoy_internal_gateway_proxy_hpa" {
   default = null
 }
 
+variable "envoy_gateway_proxy_resources" {
+  description = "Per-container CPU and memory requests and limits for the external proxy, keyed by envoy or shutdown-manager."
+  type = map(object({
+    requests = map(string)
+    limits   = map(string)
+  }))
+  default  = {}
+  nullable = false
+}
+
+variable "envoy_internal_gateway_proxy_resources" {
+  description = "Per-container CPU and memory requests and limits for the internal proxy, keyed by envoy or shutdown-manager."
+  type = map(object({
+    requests = map(string)
+    limits   = map(string)
+  }))
+  default  = {}
+  nullable = false
+}
+
 variable "k8s_envoy_gateway_enabled" {
   default = false
 }
