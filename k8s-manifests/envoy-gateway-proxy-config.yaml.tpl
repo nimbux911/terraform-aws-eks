@@ -18,9 +18,21 @@ spec:
               target:
                 type: Utilization
                 averageUtilization: ${hpa.cpu_utilization_percentage}
-%{ else ~}
+%{ endif ~}
+%{ if hpa == null || length(container_resources) > 0 ~}
       envoyDeployment:
+%{ if hpa == null ~}
         replicas: ${replicas}
+%{ endif ~}
+%{ if length(container_resources) > 0 ~}
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              template:
+                spec:
+                  containers: ${jsonencode([for name, resources in container_resources : { name = name, resources = resources }])}
+%{ endif ~}
 %{ endif ~}
       envoyService:
         type: ${service_type}

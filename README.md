@@ -59,6 +59,36 @@ The cluster must provide resource metrics, and every proxy pod container must
 have a CPU request. Envoy Gateway v1.7.1 provides CPU requests for the default
 Envoy and shutdown-manager containers.
 
+### Envoy Proxy resource requests and limits
+
+Use `envoy_gateway_proxy_resources` and `envoy_internal_gateway_proxy_resources`
+to configure the `envoy` and `shutdown-manager` containers independently for each
+proxy. Both inputs default to `{}`, preserving Envoy Gateway's resource defaults.
+
+```hcl
+envoy_gateway_proxy_resources = {
+  envoy = {
+    requests = { cpu = "100m", memory = "512Mi" }
+    limits   = { cpu = "1000m", memory = "1Gi" }
+  }
+  shutdown-manager = {
+    requests = { cpu = "10m", memory = "32Mi" }
+    limits   = { cpu = "100m", memory = "128Mi" }
+  }
+}
+```
+
+The internal proxy accepts the same configuration through
+`envoy_internal_gateway_proxy_resources`. Requests and limits are specified
+together to avoid unintentionally changing CPU requests, which determine the
+CPU-based HPA utilization percentage. Container overrides are applied through
+an EnvoyDeployment strategic merge patch and do not set a fixed replica count
+when HPA is enabled.
+
+Changing these resources updates the pod template and triggers a rolling
+deployment update. Check available capacity, readiness, graceful shutdown,
+and the deployment's rolling update strategy before applying to live traffic.
+
 ### Grafana Beyla
 
 Set `helm_beyla_enabled = true` to deploy Beyla. By default it selects applications
