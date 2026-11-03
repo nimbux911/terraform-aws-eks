@@ -416,29 +416,60 @@ resource "helm_release" "beyla" {
       enabled = false
     }
     config = {
-      data = {
-        attributes = {
+      data = merge({
+        attributes = merge({
           kubernetes = {
             enable = true
           }
-        }
-        prometheus_export = {
+          }, length(var.beyla_http_server_duration_excluded_attributes) == 0 ? {} : {
+          select = {
+            http_server_request_duration = {
+              exclude = var.beyla_http_server_duration_excluded_attributes
+            }
+          }
+        })
+        prometheus_export = merge({
           port = 9090
           path = "/metrics"
-        }
+          }, var.beyla_prometheus_ttl == null ? {} : {
+          ttl = var.beyla_prometheus_ttl
+        })
         discovery = {
           # Explicit selection is needed because setting discovery disables
           # the chart's default cluster-wide discovery configuration.
           instrument         = length(var.beyla_discovery_instrument) == 0 ? [{ k8s_namespace = "*" }] : var.beyla_discovery_instrument
           exclude_instrument = var.beyla_discovery_exclude_instrument
         }
-      }
+        }, var.beyla_internal_metrics_enabled ? {
+        internal_metrics = {
+          exporter = "prometheus"
+          prometheus = {
+            port = 6060
+            path = "/internal/metrics"
+          }
+          avoided_services = {
+            disabled = true
+          }
+        }
+        } : {}, length(var.beyla_ignored_http_routes) == 0 ? {} : {
+        routes = {
+          # Match the original URL path, not the heuristic http.route value.
+          ignored_patterns = var.beyla_ignored_http_routes
+          ignore_mode      = "all"
+          unmatched        = "heuristic"
+        }
+      })
     }
     resources = var.beyla_resources
-    service = {
+    service = merge({
       enabled = true
-    }
-    serviceMonitor = {
+      }, var.beyla_internal_metrics_enabled ? {
+      internalMetrics = {
+        # Chart 1.16.11 omits the container port when both targetPort overrides are null.
+        targetPort = 6060
+      }
+    } : {})
+    serviceMonitor = merge({
       enabled          = true
       additionalLabels = { release = "prometheus-stack" }
       endpoint = merge({
@@ -450,7 +481,13 @@ resource "helm_release" "beyla" {
           action       = "keep"
         }]
       })
-    }
+      }, var.beyla_internal_metrics_enabled ? {
+      internalMetrics = {
+        endpoint = {
+          interval = "30s"
+        }
+      }
+    } : {})
   })]
 
   # The ServiceMonitor CRD must be installed before enabling Beyla.

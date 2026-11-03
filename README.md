@@ -122,6 +122,43 @@ does not prevent their generation in Beyla. Attributes, pod identity, and bucket
 boundaries are preserved. These settings affect only Beyla instrumentation and
 its scrape, not other exporters or ServiceMonitors.
 
+For service-level HTTP dashboards, reduce sparse time series by excluding the route
+attribute before Beyla aggregates observations and retaining inactive metrics longer:
+
+```hcl
+beyla_http_server_duration_excluded_attributes = ["http.route"]
+beyla_prometheus_ttl                          = "30m"
+```
+
+Both settings are opt-in and apply to all instrumented services in this release.
+Excluding `http.route` removes per-route breakdowns from the HTTP server duration
+histogram, including its buckets, sum, and count. Pod, method, and status attributes
+remain available. Do not drop the route label using Prometheus metric relabeling:
+that does not aggregate observations and can create duplicate samples.
+Longer retention reduces series recreation but does not guarantee exact request
+counts with `rate` or `increase`, particularly for newly created series.
+
+To retain Beyla's diagnostic metrics and exclude health checks from application
+telemetry:
+
+```hcl
+beyla_internal_metrics_enabled = true
+beyla_ignored_http_routes      = ["/health", "/healthcheck"]
+```
+
+Internal metrics are served on port `6060` at `/internal/metrics`. The chart adds
+the container and Service ports and a separate ServiceMonitor endpoint with a
+`30s` interval. The application metric allowlist does not apply to that endpoint.
+The avoided-services diagnostic is disabled to preserve the previous production
+configuration. Internal metrics remain disabled by default.
+
+Ignored paths use Beyla's `routes.ignored_patterns` with `ignore_mode = "all"`.
+They match the original URL path before heuristic route normalization, excluding
+both application metrics and traces even when `http.route` is not exported.
+Other paths retain heuristic route normalization. Do not use a filter on
+`http.route` for health checks: `/health` may have been normalized to `/*`.
+An empty list leaves the routes configuration unchanged.
+
 ## Elastic Kubernetes Service
 
 EKS Cluster with ELB:

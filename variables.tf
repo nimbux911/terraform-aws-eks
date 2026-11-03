@@ -834,6 +834,30 @@ variable "beyla_prometheus_metric_names" {
   }
 }
 
+variable "beyla_prometheus_ttl" {
+  description = "Beyla Prometheus metric inactivity TTL (for example, 30m). Null preserves Beyla's default."
+  type        = string
+  default     = null
+}
+
+variable "beyla_http_server_duration_excluded_attributes" {
+  description = "Attributes to exclude from Beyla's HTTP server duration histogram before aggregation. An empty list preserves the default attributes."
+  type        = list(string)
+  default     = []
+}
+
+variable "beyla_internal_metrics_enabled" {
+  description = "Expose Beyla internal metrics on port 6060 at /internal/metrics and scrape them every 30s independently of the application metric allowlist."
+  type        = bool
+  default     = false
+}
+
+variable "beyla_ignored_http_routes" {
+  description = "Original HTTP URL path patterns to exclude from application metrics and traces via routes.ignored_patterns (for example, /health and /healthcheck)."
+  type        = list(string)
+  default     = []
+}
+
 variable "beyla_resources" {
   description = "Kubernetes resources for each Beyla DaemonSet pod (requests and limits)."
   type = object({
