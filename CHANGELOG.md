@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.16.0]
+
+- Add optional `beyla_prometheus_ttl` to configure inactive metric retention without changing the default.
+- Add optional `beyla_http_server_duration_excluded_attributes` to reduce HTTP server histogram cardinality before aggregation.
+- Add optional `beyla_internal_metrics_enabled` with a dedicated Prometheus endpoint and 30s scrape interval, independent of the application metric allowlist.
+- Add optional `beyla_ignored_http_routes` using `routes.ignored_patterns` to exclude health checks by original URL path from both metrics and traces, rather than matching heuristic route names.
+
 ## [5.15.0]
 
 - Add optional per-container CPU and memory requests and limits for the external and internal Envoy proxies, including shutdown-manager.
