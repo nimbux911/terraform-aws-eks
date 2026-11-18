@@ -247,26 +247,30 @@ locals {
     ]
   }
 
-  prometheus_metric_drop_values = merge(
-    length(local.prometheus_metric_drop_rules.apiserver) == 0 ? {} : {
-      kubeApiServer = {
-        serviceMonitor = {
-          metricRelabelings = local.prometheus_metric_drop_rules.apiserver
-        }
-      }
-    },
-    alltrue([for endpoint in ["cadvisor", "probes"] : length(local.prometheus_metric_drop_rules[endpoint]) == 0]) ? {} : {
-      kubelet = {
-        serviceMonitor = {
-          for endpoint, key in {
-            cadvisor = "cAdvisorMetricRelabelings"
-            probes   = "probesMetricRelabelings"
-          } : key => local.prometheus_metric_drop_rules[endpoint]
-          if length(local.prometheus_metric_drop_rules[endpoint]) > 0
-        }
+  prometheus_metric_drop_targets = {
+    kubeApiServer = {
+      apiserver = "metricRelabelings"
+    }
+    kubelet = {
+      cadvisor = "cAdvisorMetricRelabelings"
+      probes   = "probesMetricRelabelings"
+    }
+  }
+
+  prometheus_metric_drop_values = {
+    for component, endpoints in local.prometheus_metric_drop_targets :
+    component => {
+      serviceMonitor = {
+        for endpoint, key in endpoints :
+        key => local.prometheus_metric_drop_rules[endpoint]
+        if length(local.prometheus_metric_drop_rules[endpoint]) > 0
       }
     }
-  )
+    if anytrue([
+      for endpoint in keys(endpoints) :
+      length(local.prometheus_metric_drop_rules[endpoint]) > 0
+    ])
+  }
 }
 
 resource "helm_release" "prometheus_stack" {
