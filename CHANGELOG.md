@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [5.17.0]
 
 - Add optional `prometheus_metric_drop_regexes` to drop metrics by name before ingestion from the Kubernetes API server, kubelet cAdvisor, and kubelet probes independently. Scrapes are unchanged by default.
 
