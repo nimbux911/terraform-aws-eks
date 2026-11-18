@@ -236,6 +236,43 @@ resource "helm_release" "cert_manager" {
 
 # ========================= monitoring charts ========================= #
 
+locals {
+  prometheus_metric_drop_rules = {
+    for endpoint, regexes in var.prometheus_metric_drop_regexes : endpoint => [
+      for pattern in regexes : {
+        action       = "drop"
+        regex        = pattern
+        sourceLabels = ["__name__"]
+      }
+    ]
+  }
+
+  prometheus_metric_drop_targets = {
+    kubeApiServer = {
+      apiserver = "metricRelabelings"
+    }
+    kubelet = {
+      cadvisor = "cAdvisorMetricRelabelings"
+      probes   = "probesMetricRelabelings"
+    }
+  }
+
+  prometheus_metric_drop_values = {
+    for component, endpoints in local.prometheus_metric_drop_targets :
+    component => {
+      serviceMonitor = {
+        for endpoint, key in endpoints :
+        key => local.prometheus_metric_drop_rules[endpoint]
+        if length(local.prometheus_metric_drop_rules[endpoint]) > 0
+      }
+    }
+    if anytrue([
+      for endpoint in keys(endpoints) :
+      length(local.prometheus_metric_drop_rules[endpoint]) > 0
+    ])
+  }
+}
+
 resource "helm_release" "prometheus_stack" {
   count             = var.helm_prometheus_enabled ? 1 : 0
   name              = "prometheus-stack"
@@ -247,6 +284,7 @@ resource "helm_release" "prometheus_stack" {
   dependency_update = true
   timeout           = 600
 
+  values = length(local.prometheus_metric_drop_values) == 0 ? [] : [yamlencode(local.prometheus_metric_drop_values)]
 
   set {
     name  = "prometheus.prometheusSpec.additionalScrapeConfigs"
