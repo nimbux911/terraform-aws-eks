@@ -89,6 +89,27 @@ Changing these resources updates the pod template and triggers a rolling
 deployment update. Check available capacity, readiness, graceful shutdown,
 and the deployment's rolling update strategy before applying to live traffic.
 
+### Prometheus scrape filters
+
+Use `prometheus_metric_drop_regexes` to discard samples by metric name before
+ingestion when `helm_prometheus_enabled = true`. Each key configures a separate
+ServiceMonitor endpoint: `apiserver` for the Kubernetes API server, `cadvisor`
+for kubelet `/metrics/cadvisor`, and `probes` for kubelet `/metrics/probes`.
+Omitted keys and empty lists add no filters.
+
+```hcl
+prometheus_metric_drop_regexes = {
+  apiserver = ["apiserver_request_body_size_bytes_(bucket|sum|count)"]
+  cadvisor  = ["container_tasks_state"]
+  probes    = ["prober_probe_duration_seconds_bucket"]
+}
+```
+
+Prometheus matches each regex against the full metric name (`__name__`).
+These rules do not change the exporters, existing historical data, or other
+scrapes such as Envoy and Beyla. Dropping a histogram's `_bucket` series prevents
+calculating new percentiles for it, even if `_sum` and `_count` are retained.
+
 ### Grafana Beyla
 
 Set `helm_beyla_enabled = true` to deploy Beyla. By default it selects applications
@@ -499,6 +520,7 @@ module "eks_main" {
 | prometheus\_storage\_class\_name | Prometheus storage className for pv | `string` | `gp2` | no |
 | prometheus\_storage\_size | Prometheus storage size | `string` | `20Gi` | no |
 | prometheus\_metrics\_retention | Prometheus metrics period retention | `string` | `14d` | no |
+| prometheus\_metric\_drop\_regexes | Metric name regexes to drop from the API server, kubelet cAdvisor, and kubelet probes scrapes | `object({ apiserver = optional(list(string), []), cadvisor = optional(list(string), []), probes = optional(list(string), []) })` | `{}` | no |
 | prometheus\_priority\_class\_name | allows you to set a priority class | `string` | `""` | no |
 | prometheus\_additional_scrape_configs | allows you to set a additional scrape config | `string` | `""` | no |
 | helm\_tempo\_enabled | Install tempo-distributed helm chart | `bool` | `false` | no |

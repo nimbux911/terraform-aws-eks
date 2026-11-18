@@ -798,6 +798,17 @@ variable "prometheus_additional_scrape_configs" {
   default = ""
 }
 
+variable "prometheus_metric_drop_regexes" {
+  description = "Prometheus metric name regexes to drop from the API server, kubelet cAdvisor, and kubelet probes scrapes."
+  type = object({
+    apiserver = optional(list(string), [])
+    cadvisor  = optional(list(string), [])
+    probes    = optional(list(string), [])
+  })
+  default  = {}
+  nullable = false
+}
+
 # ================== beyla ================== #
 variable "helm_beyla_enabled" {
   description = "Deploy Grafana Beyla as a DaemonSet to expose application metrics to Prometheus."
